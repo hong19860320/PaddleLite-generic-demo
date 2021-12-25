@@ -1,3 +1,5 @@
+!README.md
+
 # Prerequisites
 *.d
 
@@ -12,9 +14,9 @@
 *.pch
 
 # Compiled Dynamic libraries
-*.so
 *.dylib
 *.dll
+*.so
 
 # Fortran module files
 *.mod
@@ -30,3 +32,20 @@
 *.exe
 *.out
 *.app
+
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+# Python
+__pycache__/
+
+# Others
+log.txt
+*.log
+*.nb
+models/*
+*/build.*/*
+/libs/*
