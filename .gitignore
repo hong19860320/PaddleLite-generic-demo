@@ -1,3 +1,6 @@
+!.gitignore
+
+# Doc
 !README.md
 
 # Prerequisites
@@ -46,6 +49,4 @@ __pycache__/
 log.txt
 *.log
 *.nb
-models/*
-*/build.*/*
-/libs/*
+build.*/
