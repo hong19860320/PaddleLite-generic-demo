@@ -12,19 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "paddle_api.h"
-#include <cmath>
-#include <iostream>
+#include <paddle_api.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <cmath>
+#include <iostream>
 #include <vector>
-#include <string.h>
 
 int WARMUP_COUNT = 1;
 int REPEAT_COUNT = 1;
 const int CPU_THREAD_NUM = 1;
-const paddle::lite_api::PowerMode CPU_POWER_MODE = paddle::lite_api::PowerMode::LITE_POWER_NO_BIND;
+const paddle::lite_api::PowerMode CPU_POWER_MODE =
+    paddle::lite_api::PowerMode::LITE_POWER_NO_BIND;
 
 inline double GetCurrentUS() {
   struct timeval time;
@@ -32,8 +33,10 @@ inline double GetCurrentUS() {
   return 1e+6 * time.tv_sec + time.tv_usec;
 }
 
-bool read_file(const std::string& filename, std::vector<char>* contents, bool binary = true) {
-  FILE* fp = fopen(filename.c_str(), binary ? "rb" : "r");
+bool read_file(const std::string &filename,
+               std::vector<char> *contents,
+               bool binary = true) {
+  FILE *fp = fopen(filename.c_str(), binary ? "rb" : "r");
   if (!fp) return false;
   fseek(fp, 0, SEEK_END);
   size_t size = ftell(fp);
@@ -41,7 +44,7 @@ bool read_file(const std::string& filename, std::vector<char>* contents, bool bi
   contents->clear();
   contents->resize(size);
   size_t offset = 0;
-  char* ptr = reinterpret_cast<char*>(&(contents->at(0)));
+  char *ptr = reinterpret_cast<char *>(&(contents->at(0)));
   while (offset < size) {
     size_t already_read = fread(ptr, 1, size - offset, fp);
     offset += already_read;
@@ -51,12 +54,14 @@ bool read_file(const std::string& filename, std::vector<char>* contents, bool bi
   return true;
 }
 
-bool write_file(const std::string& filename, const std::vector<char>& contents, bool binary = true) {
-  FILE* fp = fopen(filename.c_str(), binary ? "wb" : "w");
+bool write_file(const std::string &filename,
+                const std::vector<char> &contents,
+                bool binary = true) {
+  FILE *fp = fopen(filename.c_str(), binary ? "wb" : "w");
   if (!fp) return false;
   size_t size = contents.size();
   size_t offset = 0;
-  const char* ptr = reinterpret_cast<const char*>(&(contents.at(0)));
+  const char *ptr = reinterpret_cast<const char *>(&(contents.at(0)));
   while (offset < size) {
     size_t already_written = fwrite(ptr, 1, size - offset, fp);
     offset += already_written;
@@ -122,11 +127,12 @@ int64_t ShapeProduction(std::vector<int64_t> shape) {
 void FillInputTensors(
     const std::shared_ptr<paddle::lite_api::PaddlePredictor> &predictor,
     const std::vector<std::vector<int64_t>> &input_tensor_shape,
-    const std::vector<std::string> &input_tensor_type, const float value) {
-#define FILL_TENSOR_WITH_TYPE(type)                                            \
-  auto input_tensor_data = input_tensor->mutable_data<type>();                 \
-  for (int j = 0; j < input_tensor_size; j++) {                                \
-    input_tensor_data[j] = static_cast<type>(value);                           \
+    const std::vector<std::string> &input_tensor_type,
+    const float value) {
+#define FILL_TENSOR_WITH_TYPE(type)                            \
+  auto input_tensor_data = input_tensor->mutable_data<type>(); \
+  for (int j = 0; j < input_tensor_size; j++) {                \
+    input_tensor_data[j] = static_cast<type>(value);           \
   }
   for (int i = 0; i < input_tensor_shape.size(); i++) {
     auto input_tensor = predictor->GetInput(i);
@@ -147,10 +153,12 @@ const int MAX_DISPLAY_OUTPUT_TENSOR_SIZE = 10000;
 void PrintOutputTensors(
     const std::shared_ptr<paddle::lite_api::PaddlePredictor> &predictor,
     const std::vector<std::string> &output_tensor_type) {
-#define PRINT_TENSOR_WITH_TYPE(type)                                                          \
-  auto output_tensor_data = output_tensor->data<type>();                                      \
-  for (size_t j = 0; j < output_tensor_size && j < MAX_DISPLAY_OUTPUT_TENSOR_SIZE; j++) {     \
-    std::cout << "[" << j << "] " << output_tensor_data[j] << std::endl;                      \
+#define PRINT_TENSOR_WITH_TYPE(type)                                     \
+  auto output_tensor_data = output_tensor->data<type>();                 \
+  for (size_t j = 0;                                                     \
+       j < output_tensor_size && j < MAX_DISPLAY_OUTPUT_TENSOR_SIZE;     \
+       j++) {                                                            \
+    std::cout << "[" << j << "] " << output_tensor_data[j] << std::endl; \
   }
   for (int i = 0; i < output_tensor_type.size(); i++) {
     auto output_tensor = predictor->GetOutput(i);
@@ -170,19 +178,18 @@ void CheckOutputTensors(
     const std::shared_ptr<paddle::lite_api::PaddlePredictor> &tar_predictor,
     const std::shared_ptr<paddle::lite_api::PaddlePredictor> &ref_predictor,
     const std::vector<std::string> &output_tensor_type) {
-#define CHECK_TENSOR_WITH_TYPE(type)                                           \
-  auto tar_output_tensor_data = tar_output_tensor->data<type>();               \
-  auto ref_output_tensor_data = ref_output_tensor->data<type>();               \
-  for (size_t j = 0; j < ref_output_tensor_size; j++) {                        \
-    auto abs_diff =                                                            \
-        std::fabs(tar_output_tensor_data[j] - ref_output_tensor_data[j]);      \
-    auto rel_diff = abs_diff / (std::fabs(ref_output_tensor_data[j]) + 1e-6);  \
-    if (rel_diff < 0.01f)                                                      \
-      continue;                                                                \
-    std::cout << "val: " << tar_output_tensor_data[j]                          \
-              << " ref: " << ref_output_tensor_data[j]                         \
-              << " abs_diff: " << abs_diff << " rel_diff: " << rel_diff        \
-              << std::endl;                                                    \
+#define CHECK_TENSOR_WITH_TYPE(type)                                          \
+  auto tar_output_tensor_data = tar_output_tensor->data<type>();              \
+  auto ref_output_tensor_data = ref_output_tensor->data<type>();              \
+  for (size_t j = 0; j < ref_output_tensor_size; j++) {                       \
+    auto abs_diff =                                                           \
+        std::fabs(tar_output_tensor_data[j] - ref_output_tensor_data[j]);     \
+    auto rel_diff = abs_diff / (std::fabs(ref_output_tensor_data[j]) + 1e-6); \
+    if (rel_diff < 0.01f) continue;                                           \
+    std::cout << "val: " << tar_output_tensor_data[j]                         \
+              << " ref: " << ref_output_tensor_data[j]                        \
+              << " abs_diff: " << abs_diff << " rel_diff: " << rel_diff       \
+              << std::endl;                                                   \
   }
   for (int i = 0; i < output_tensor_type.size(); i++) {
     auto tar_output_tensor = tar_predictor->GetOutput(i);
@@ -207,7 +214,12 @@ void CheckOutputTensors(
 
 int main(int argc, char **argv) {
   if (argc < 11) {
-    printf("Usage: \n./model_test model_dir model_type input_tensor_shape input_tensor_type output_tensor_type nnadapter_device_names nnadapter_context_properties nnadapter_model_cache_dir nnadapter_model_cache_token nnadapter_subgraph_partition_config_path\n");
+    printf(
+        "Usage: \n./model_test model_dir model_type input_tensor_shape "
+        "input_tensor_type output_tensor_type nnadapter_device_names "
+        "nnadapter_context_properties nnadapter_model_cache_dir "
+        "nnadapter_model_cache_token "
+        "nnadapter_subgraph_partition_config_path\n");
     return -1;
   }
 
@@ -221,16 +233,20 @@ int main(int argc, char **argv) {
   auto input_tensor_type = TypeParsing(argv[4]);
   auto output_tensor_type = TypeParsing(argv[5]);
   std::string nnadapter_device_names = argv[6];
-  std::string nnadapter_context_properties = strcmp(argv[7], "null") == 0 ? "" : argv[7];
-  std::string nnadapter_model_cache_dir = strcmp(argv[8], "null") == 0 ? "" : argv[8];
-  std::string nnadapter_model_cache_token = strcmp(argv[9], "null") == 0 ? "" : argv[9];
-  std::string nnadapter_subgraph_partition_config_path = strcmp(argv[10], "null") == 0 ? "" : argv[10];
-  std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor = nullptr;
+  std::string nnadapter_context_properties =
+      strcmp(argv[7], "null") == 0 ? "" : argv[7];
+  std::string nnadapter_model_cache_dir =
+      strcmp(argv[8], "null") == 0 ? "" : argv[8];
+  std::string nnadapter_model_cache_token =
+      strcmp(argv[9], "null") == 0 ? "" : argv[9];
+  std::string nnadapter_subgraph_partition_config_path =
+      strcmp(argv[10], "null") == 0 ? "" : argv[10];
 
+  std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor = nullptr;
 #ifdef USE_FULL_API
   // Run inference by using full api with CxxConfig
   paddle::lite_api::CxxConfig cxx_config;
-  if (model_type) { // combined model
+  if (model_type) {  // combined model
     cxx_config.set_model_file(model_dir + "/model");
     cxx_config.set_param_file(model_dir + "/params");
   } else {
@@ -240,17 +256,25 @@ int main(int argc, char **argv) {
   cxx_config.set_power_mode(CPU_POWER_MODE);
   std::vector<paddle::lite_api::Place> valid_places;
   if (strcmp(nnadapter_device_names.c_str(), "cpu")) {
-    valid_places.push_back(paddle::lite_api::Place{TARGET(kNNAdapter), PRECISION(kInt8)});
-    valid_places.push_back(paddle::lite_api::Place{TARGET(kNNAdapter), PRECISION(kFloat)});
+    valid_places.push_back(
+        paddle::lite_api::Place{TARGET(kNNAdapter), PRECISION(kInt8)});
+    valid_places.push_back(
+        paddle::lite_api::Place{TARGET(kNNAdapter), PRECISION(kFloat)});
   }
 #if defined(__arm__) || defined(__aarch64__)
-  valid_places.push_back(paddle::lite_api::Place{TARGET(kARM), PRECISION(kInt8)});
-  valid_places.push_back(paddle::lite_api::Place{TARGET(kARM), PRECISION(kFloat)});
-  valid_places.push_back(paddle::lite_api::Place{TARGET(kARM), PRECISION(kInt32)});
+  valid_places.push_back(
+      paddle::lite_api::Place{TARGET(kARM), PRECISION(kInt8)});
+  valid_places.push_back(
+      paddle::lite_api::Place{TARGET(kARM), PRECISION(kFloat)});
+  valid_places.push_back(
+      paddle::lite_api::Place{TARGET(kARM), PRECISION(kInt32)});
 #elif defined(__x86_64__)
-  valid_places.push_back(paddle::lite_api::Place{TARGET(kX86), PRECISION(kInt8)});
-  valid_places.push_back(paddle::lite_api::Place{TARGET(kX86), PRECISION(kFloat)});
-  valid_places.push_back(paddle::lite_api::Place{TARGET(kX86), PRECISION(kInt32)});
+  valid_places.push_back(
+      paddle::lite_api::Place{TARGET(kX86), PRECISION(kInt8)});
+  valid_places.push_back(
+      paddle::lite_api::Place{TARGET(kX86), PRECISION(kFloat)});
+  valid_places.push_back(
+      paddle::lite_api::Place{TARGET(kX86), PRECISION(kInt32)});
 #endif
   cxx_config.set_valid_places(valid_places);
   cxx_config.set_nnadapter_device_names({nnadapter_device_names});
@@ -259,18 +283,27 @@ int main(int argc, char **argv) {
   // Set the subgraph custom partition configuration file
   if (!nnadapter_subgraph_partition_config_path.empty()) {
     std::vector<char> nnadapter_subgraph_partition_config_buffer;
-    if (read_file(nnadapter_subgraph_partition_config_path, &nnadapter_subgraph_partition_config_buffer, false)) {
+    if (read_file(nnadapter_subgraph_partition_config_path,
+                  &nnadapter_subgraph_partition_config_buffer,
+                  false)) {
       if (!nnadapter_subgraph_partition_config_buffer.empty()) {
-        std::string nnadapter_subgraph_partition_config_string(nnadapter_subgraph_partition_config_buffer.data(), nnadapter_subgraph_partition_config_buffer.size());
-        cxx_config.set_nnadapter_subgraph_partition_config_buffer(nnadapter_subgraph_partition_config_string);
+        std::string nnadapter_subgraph_partition_config_string(
+            nnadapter_subgraph_partition_config_buffer.data(),
+            nnadapter_subgraph_partition_config_buffer.size());
+        cxx_config.set_nnadapter_subgraph_partition_config_buffer(
+            nnadapter_subgraph_partition_config_string);
       }
     } else {
-      printf("Failed to load the subgraph custom partition configuration file %s\n", nnadapter_subgraph_partition_config_path.c_str());
+      printf(
+          "Failed to load the subgraph custom partition configuration file "
+          "%s\n",
+          nnadapter_subgraph_partition_config_path.c_str());
     }
   }
   try {
     predictor = paddle::lite_api::CreatePaddlePredictor(cxx_config);
-    predictor->SaveOptimizedModel(model_dir, paddle::lite_api::LiteModelType::kNaiveBuffer);
+    predictor->SaveOptimizedModel(
+        model_dir, paddle::lite_api::LiteModelType::kNaiveBuffer);
   } catch (std::exception e) {
     printf("An internal error occurred in PaddleLite(cxx config).\n");
     return -1;
@@ -286,14 +319,19 @@ int main(int argc, char **argv) {
   mobile_config.set_nnadapter_context_properties(nnadapter_context_properties);
   // Set the model cache buffer and directory
   mobile_config.set_nnadapter_model_cache_dir(nnadapter_model_cache_dir);
-  if (!nnadapter_model_cache_token.empty() && !nnadapter_model_cache_dir.empty()) {
+  if (!nnadapter_model_cache_token.empty() &&
+      !nnadapter_model_cache_dir.empty()) {
     std::vector<char> nnadapter_model_cache_buffer;
-    std::string nnadapter_model_cache_path = nnadapter_model_cache_dir + "/" + nnadapter_model_cache_token + ".nnc";
-    if (!read_file(nnadapter_model_cache_path, &nnadapter_model_cache_buffer, true)) {
-      printf("Failed to load the cache model file %s\n", nnadapter_model_cache_path.c_str());
+    std::string nnadapter_model_cache_path =
+        nnadapter_model_cache_dir + "/" + nnadapter_model_cache_token + ".nnc";
+    if (!read_file(
+            nnadapter_model_cache_path, &nnadapter_model_cache_buffer, true)) {
+      printf("Failed to load the cache model file %s\n",
+             nnadapter_model_cache_path.c_str());
     }
     if (!nnadapter_model_cache_buffer.empty()) {
-      mobile_config.set_nnadapter_model_cache_buffers(nnadapter_model_cache_token, nnadapter_model_cache_buffer);
+      mobile_config.set_nnadapter_model_cache_buffers(
+          nnadapter_model_cache_token, nnadapter_model_cache_buffer);
     }
   }
   try {
