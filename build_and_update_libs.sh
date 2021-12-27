@@ -10,29 +10,29 @@ cur_dir=$(readlinkf $(pwd))
 # User config
 src_dir=/Work/Paddle-Lite/experiment/Paddle-Lite
 # HuaweiKirinNPU
-build_huawei_kirin_npu=0
+build_huawei_kirin_npu=1
 hiai_ddk_lib=$src_dir/hiai_ddk_lib_510
 # MediatekAPU
-build_mediatek_apu=0
+build_mediatek_apu=1
 apu_ddk=$src_dir/apu_ddk
 # RockchipNPU
-build_rockchip_npu=0
+build_rockchip_npu=1
 rknpu_ddk=$src_dir/rknpu_ddk
 # AmlogicNPU
-build_amlogic_npu=0
+build_amlogic_npu=1
 amlnpu_ddk_android=$src_dir/amlnpu_ddk_android
 amlnpu_ddk_linux=$src_dir/amlnpu_ddk_linux
 # ImaginationNNA
-build_imagination_nna=0
+build_imagination_nna=1
 imagination_nna_sdk=$src_dir/imagination_nna_sdk
 # VerisiliconTIMVX
-build_verisilicon_timvx=0 # No need to set the SDK path since it can be downloaded automatically
+build_verisilicon_timvx=1 # No need to set the SDK path since it can be downloaded automatically
 # HuaweiAscendNPU
-build_huawei_ascend_npu=0
+build_huawei_ascend_npu=1
 ascend_toolkit_aarch64_linux=$src_dir/ascend-toolkit-aarch64-linux/3.3.0
 ascend_toolkit_x86_64_linux=$src_dir/ascend-toolkit-x86_64-linux/3.3.0
 # KunlunxinXTCL
-build_kunlunxin_xtcl=0 # No need to set the SDK path since it can be downloaded automatically
+build_kunlunxin_xtcl=1 # No need to set the SDK path since it can be downloaded automatically
 
 build_and_update_lib() {
   local os=$1
@@ -44,7 +44,7 @@ build_and_update_lib() {
 
   build_cmd="--arch=$arch --toolchain=$toolchain --with_extra=ON --with_exception=ON --with_nnadapter=ON"
   build_dir=$src_dir/build.lite.$os.$arch.$toolchain
-  device_list={}
+  device_list=()
   if [ "$os" = "android" ]; then
     # android
     build_cmd="$build_cmd --android_stl=c++_shared --with_cv=ON"
@@ -52,25 +52,25 @@ build_and_update_lib() {
       lib_abi="arm64-v8a"
       if [ $build_huawei_kirin_npu -ne 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_huawei_kirin_npu=ON --nnadapter_huawei_kirin_npu_sdk_root=$hiai_ddk_lib"
-        device_list={"${device_list[@]}" "huawei_kirin_npu"}
+        device_list=( "${device_list[@]}" "huawei_kirin_npu" )
       fi
     elif [ "$arch" = "armv7" ]; then
       lib_abi="armeabi-v7a"
       if [ $build_huawei_kirin_npu -ne 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_huawei_kirin_npu=ON --nnadapter_huawei_kirin_npu_sdk_root=$hiai_ddk_lib"
-        device_list={"${device_list[@]}" "huawei_kirin_npu"}
+        device_list=( "${device_list[@]}" "huawei_kirin_npu" )
       fi
       if [ $build_mediatek_apu -ne 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_mediatek_apu=ON --nnadapter_mediatek_apu_sdk_root=$apu_ddk"
-        device_list={"${device_list[@]}" "mediatek_apu"}
+        device_list=( "${device_list[@]}" "mediatek_apu" )
       fi
       if [ $build_amlogic_npu -ne 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_amlogic_npu=ON --nnadapter_amlogic_npu_sdk_root=$amlnpu_ddk_android"
-        device_list={"${device_list[@]}" "amlogic_npu"}
+        device_list=( "${device_list[@]}" "amlogic_npu" )
       fi
       if [ $build_verisilicon_timvx -ne 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_verisilicon_timvx=ON"
-        device_list={"${device_list[@]}" "verisilicon_timvx"}
+        device_list=( "${device_list[@]}" "verisilicon_timvx" )
       fi
     else
       echo "Abi $arch is not supported for $os and any devices."
@@ -83,44 +83,44 @@ build_and_update_lib() {
       build_cmd="$build_cmd --with_cv=ON"
       if [ $build_rockchip_npu -ne 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_rockchip_npu=ON --nnadapter_rockchip_npu_sdk_root=$rknpu_ddk"
-        device_list={"${device_list[@]}" "rockchip_npu"}
+        device_list=( "${device_list[@]}" "rockchip_npu" )
       fi
       if [ $build_imagination_nna -ne 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_imagination_nna=ON --nnadapter_imagination_nna_sdk_root=$imagination_nna_sdk"
-        device_list={"${device_list[@]}" "imagination_nna"}
+        device_list=( "${device_list[@]}" "imagination_nna" )
       fi
       if [ $build_amlogic_npu -ne 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_amlogic_npu=ON --nnadapter_amlogic_npu_sdk_root=$amlnpu_ddk_linux"
-        device_list={"${device_list[@]}" "amlogic_npu"}
+        device_list=( "${device_list[@]}" "amlogic_npu" )
       fi
       if [ $build_verisilicon_timvx -ne 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_verisilicon_timvx=ON"
-        device_list={"${device_list[@]}" "verisilicon_timvx"}
+        device_list=( "${device_list[@]}" "verisilicon_timvx" )
       fi
       if [ $build_kunlunxin_xtcl -ne 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_kunlunxin_xtcl=ON"
-        device_list={"${device_list[@]}" "kunlunxin_xtcl"}
+        device_list=( "${device_list[@]}" "kunlunxin_xtcl" )
       fi
       if [ $disable_huawei_ascend_npu -eq 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_huawei_ascend_npu=ON --nnadapter_huawei_ascend_npu_sdk_root=$ascend_toolkit_aarch64_linux"
-        device_list={"huawei_ascend_npu"}
+        device_list=( "huawei_ascend_npu" )
       fi
     elif [ "$arch" = "armv7hf" ]; then
       lib_abi="armhf"
       build_cmd="$build_cmd --with_cv=ON"
       if [ $build_rockchip_npu -ne 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_rockchip_npu=ON --nnadapter_rockchip_npu_sdk_root=$rknpu_ddk"
-        device_list={"${device_list[@]}" "rockchip_npu"}
+        device_list=( "${device_list[@]}" "rockchip_npu" )
       fi
     elif [ "$arch" = "x86" ]; then
       lib_abi="amd64"
       if [ $build_kunlunxin_xtcl -ne 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_kunlunxin_xtcl=ON"
-        device_list={"${device_list[@]}" "kunlunxin_xtcl"}
+        device_list=( "${device_list[@]}" "kunlunxin_xtcl" )
       fi
       if [ $disable_huawei_ascend_npu -eq 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_huawei_ascend_npu=ON --nnadapter_huawei_ascend_npu_sdk_root=$ascend_toolkit_x86_64_linux"
-        device_list={"huawei_ascend_npu"}
+        device_list=( "huawei_ascend_npu" )
       fi
     else
       echo "Abi $arch is not supported for $os and any devices."
