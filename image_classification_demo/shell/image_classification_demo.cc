@@ -12,24 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <thread>
-#include "paddle_api.h"
+#include <paddle_api.h>
 #if defined(__ARM_NEON) || defined(__ARM_NEON__)
 #include <arm_neon.h>
 #endif
-#include <fstream>
-#include <limits>
 #include <stdio.h>
+#include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <vector>
 #include <algorithm>
-#include <string.h>
+#include <fstream>
+#include <limits>
+#include <vector>
 
 int WARMUP_COUNT = 1;
 int REPEAT_COUNT = 5;
 const int CPU_THREAD_NUM = 1;
-const paddle::lite_api::PowerMode CPU_POWER_MODE = paddle::lite_api::PowerMode::LITE_POWER_NO_BIND;
+const paddle::lite_api::PowerMode CPU_POWER_MODE =
+    paddle::lite_api::PowerMode::LITE_POWER_NO_BIND;
 const std::vector<int64_t> INPUT_SHAPE = {1, 3, 224, 224};
 const std::vector<float> INPUT_MEAN = {0.485f, 0.456f, 0.406f};
 const std::vector<float> INPUT_STD = {0.229f, 0.224f, 0.225f};
@@ -46,8 +46,10 @@ inline int64_t get_current_us() {
   return 1000000LL * (int64_t)time.tv_sec + (int64_t)time.tv_usec;
 }
 
-bool read_file(const std::string& filename, std::vector<char>* contents, bool binary = true) {
-  FILE* fp = fopen(filename.c_str(), binary ? "rb" : "r");
+bool read_file(const std::string &filename,
+               std::vector<char> *contents,
+               bool binary = true) {
+  FILE *fp = fopen(filename.c_str(), binary ? "rb" : "r");
   if (!fp) return false;
   fseek(fp, 0, SEEK_END);
   size_t size = ftell(fp);
@@ -55,7 +57,7 @@ bool read_file(const std::string& filename, std::vector<char>* contents, bool bi
   contents->clear();
   contents->resize(size);
   size_t offset = 0;
-  char* ptr = reinterpret_cast<char*>(&(contents->at(0)));
+  char *ptr = reinterpret_cast<char *>(&(contents->at(0)));
   while (offset < size) {
     size_t already_read = fread(ptr, 1, size - offset, fp);
     offset += already_read;
@@ -65,12 +67,14 @@ bool read_file(const std::string& filename, std::vector<char>* contents, bool bi
   return true;
 }
 
-bool write_file(const std::string& filename, const std::vector<char>& contents, bool binary = true) {
-  FILE* fp = fopen(filename.c_str(), binary ? "wb" : "w");
+bool write_file(const std::string &filename,
+                const std::vector<char> &contents,
+                bool binary = true) {
+  FILE *fp = fopen(filename.c_str(), binary ? "wb" : "w");
   if (!fp) return false;
   size_t size = contents.size();
   size_t offset = 0;
-  const char* ptr = reinterpret_cast<const char*>(&(contents.at(0)));
+  const char *ptr = reinterpret_cast<const char *>(&(contents.at(0)));
   while (offset < size) {
     size_t already_written = fwrite(ptr, 1, size - offset, fp);
     offset += already_written;
@@ -98,9 +102,12 @@ std::vector<std::string> load_labels(const std::string &path) {
   return labels;
 }
 
-void preprocess(const float *input_image, const std::vector<float> &input_mean,
-                const std::vector<float> &input_std, int input_width,
-                int input_height, float *input_data) {
+void preprocess(const float *input_image,
+                const std::vector<float> &input_mean,
+                const std::vector<float> &input_std,
+                int input_width,
+                int input_height,
+                float *input_data) {
   // NHWC->NCHW
   int image_size = input_height * input_width;
   float *input_data_c0 = input_data;
@@ -142,15 +149,16 @@ bool topk_compare_func(std::pair<float, int> a, std::pair<float, int> b) {
   return (a.first > b.first);
 }
 
-std::vector<RESULT> postprocess(const float *output_data, int64_t output_size,
+std::vector<RESULT> postprocess(const float *output_data,
+                                int64_t output_size,
                                 const std::vector<std::string> &word_labels) {
   const int TOPK = 3;
   std::vector<std::pair<float, int>> vec;
   for (int i = 0; i < output_size; i++) {
     vec.push_back(std::make_pair(output_data[i], i));
   }
-  std::partial_sort(vec.begin(), vec.begin() + TOPK, vec.end(),
-                    topk_compare_func);
+  std::partial_sort(
+      vec.begin(), vec.begin() + TOPK, vec.end(), topk_compare_func);
   std::vector<RESULT> results(TOPK);
   for (int i = 0; i < TOPK; i++) {
     results[i].score = vec[i].first;
@@ -163,8 +171,9 @@ std::vector<RESULT> postprocess(const float *output_data, int64_t output_size,
   return results;
 }
 
-void process(const float *input_image, std::vector<std::string> &word_labels,
-             std::shared_ptr<paddle::lite_api::PaddlePredictor> &predictor) {
+void process(const float *input_image,
+             const std::vector<std::string> &word_labels,
+             std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor) {
   // Preprocess image and fill the data of input tensor
   std::unique_ptr<paddle::lite_api::Tensor> input_tensor(
       std::move(predictor->GetInput(0)));
@@ -173,7 +182,11 @@ void process(const float *input_image, std::vector<std::string> &word_labels,
   int input_height = INPUT_SHAPE[2];
   auto *input_data = input_tensor->mutable_data<float>();
   double preprocess_start_time = get_current_us();
-  preprocess(input_image, INPUT_MEAN, INPUT_STD, input_width, input_height,
+  preprocess(input_image,
+             INPUT_MEAN,
+             INPUT_STD,
+             input_width,
+             input_height,
              input_data);
   double preprocess_end_time = get_current_us();
   double preprocess_time =
@@ -207,7 +220,10 @@ void process(const float *input_image, std::vector<std::string> &word_labels,
     usleep(10000);
   }
   printf("warmup: %d repeat: %d, average: %f ms, max: %f ms, min: %f ms\n",
-         WARMUP_COUNT, REPEAT_COUNT, prediction_time, max_time_cost,
+         WARMUP_COUNT,
+         REPEAT_COUNT,
+         prediction_time,
+         max_time_cost,
          min_time_cost);
 
   // Get the data of output tensor and postprocess to output detected objects
@@ -227,8 +243,8 @@ void process(const float *input_image, std::vector<std::string> &word_labels,
 
   printf("results: %d\n", results.size());
   for (int i = 0; i < results.size(); i++) {
-    printf("Top%d %s - %f\n", i, results[i].class_name.c_str(),
-           results[i].score);
+    printf(
+        "Top%d %s - %f\n", i, results[i].class_name.c_str(), results[i].score);
   }
   printf("Preprocess time: %f ms\n", preprocess_time);
   printf("Prediction time: %f ms\n", prediction_time);
@@ -239,7 +255,10 @@ int main(int argc, char **argv) {
   if (argc < 10) {
     printf(
         "Usage: \n"
-        "./image_classification_demo model_path mode_type label_path image_path nnadapter_device_names nnadapter_context_properties nnadapter_model_cache_dir nnadapter_model_cache_token nnadapter_subgraph_partition_config_path");
+        "./image_classification_demo model_path mode_type label_path "
+        "image_path nnadapter_device_names nnadapter_context_properties "
+        "nnadapter_model_cache_dir nnadapter_model_cache_token "
+        "nnadapter_subgraph_partition_config_path");
     return -1;
   }
   std::string model_dir = argv[1];
@@ -247,31 +266,38 @@ int main(int argc, char **argv) {
   std::string label_path = argv[3];
   std::string image_path = argv[4];
   std::string nnadapter_device_names = argv[5];
-  std::string nnadapter_context_properties = strcmp(argv[6], "null") == 0 ? "" : argv[6];
-  std::string nnadapter_model_cache_dir = strcmp(argv[7], "null") == 0 ? "" : argv[7];
-  std::string nnadapter_model_cache_token = strcmp(argv[8], "null") == 0 ? "" : argv[8];
-  std::string nnadapter_subgraph_partition_config_path = strcmp(argv[9], "null") == 0 ? "" : argv[9];
+  std::string nnadapter_context_properties =
+      strcmp(argv[6], "null") == 0 ? "" : argv[6];
+  std::string nnadapter_model_cache_dir =
+      strcmp(argv[7], "null") == 0 ? "" : argv[7];
+  std::string nnadapter_model_cache_token =
+      strcmp(argv[8], "null") == 0 ? "" : argv[8];
+  std::string nnadapter_subgraph_partition_config_path =
+      strcmp(argv[9], "null") == 0 ? "" : argv[9];
 
   // Load Labels
   std::vector<std::string> word_labels = load_labels(label_path);
 
   // Load raw image data from file
-  std::ifstream image_file(image_path, std::ios::in | std::ios::binary); // Raw RGB image with float data type
+  std::ifstream image_file(
+      image_path,
+      std::ios::in | std::ios::binary);  // Raw RGB image with float data type
   if (!image_file) {
     printf("Failed to load image file %s\n", image_path.c_str());
     return -1;
   }
-  size_t image_size = INPUT_SHAPE[0] * INPUT_SHAPE[1] * INPUT_SHAPE[2] * INPUT_SHAPE[3];
+  size_t image_size =
+      INPUT_SHAPE[0] * INPUT_SHAPE[1] * INPUT_SHAPE[2] * INPUT_SHAPE[3];
   std::vector<float> image_data(image_size);
-  image_file.read(reinterpret_cast<char *>(image_data.data()), image_size * sizeof(float));
+  image_file.read(reinterpret_cast<char *>(image_data.data()),
+                  image_size * sizeof(float));
   image_file.close();
 
   std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor = nullptr;
-
 #ifdef USE_FULL_API
   // Run inference by using full api with CxxConfig
   paddle::lite_api::CxxConfig cxx_config;
-  if (model_type) { // combined model
+  if (model_type) {  // combined model
     cxx_config.set_model_file(model_dir + "/model");
     cxx_config.set_param_file(model_dir + "/params");
   } else {
@@ -281,15 +307,21 @@ int main(int argc, char **argv) {
   cxx_config.set_power_mode(CPU_POWER_MODE);
   std::vector<paddle::lite_api::Place> valid_places;
   if (strcmp(nnadapter_device_names.c_str(), "cpu")) {
-    valid_places.push_back(paddle::lite_api::Place{TARGET(kNNAdapter), PRECISION(kInt8)});
-    valid_places.push_back(paddle::lite_api::Place{TARGET(kNNAdapter), PRECISION(kFloat)});
+    valid_places.push_back(
+        paddle::lite_api::Place{TARGET(kNNAdapter), PRECISION(kInt8)});
+    valid_places.push_back(
+        paddle::lite_api::Place{TARGET(kNNAdapter), PRECISION(kFloat)});
   }
 #if defined(__arm__) || defined(__aarch64__)
-  valid_places.push_back(paddle::lite_api::Place{TARGET(kARM), PRECISION(kInt8)});
-  valid_places.push_back(paddle::lite_api::Place{TARGET(kARM), PRECISION(kFloat)});
+  valid_places.push_back(
+      paddle::lite_api::Place{TARGET(kARM), PRECISION(kInt8)});
+  valid_places.push_back(
+      paddle::lite_api::Place{TARGET(kARM), PRECISION(kFloat)});
 #elif defined(__x86_64__)
-  valid_places.push_back(paddle::lite_api::Place{TARGET(kX86), PRECISION(kInt8)});
-  valid_places.push_back(paddle::lite_api::Place{TARGET(kX86), PRECISION(kFloat)});
+  valid_places.push_back(
+      paddle::lite_api::Place{TARGET(kX86), PRECISION(kInt8)});
+  valid_places.push_back(
+      paddle::lite_api::Place{TARGET(kX86), PRECISION(kFloat)});
 #endif
   cxx_config.set_valid_places(valid_places);
   cxx_config.set_nnadapter_device_names({nnadapter_device_names});
@@ -298,18 +330,27 @@ int main(int argc, char **argv) {
   // Set the subgraph custom partition configuration file
   if (!nnadapter_subgraph_partition_config_path.empty()) {
     std::vector<char> nnadapter_subgraph_partition_config_buffer;
-    if (read_file(nnadapter_subgraph_partition_config_path, &nnadapter_subgraph_partition_config_buffer, false)) {
+    if (read_file(nnadapter_subgraph_partition_config_path,
+                  &nnadapter_subgraph_partition_config_buffer,
+                  false)) {
       if (!nnadapter_subgraph_partition_config_buffer.empty()) {
-        std::string nnadapter_subgraph_partition_config_string(nnadapter_subgraph_partition_config_buffer.data(), nnadapter_subgraph_partition_config_buffer.size());
-        cxx_config.set_nnadapter_subgraph_partition_config_buffer(nnadapter_subgraph_partition_config_string);
+        std::string nnadapter_subgraph_partition_config_string(
+            nnadapter_subgraph_partition_config_buffer.data(),
+            nnadapter_subgraph_partition_config_buffer.size());
+        cxx_config.set_nnadapter_subgraph_partition_config_buffer(
+            nnadapter_subgraph_partition_config_string);
       }
     } else {
-      printf("Failed to load the subgraph custom partition configuration file %s\n", nnadapter_subgraph_partition_config_path.c_str());
+      printf(
+          "Failed to load the subgraph custom partition configuration file "
+          "%s\n",
+          nnadapter_subgraph_partition_config_path.c_str());
     }
   }
   try {
     predictor = paddle::lite_api::CreatePaddlePredictor(cxx_config);
-    predictor->SaveOptimizedModel(model_dir, paddle::lite_api::LiteModelType::kNaiveBuffer);
+    predictor->SaveOptimizedModel(
+        model_dir, paddle::lite_api::LiteModelType::kNaiveBuffer);
   } catch (std::exception e) {
     printf("An internal error occurred in PaddleLite(cxx config).\n");
     return -1;
@@ -325,18 +366,25 @@ int main(int argc, char **argv) {
   mobile_config.set_nnadapter_context_properties(nnadapter_context_properties);
   // Set the model cache buffer and directory
   mobile_config.set_nnadapter_model_cache_dir(nnadapter_model_cache_dir);
-  if (!nnadapter_model_cache_token.empty() && !nnadapter_model_cache_dir.empty()) {
+  if (!nnadapter_model_cache_token.empty() &&
+      !nnadapter_model_cache_dir.empty()) {
     std::vector<char> nnadapter_model_cache_buffer;
-    std::string nnadapter_model_cache_path = nnadapter_model_cache_dir + "/" + nnadapter_model_cache_token + ".nnc";
-    if (!read_file(nnadapter_model_cache_path, &nnadapter_model_cache_buffer, true)) {
-      printf("Failed to load the cache model file %s\n", nnadapter_model_cache_path.c_str());
+    std::string nnadapter_model_cache_path =
+        nnadapter_model_cache_dir + "/" + nnadapter_model_cache_token + ".nnc";
+    if (!read_file(
+            nnadapter_model_cache_path, &nnadapter_model_cache_buffer, true)) {
+      printf("Failed to load the cache model file %s\n",
+             nnadapter_model_cache_path.c_str());
     }
     if (!nnadapter_model_cache_buffer.empty()) {
-      mobile_config.set_nnadapter_model_cache_buffers(nnadapter_model_cache_token, nnadapter_model_cache_buffer);
+      mobile_config.set_nnadapter_model_cache_buffers(
+          nnadapter_model_cache_token, nnadapter_model_cache_buffer);
     }
   }
   try {
-    predictor = paddle::lite_api::CreatePaddlePredictor<paddle::lite_api::MobileConfig>(mobile_config);
+    predictor =
+        paddle::lite_api::CreatePaddlePredictor<paddle::lite_api::MobileConfig>(
+            mobile_config);
     process(image_data.data(), word_labels, predictor);
   } catch (std::exception e) {
     printf("An internal error occurred in PaddleLite(mobile config).\n");

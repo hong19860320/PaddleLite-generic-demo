@@ -15,7 +15,7 @@ rockchip_npu_rv1109_test_device_name="192.168.100.13 22 root rockchip"
 amlogic_npu_test_device_name="192.168.100.244 22 root 123456"
 # ImaginationNNA
 imagination_nna_test_device_name="192.168.100.10 22 img imgroc1"
-# HuaweiAscendNPU]
+# HuaweiAscendNPU
 huawei_ascend_npu_arm64_test_device_name="localhost 9022 root root"
 huawei_ascend_npu_amd64_test_device_name="localhost 9022 root root"
 # VerisiliconTIMVX
