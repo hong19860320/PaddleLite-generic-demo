@@ -76,7 +76,7 @@ if [ "$NNADAPTER_DEVICE_NAMES" == "rockchip_npu" ]; then
   adb $ADB_DEVICE_NAME shell "echo $(cat /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq) > /sys/devices/system/cpu/cpufreq/policy0/scaling_setspeed"
 fi
 
-EXPORT_ENVIRONMENT_VARIABLES="$EXPORT_ENVIRONMENT_VARIABLES; export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:.:./$NNADAPTER_DEVICE_NAMES"
+EXPORT_ENVIRONMENT_VARIABLES="$EXPORT_ENVIRONMENT_VARIABLES; export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:.:./$NNADAPTER_DEVICE_NAMES:./cpu"
 
 BUILD_DIR=build.${TARGET_OS}.${TARGET_ABI}
 
@@ -86,6 +86,7 @@ adb $ADB_DEVICE_NAME shell "rm -rf $WORK_SPACE"
 adb $ADB_DEVICE_NAME shell "mkdir -p $WORK_SPACE"
 adb $ADB_DEVICE_NAME push ../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/libpaddle_*.so $WORK_SPACE
 adb $ADB_DEVICE_NAME push ../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/$NNADAPTER_DEVICE_NAMES/. $WORK_SPACE
+adb $ADB_DEVICE_NAME push ../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/cpu/. $WORK_SPACE
 adb $ADB_DEVICE_NAME push ../assets/models/$MODEL_NAME $WORK_SPACE
 set +e
 adb $ADB_DEVICE_NAME push ../assets/models/${MODEL_NAME}.nb $WORK_SPACE

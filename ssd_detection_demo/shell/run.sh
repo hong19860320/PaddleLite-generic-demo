@@ -78,7 +78,7 @@ if [ "$NNADAPTER_DEVICE_NAMES" == "imagination_nna" ]; then
   echo performance > /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
 fi
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.:../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib:../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/$NNADAPTER_DEVICE_NAMES
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.:../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib:../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/$NNADAPTER_DEVICE_NAMES:../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/cpu
 if [ "$NNADAPTER_DEVICE_NAMES" == "huawei_ascend_npu" ]; then
     HUAWEI_ASCEND_TOOLKIT_HOME="/usr/local/Ascend/ascend-toolkit/latest"
     if [ "$TARGET_OS" == "linux" ]; then
