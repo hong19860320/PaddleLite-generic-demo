@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 USE_FULL_API=TRUE
 # Settings only for Android
 ANDROID_NDK=/opt/android-ndk-r17c # docker
