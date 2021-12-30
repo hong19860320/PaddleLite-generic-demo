@@ -80,13 +80,16 @@ EXPORT_ENVIRONMENT_VARIABLES="$EXPORT_ENVIRONMENT_VARIABLES; export LD_LIBRARY_P
 BUILD_DIR=build.${TARGET_OS}.${TARGET_ABI}
 
 # Please install adb, and DON'T run this in the docker.
+set -e
 adb $ADB_DEVICE_NAME shell "rm -rf $WORK_SPACE"
 adb $ADB_DEVICE_NAME shell "mkdir -p $WORK_SPACE"
 adb $ADB_DEVICE_NAME push ../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/libpaddle_*.so $WORK_SPACE
 adb $ADB_DEVICE_NAME push ../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/$NNADAPTER_DEVICE_NAMES/* $WORK_SPACE
 adb $ADB_DEVICE_NAME push ../assets/models/$MODEL_NAME $WORK_SPACE
+set +e
 adb $ADB_DEVICE_NAME push ../assets/models/${MODEL_NAME}.nb $WORK_SPACE
 adb $ADB_DEVICE_NAME push ../assets/models/*.nnc $WORK_SPACE
+set -e
 adb $ADB_DEVICE_NAME push ../assets/labels/. $WORK_SPACE
 adb $ADB_DEVICE_NAME push ../assets/images/. $WORK_SPACE
 adb $ADB_DEVICE_NAME push $BUILD_DIR/ssd_detection_demo $WORK_SPACE

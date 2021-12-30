@@ -5,7 +5,7 @@ readlinkf() {
   perl -MCwd -e 'print Cwd::abs_path shift' "$1";
 }
 
-cur_dir=$(readlinkf $(pwd))
+root_dir=$(readlinkf $(pwd)/../../)
 
 # User config
 src_dir=/Work/Paddle-Lite/experiment/Paddle-Lite
@@ -132,11 +132,10 @@ build_and_update_lib() {
     return 0
   fi
 
-  lib_dir=$cur_dir/libs/PaddleLite/$os/$lib_abi
+  lib_dir=$root_dir/libs/PaddleLite/$os/$lib_abi
   if [ -d "$build_dir" ] && [ $rebuild_all -eq 0 ]; then
     cd $build_dir
     make -j8 publish_inference
-    cd $cur_dir
   else
     if [ $tiny_publish -eq 0 ]; then
       build_cmd="$build_cmd full_publish"
@@ -144,7 +143,6 @@ build_and_update_lib() {
     rm -rf $build_dir
     cd $src_dir
     ./lite/tools/build_${os}.sh ${build_cmd}
-    cd $cur_dir
   fi
 
   lib_name="libpaddle_light_api_shared.so"

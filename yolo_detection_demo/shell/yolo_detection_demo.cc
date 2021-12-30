@@ -174,7 +174,7 @@ std::vector<RESULT> postprocess(const float *output_data,
 }
 
 void process(const float *image_data,
-             const std::vector<float> &output_result,
+             std::vector<float> *output_result,
              const std::vector<std::string> &word_labels,
              std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor) {
   // Preprocess image and fill the data of input tensor
@@ -243,8 +243,8 @@ void process(const float *image_data,
   for (auto dim : output_tensor->shape()) {
     output_size *= dim;
   }
-  output_result.resize(output_size);
-  memcpy(output_result.data(), output_data, output_size * sizeof(float));
+  output_result->resize(output_size);
+  memcpy(output_result->data(), &output_data, output_size * sizeof(float));
   double postprocess_start_time = get_current_us();
   std::vector<RESULT> results = postprocess(
       output_data, output_size, input_width, input_height, word_labels);
@@ -404,7 +404,7 @@ int main(int argc, char **argv) {
         paddle::lite_api::CreatePaddlePredictor<paddle::lite_api::MobileConfig>(
             mobile_config);
     std::vector<float> result_data;
-    process(image_data.data(), result_data, word_labels, predictor);
+    process(image_data.data(), &result_data, word_labels, predictor);
     std::ofstream result_file(
         result_path,
         std::ios::out | std::ios::binary);  // dump the output tensor to file
