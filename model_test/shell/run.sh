@@ -74,6 +74,7 @@ WORK_SPACE="~/test"
 # RK1808EVB, TB-RK1808S0, Kunpeng-920+Ascend310: TARGET_OS=linux and TARGET_ABI=arm64
 # RK1806EVB, RV1109/1126 EVB: TARGET_OS=linux and TARGET_ABI=armhf 
 # Intel-x86+Ascend310: TARGET_OS=linux and TARGET_ABI=amd64
+# Intel-x86+CambriconMLU: TARGET_OS=linux and TARGET_ABI=amd64
 TARGET_OS=linux
 if [ -n "$6" ]; then
     TARGET_OS=$6
@@ -88,6 +89,7 @@ fi
 # MT8168/8175: NNADAPTER_DEVICE_NAMES=mediatek_apu
 # Kirin810/820/985/990/9000/9000E: NNADAPTER_DEVICE_NAMES=huawei_kirin_npu
 # Ascend310: NNADAPTER_DEVICE_NAMES=huawei_ascend_npu
+# CambriconMLU: NNADAPTER_DEVICE_NAMES=cambricon_mlu
 # CPU only: NNADAPTER_DEVICE_NAMES=cpu
 NNADAPTER_DEVICE_NAMES="cpu"
 if [ -n "$8" ]; then
@@ -162,6 +164,10 @@ if [ "$NNADAPTER_DEVICE_NAMES" == "kunlunxin_xtcl" ]; then
     export XTCL_CONV_USE_FP16=1
     export XTCL_QUANTIZE_WEIGHT=1
     export XTCL_L3_SIZE=16777216
+fi
+
+if [ "$NNADAPTER_DEVICE_NAMES" == "cambricon_mlu" ]; then
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/neuware/lib64"
 fi
 
 BUILD_DIR=build.${TARGET_OS}.${TARGET_ABI}
