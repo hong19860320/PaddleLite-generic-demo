@@ -4,25 +4,25 @@ set -e
 # User config
 # Set it to empty if you do not want to test on the specified hardware
 # HuaweiKirinNPU
-# huawei_kirin_npu_test_device_name=UQG0220A15000356
-# # MediatekAPU
-# mediatek_apu_test_device_name=0123456789ABCDEF
-# # RockchipNPU
-# rockchip_npu_rk1808evb_test_device_name=a133d8abb26137b2
-# rockchip_npu_tb_rk1808s0_test_device_name="192.168.180.8 22 toybrick toybrick"
-# rockchip_npu_rv1109_test_device_name="192.168.100.13 22 root rockchip"
-# # AmlogicNPU
-# amlogic_npu_test_device_name="192.168.100.244 22 root 123456"
-# # ImaginationNNA
-# imagination_nna_test_device_name="192.168.100.10 22 img imgroc1"
-# # HuaweiAscendNPU
-# huawei_ascend_npu_arm64_test_device_name="localhost 9022 root root"
-# huawei_ascend_npu_amd64_test_device_name="localhost 9022 root root"
-# # VerisiliconTIMVX
-# verisilicon_timvx_armlinux_test_device_name="192.168.100.30 22 khadas khadas"
-# # KunlunxinXTCL
-# #kunlunxin_xtcl_arm64_test_device_name="localhost 9023 root root"
-# kunlunxin_xtcl_amd64_test_device_name="localhost 9023 root root"
+huawei_kirin_npu_test_device_name=UQG0220A15000356
+# MediatekAPU
+mediatek_apu_test_device_name=0123456789ABCDEF
+# RockchipNPU
+rockchip_npu_rk1808evb_test_device_name=a133d8abb26137b2
+rockchip_npu_tb_rk1808s0_test_device_name="192.168.180.8 22 toybrick toybrick"
+rockchip_npu_rv1109_test_device_name="192.168.100.13 22 root rockchip"
+# AmlogicNPU
+amlogic_npu_test_device_name="192.168.100.244 22 root 123456"
+# ImaginationNNA
+imagination_nna_test_device_name="192.168.100.10 22 img imgroc1"
+# HuaweiAscendNPU
+huawei_ascend_npu_arm64_test_device_name="localhost 9022 root root"
+huawei_ascend_npu_amd64_test_device_name="localhost 9022 root root"
+# VerisiliconTIMVX
+verisilicon_timvx_armlinux_test_device_name="192.168.100.30 22 khadas khadas"
+# KunlunxinXTCL
+#kunlunxin_xtcl_arm64_test_device_name="localhost 9023 root root"
+kunlunxin_xtcl_amd64_test_device_name="localhost 9023 root root"
 # CambriconMLU
 cambricon_mlu_amd64_test_device_name="localhost 9031 root root"
 
