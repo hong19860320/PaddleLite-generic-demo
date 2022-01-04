@@ -23,6 +23,8 @@ verisilicon_timvx_armlinux_test_device_name="192.168.100.30 22 khadas khadas"
 # KunlunxinXTCL
 #kunlunxin_xtcl_arm64_test_device_name="localhost 9023 root root"
 kunlunxin_xtcl_amd64_test_device_name="localhost 9023 root root"
+# CambriconMLU
+cambricon_mlu_amd64_test_device_name="localhost 9031 root root"
 
 readlinkf() {
   perl -MCwd -e 'print Cwd::abs_path shift' "$1";
@@ -189,6 +191,17 @@ build_and_run_image_classification_demo() {
     ./run_with_ssh.sh resnet50_fp32_224 linux amd64 cpu $kunlunxin_xtcl_amd64_test_device_name
     echo "Perform step $test_name 54"
     ./run_with_ssh.sh resnet50_fp32_224 linux amd64 kunlunxin_xtcl $kunlunxin_xtcl_amd64_test_device_name
+  fi
+  if [ -n "$cambricon_mlu_amd64_test_device_name" ]; then
+    echo "Running on device: x86 CPU + CambriconMLU 370"
+    echo "Perform step $test_name 55"
+    ./run_with_ssh.sh mobilenet_v1_fp32_224 linux amd64 cpu $cambricon_mlu_amd64_test_device_name
+    echo "Perform step $test_name 56"
+    ./run_with_ssh.sh mobilenet_v1_fp32_224 linux amd64 cambricon_mlu $cambricon_mlu_amd64_test_device_name
+    echo "Perform step $test_name 57"
+    ./run_with_ssh.sh resnet50_fp32_224 linux amd64 cpu $cambricon_mlu_amd64_test_device_name
+    echo "Perform step $test_name 58"
+    ./run_with_ssh.sh resnet50_fp32_224 linux amd64 cambricon_mlu $cambricon_mlu_amd64_test_device_name
   fi
   echo "done"
 }
@@ -418,6 +431,13 @@ build_and_run_yolo_detection_demo() {
     echo "Perform step $test_name 30"
     ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux amd64 kunlunxin_xtcl $kunlunxin_xtcl_amd64_test_device_name
   fi
+  if [ -n "$cambricon_mlu_amd64_test_device_name" ]; then
+    echo "Running on device: x86 CPU + Cambricon MLU370"
+    echo "Perform step $test_name 31"
+    ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux amd64 cpu $cambricon_mlu_amd64_test_device_name
+    echo "Perform step $test_name 32"
+    ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux amd64 cambricon_mlu $cambricon_mlu_amd64_test_device_name
+  fi
   echo "done"
 }
 
@@ -533,6 +553,13 @@ build_and_run_model_test() {
     ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux amd64 cpu $kunlunxin_xtcl_amd64_test_device_name
     echo "Perform step $test_name 30"
     ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux amd64 kunlunxin_xtcl $kunlunxin_xtcl_amd64_test_device_name
+  fi
+  if [ -n "$cambricon_mlu_amd64_test_device_name" ]; then
+    echo "Running on device: x86 CPU + Cambricon MLU370"
+    echo "Perform step $test_name 31"
+    ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux amd64 cpu $cambricon_mlu_amd64_test_device_name
+    echo "Perform step $test_name 32"
+    ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux amd64 cambricon_mlu $cambricon_mlu_amd64_test_device_name
   fi
   echo "done"
 }
