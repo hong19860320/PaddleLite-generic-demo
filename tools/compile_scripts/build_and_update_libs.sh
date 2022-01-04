@@ -33,6 +33,9 @@ ascend_toolkit_aarch64_linux=$src_dir/ascend-toolkit-aarch64-linux/3.3.0
 ascend_toolkit_x86_64_linux=$src_dir/ascend-toolkit-x86_64-linux/3.3.0
 # KunlunxinXTCL
 build_kunlunxin_xtcl=1 # No need to set the SDK path since it can be downloaded automatically
+# CambriconMLU
+build_cambricon_mlu=1
+cambricon_mlu_sdk=$src_dir/neuware
 
 build_and_update_lib() {
   local os=$1
@@ -118,6 +121,10 @@ build_and_update_lib() {
         build_cmd="$build_cmd --nnadapter_with_kunlunxin_xtcl=ON"
         device_list=( "${device_list[@]}" "kunlunxin_xtcl" )
       fi
+      if [ $build_cambricon_mlu -ne 0 ]; then
+        build_cmd="$build_cmd --nnadapter_with_cambricon_mlu=ON --nnadapter_cambricon_mlu_sdk_root=$cambricon_mlu_sdk"
+        device_list=( "${device_list[@]}" "cambricon_mlu" )
+      fi
       if [ $disable_huawei_ascend_npu -eq 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_huawei_ascend_npu=ON --nnadapter_huawei_ascend_npu_sdk_root=$ascend_toolkit_x86_64_linux"
         device_list=( "huawei_ascend_npu" )
@@ -194,7 +201,7 @@ echo "3/14"
 build_and_update_lib android armv7 clang 1 0 1
 echo "4/14"
 build_and_update_lib android armv7 clang 1 1 1
-# Linux amd64: KunlunxinXTCL/x86
+# Linux amd64: KunlunxinXTCL/x86, CambriconMLU/x86
 echo "5/14"
 build_and_update_lib linux x86 gcc 1 0 1
 echo "6/14"

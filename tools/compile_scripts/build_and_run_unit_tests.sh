@@ -25,6 +25,8 @@ src_dir=/Work/Paddle-Lite/experiment/Paddle-Lite
 #nnadapter_device_list="c8631471d5cd"
 # KunlunxinXTCL
 #nnadapter_device_name="kunlunxin_xtcl" # No need to set 'nnadapter_device_list' because this script must be run on the device locally
+# CambriconMLU
+#nnadapter_device_name="cambricon_mlu" # No need to set 'nnadapter_device_list' because this script must be run on the device locally
 
 if [ -z $nnadapter_device_name ]; then
   echo "nnadapter_device_name should not be empty!"
@@ -111,6 +113,12 @@ elif [ "$nnadapter_device_name" = "kunlunxin_xtcl" ]; then
   unit_test_check_list="test_kernel_activation_compute,test_mobilenet_v1_fp32_v1_8_nnadapter,test_mobilenet_v1_fp32_v2_0_nnadapter,test_resnet50_fp32_v1_8_nnadapter,test_resnet50_fp32_v2_0_nnadapter,test_ssd_mobilenet_v1_relu_voc_fp32_v1_8_nnadapter"
   unit_test_filter_type=1
   build_target=kunlunxin_xtcl_build_and_test
+elif [ "$nnadapter_device_name" = "cambricon_mlu" ]; then
+  arch=x86
+  toolchain=gcc
+  unit_test_check_list="test_kernel_argmax_compute,test_light_api,test_apis,test_paddle_api,test_cxx_api,test_vector_view"
+  unit_test_filter_type=0
+  build_target=cambricon_mlu_build_and_test
 else
   echo "nnadapter_device_name($nnadapter_device_name) is not supported."
   exit 1
