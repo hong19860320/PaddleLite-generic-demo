@@ -190,7 +190,7 @@ export LIT_BUILD_THREAD=8
 # tiny_publish: 0, 1
 # disable_huawei_ascend_npu: 0, 1
 
-#=:<<!
+#:<<!
 # Android arm64-v8a: HuaweiKirinNPU
 echo "1/14"
 build_and_update_lib android armv8 clang 1 0 1
