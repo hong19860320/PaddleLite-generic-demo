@@ -3,29 +3,29 @@ set -e
 
 # User config
 src_dir=/Work/Paddle-Lite/experiment/Paddle-Lite
-# HuaweiKirinNPU
+# Huawei Kirin NPU
 #nnadapter_device_name="huawei_kirin_npu"
 #nnadapter_device_list="UQG0220A15000356"
-# MediatekAPU
+# Mediatek APU
 #nnadapter_device_name="mediatek_apu"
 #nnadapter_device_list="0123456789ABCDEF"
-# RockchipNPU
+# Rockchip NPU
 #nnadapter_device_name="rockchip_npu"
 #nnadapter_device_list="192.168.180.8,22,toybrick,toybrick"
-# HuaweiAscendNPU
+# Huawei Ascend NPU
 #nnadapter_device_name="huawei_ascend_npu" # No need to set 'nnadapter_device_list' because this script must be run on the device locally
-# AmlogicNPU
+# Amlogic NPU
 #nnadapter_device_name="amlogic_npu"
 #nnadapter_device_list="192.168.100.244,22,root,123456"
-# ImaginationNNA
+# Imagination NNA
 #nnadapter_device_name="imagination_nna"
 #nnadapter_device_list="192.168.100.10,22,img,imgroc1"
-# VerisiliconTIMVX
+# Verisilicon TIM-VX
 #nnadapter_device_name="verisilicon_timvx"
 #nnadapter_device_list="c8631471d5cd"
-# KunlunxinXTCL
+# Kunlunxin XTCL
 #nnadapter_device_name="kunlunxin_xtcl" # No need to set 'nnadapter_device_list' because this script must be run on the device locally
-# CambriconMLU
+# Cambricon MLU
 #nnadapter_device_name="cambricon_mlu" # No need to set 'nnadapter_device_list' because this script must be run on the device locally
 
 if [ -z $nnadapter_device_name ]; then
