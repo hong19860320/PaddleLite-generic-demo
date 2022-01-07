@@ -9,31 +9,32 @@ root_dir=$(readlinkf $(pwd)/../../)
 
 # User config
 src_dir=/Work/Paddle-Lite/experiment/Paddle-Lite
-# HuaweiKirinNPU
+# Huawei Kirin NPU
 build_huawei_kirin_npu=1
 hiai_ddk_lib=$src_dir/hiai_ddk_lib_510
-# MediatekAPU
+# Mediatek APU
 build_mediatek_apu=1
 apu_ddk=$src_dir/apu_ddk
-# RockchipNPU
+# Rockchip NPU
 build_rockchip_npu=1
 rknpu_ddk=$src_dir/rknpu_ddk
-# AmlogicNPU
+# Amlogic NPU
 build_amlogic_npu=1
 amlnpu_ddk_android=$src_dir/amlnpu_ddk_android
 amlnpu_ddk_linux=$src_dir/amlnpu_ddk_linux
-# ImaginationNNA
+# Imagination NNA
 build_imagination_nna=1
 imagination_nna_sdk=$src_dir/imagination_nna_sdk
-# VerisiliconTIMVX
+# Verisilicon TIM-VX
 build_verisilicon_timvx=1 # No need to set the SDK path since it can be downloaded automatically
-# HuaweiAscendNPU
+# Huawei Ascend NPU
 build_huawei_ascend_npu=1
 ascend_toolkit_aarch64_linux=$src_dir/ascend-toolkit-aarch64-linux/3.3.0
 ascend_toolkit_x86_64_linux=$src_dir/ascend-toolkit-x86_64-linux/3.3.0
-# KunlunxinXTCL
-build_kunlunxin_xtcl=1 # No need to set the SDK path since it can be downloaded automatically
-# CambriconMLU
+# Kunlunxin XTCL
+build_kunlunxin_xtcl=1
+kunlunxin_xtcl_sdk_url=http://baidu-kunlun-product.cdn.bcebos.com/KL-SDK/klsdk-dev/20211228/
+# Cambricon MLU
 build_cambricon_mlu=1
 cambricon_mlu_sdk=$src_dir/neuware
 
@@ -101,7 +102,7 @@ build_and_update_lib() {
         device_list=( "${device_list[@]}" "verisilicon_timvx" )
       fi
       if [ $build_kunlunxin_xtcl -ne 0 ]; then
-        build_cmd="$build_cmd --nnadapter_with_kunlunxin_xtcl=ON"
+        build_cmd="$build_cmd --nnadapter_with_kunlunxin_xtcl=ON --nnadapter_kunlunxin_xtcl_sdk_url=$kunlunxin_xtcl_sdk_url"
         device_list=( "${device_list[@]}" "kunlunxin_xtcl" )
       fi
       if [ $disable_huawei_ascend_npu -eq 0 ]; then
@@ -118,7 +119,7 @@ build_and_update_lib() {
     elif [ "$arch" = "x86" ]; then
       lib_abi="amd64"
       if [ $build_kunlunxin_xtcl -ne 0 ]; then
-        build_cmd="$build_cmd --nnadapter_with_kunlunxin_xtcl=ON"
+        build_cmd="$build_cmd --nnadapter_with_kunlunxin_xtcl=ON --nnadapter_kunlunxin_xtcl_sdk_url=$kunlunxin_xtcl_sdk_url"
         device_list=( "${device_list[@]}" "kunlunxin_xtcl" )
       fi
       if [ $build_cambricon_mlu -ne 0 ]; then
@@ -191,12 +192,12 @@ export LIT_BUILD_THREAD=8
 # disable_huawei_ascend_npu: 0, 1
 
 #:<<!
-# Android arm64-v8a: HuaweiKirinNPU
+# Android arm64-v8a: Huawei Kirin NPU
 echo "1/14"
 build_and_update_lib android armv8 clang 1 0 1
 echo "2/14"
 build_and_update_lib android armv8 clang 1 1 1
-# Android armeabi-v7a: HuaweiKirinNPU, MediaTekAPU, AmlogicNPU, TIM-VX
+# Android armeabi-v7a: Huawei Kirin NPU, MediaTek APU, Amlogic NPU, Verisilicon TIM-VX
 echo "3/14"
 build_and_update_lib android armv7 clang 1 0 1
 echo "4/14"
@@ -206,23 +207,23 @@ echo "5/14"
 build_and_update_lib linux x86 gcc 1 0 1
 echo "6/14"
 build_and_update_lib linux x86 gcc 1 1 1
-# Linux arm64: RockchipNPU, AmlogicNPU, ImaginationNNA, TIM-VX, KunlunxinXTCL
+# Linux arm64: Rockchip NPU, Amlogic NPU, Imagination NNA, Verisilicon TIM-VX, Kunlunxin XTCL
 echo "7/14"
 build_and_update_lib linux armv8 gcc 1 0 1
 echo "8/14"
 build_and_update_lib linux armv8 gcc 1 1 1
-# Linux armhf: RockchipNPU
+# Linux armhf: Rockchip NPU
 echo "9/14"
 build_and_update_lib linux armv7hf gcc 1 0 1
 echo "10/14"
 build_and_update_lib linux armv7hf gcc 1 1 1
 if [[ $build_huawei_ascend_npu -ne 0 ]]; then
-    # Linux amd64: HuaweiAscendNPU/x86
+    # Linux amd64: Huawei Ascend NPU / x86
     echo "11/14"
     build_and_update_lib linux x86 gcc 1 0 0
     echo "12/14"
     build_and_update_lib linux x86 gcc 1 1 0
-    # Linux arm64: HuaweiAscendNPU/aarch64
+    # Linux arm64: Huawei Ascend NPU / aarch64
     echo "13/14"
     build_and_update_lib linux armv8 gcc 1 0 0
     echo "14/14"
