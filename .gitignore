@@ -50,3 +50,6 @@ log.txt
 *.log
 *.nb
 build.*/
+
+# Private files and directories
+/projects
