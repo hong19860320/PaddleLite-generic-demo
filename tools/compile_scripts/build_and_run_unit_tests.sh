@@ -4,8 +4,8 @@ set -e
 # User config
 src_dir=/Work/Paddle-Lite/experiment/Paddle-Lite
 # Huawei Kirin NPU
-#nnadapter_device_name="huawei_kirin_npu"
-#nnadapter_device_list="UQG0220A15000356"
+nnadapter_device_name="huawei_kirin_npu"
+nnadapter_device_list="UQG0220A15000356"
 # Mediatek APU
 #nnadapter_device_name="mediatek_apu"
 #nnadapter_device_list="0123456789ABCDEF"
@@ -36,8 +36,10 @@ if [ "$nnadapter_device_name" = "huawei_kirin_npu" ]; then
   os=android
   arch=armv7
   toolchain=clang
-  unit_test_check_list="test_mobilenet_v1_fp32_nnadapter,test_resnet50_fp32_nnadapter,test_ssd_mobilenet_v1_relu_voc_fp32_nnadapter"
-  unit_test_filter_type=1
+  unit_test_check_list="test_light_api,test_apis,test_paddle_api,test_cxx_api,test_vector_view,test_gen_code,test_generated_code,test_mobilenetv1_int8,test_mobilenetv1,test_mobilenetv1_int16,test_mobilenetv2,test_resnet50,test_inceptionv4,test_fast_rcnn,test_resnet50_fpga,test_mobilenetv1_opt_quant,sgemv_compute_test,test_kernel_decode_bboxes_compute,test_decode_bboxes_compute_arm"
+  unit_test_filter_type=0
+  #unit_test_check_list="test_kernel_activation_compute"
+  #unit_test_filter_type=1
   remote_device_type=0
   remote_device_list=$nnadapter_device_list
   build_target=huawei_kirin_npu_build_and_test
