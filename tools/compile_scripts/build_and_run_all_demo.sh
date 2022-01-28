@@ -9,7 +9,7 @@ huawei_kirin_npu_test_device_name=UQG0220A15000356
 mediatek_apu_test_device_name=0123456789ABCDEF
 # Rockchip NPU
 rockchip_npu_rk1808evb_test_device_name=a133d8abb26137b2
-rockchip_npu_tb_rk1808s0_test_device_name="192.168.180.8 22 toybrick toybrick"
+rockchip_npu_tb_rk1808s0_test_device_name="192.168.182.8 22 toybrick toybrick"
 rockchip_npu_rv1109_test_device_name="192.168.100.13 22 root rockchip"
 # Amlogic NPU
 amlogic_npu_test_device_name="192.168.100.244 22 root 123456"
@@ -19,9 +19,10 @@ imagination_nna_test_device_name="192.168.100.10 22 img imgroc1"
 huawei_ascend_npu_arm64_test_device_name="localhost 9022 root root"
 huawei_ascend_npu_amd64_test_device_name="localhost 9022 root root"
 # Verisilicon TIM-VX
+verisilicon_timvx_android_test_device_name="c8631471d5cd"
 verisilicon_timvx_armlinux_test_device_name="192.168.100.30 22 khadas khadas"
 # Kunlunxin XTCL
-#kunlunxin_xtcl_arm64_test_device_name="localhost 9023 root root"
+kunlunxin_xtcl_arm64_test_device_name="localhost 22 root root"
 kunlunxin_xtcl_amd64_test_device_name="localhost 9023 root root"
 # Cambricon MLU
 cambricon_mlu_amd64_test_device_name="localhost 9031 root root"
@@ -76,135 +77,154 @@ build_and_run_image_classification_demo() {
     echo "Perform step $test_name 14"
     ./run_with_adb.sh resnet50_int8_224_per_layer android armeabi-v7a mediatek_apu $mediatek_apu_test_device_name
   fi
+  if [ -n "$verisilicon_timvx_android_test_device_name" ]; then
+    echo "Running on device: Khadas"
+    echo "Perform step $test_name 15"
+    ./run_with_adb.sh mobilenet_v1_int8_224_per_layer android armeabi-v7a cpu $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 16"
+    ./run_with_adb.sh mobilenet_v1_int8_224_per_layer android armeabi-v7a verisilicon_timvx $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 17"
+    ./run_with_adb.sh mobilenet_v1_fp32_224 android armeabi-v7a cpu $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 18"
+    ./run_with_adb.sh mobilenet_v1_fp32_224 android armeabi-v7a verisilicon_timvx $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 19"
+    ./run_with_adb.sh resnet50_int8_224_per_layer android armeabi-v7a cpu $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 20"
+    ./run_with_adb.sh resnet50_int8_224_per_layer android armeabi-v7a verisilicon_timvx $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 21"
+    ./run_with_adb.sh resnet50_fp32_224 android armeabi-v7a cpu $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 22"
+    ./run_with_adb.sh resnet50_fp32_224 android armeabi-v7a verisilicon_timvx $verisilicon_timvx_android_test_device_name
+  fi
   # linux arm64
   ./build.sh linux arm64
   if [ -n "$rockchip_npu_rk1808evb_test_device_name" ]; then
     echo "Running on device: RK1808EVB"
-    echo "Perform step $test_name 15"
+    echo "Perform step $test_name 23"
     ./run_with_adb.sh mobilenet_v1_int8_224_per_layer linux arm64 cpu $rockchip_npu_rk1808evb_test_device_name
-    echo "Perform step $test_name 16"
+    echo "Perform step $test_name 24"
     ./run_with_adb.sh mobilenet_v1_int8_224_per_layer linux arm64 rockchip_npu $rockchip_npu_rk1808evb_test_device_name
-    echo "Perform step $test_name 17"
+    echo "Perform step $test_name 25"
     ./run_with_adb.sh resnet50_int8_224_per_layer linux arm64 cpu $rockchip_npu_rk1808evb_test_device_name
-    echo "Perform step $test_name 18"
+    echo "Perform step $test_name 26"
     ./run_with_adb.sh resnet50_int8_224_per_layer linux arm64 rockchip_npu $rockchip_npu_rk1808evb_test_device_name
   fi
   if [ -n "$rockchip_npu_tb_rk1808s0_test_device_name" ]; then
     echo "Running on device: Toybirck TB-RK1808S0"
-    echo "Perform step $test_name 19"
+    echo "Perform step $test_name 27"
     ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer linux arm64 cpu $rockchip_npu_tb_rk1808s0_test_device_name
-    echo "Perform step $test_name 20"
+    echo "Perform step $test_name 28"
     ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer linux arm64 rockchip_npu $rockchip_npu_tb_rk1808s0_test_device_name
-    echo "Perform step $test_name 21"
+    echo "Perform step $test_name 29"
     ./run_with_ssh.sh resnet50_int8_224_per_layer linux arm64 cpu $rockchip_npu_tb_rk1808s0_test_device_name
-    echo "Perform step $test_name 22"
+    echo "Perform step $test_name 30"
     ./run_with_ssh.sh resnet50_int8_224_per_layer linux arm64 rockchip_npu $rockchip_npu_tb_rk1808s0_test_device_name
   fi
   if [ -n "$amlogic_npu_test_device_name" ]; then
     echo "Running on device: Amlogic A311D"
-    echo "Perform step $test_name 23"
+    echo "Perform step $test_name 35"
     ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer linux arm64 cpu $amlogic_npu_test_device_name
-    echo "Perform step $test_name 24"
+    echo "Perform step $test_name 36"
     ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer linux arm64 amlogic_npu $amlogic_npu_test_device_name
-    echo "Perform step $test_name 25"
+    echo "Perform step $test_name 37"
     ./run_with_ssh.sh resnet50_int8_224_per_layer linux arm64 cpu $amlogic_npu_test_device_name
-    echo "Perform step $test_name 26"
+    echo "Perform step $test_name 38"
     ./run_with_ssh.sh resnet50_int8_224_per_layer linux arm64 amlogic_npu $amlogic_npu_test_device_name
   fi
   if [ -n "$imagination_nna_test_device_name" ]; then
     echo "Running on device: ROC1"
-    echo "Perform step $test_name 27"
+    echo "Perform step $test_name 39"
     ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer linux arm64 cpu $imagination_nna_test_device_name
-    echo "Perform step $test_name 28"
+    echo "Perform step $test_name 40"
     ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer linux arm64 imagination_nna $imagination_nna_test_device_name
   fi
   if [ -n "$huawei_ascend_npu_arm64_test_device_name" ]; then
     echo "Running on device: Kunpeng 920 + Huawei Atlas 300C(3000)"
-    echo "Perform step $test_name 29"
+    echo "Perform step $test_name 41"
     ./run_with_ssh.sh mobilenet_v1_fp32_224 linux arm64 cpu $huawei_ascend_npu_arm64_test_device_name
-    echo "Perform step $test_name 30"
+    echo "Perform step $test_name 42"
     ./run_with_ssh.sh mobilenet_v1_fp32_224 linux arm64 huawei_ascend_npu $huawei_ascend_npu_arm64_test_device_name
-    echo "Perform step $test_name 31"
+    echo "Perform step $test_name 43"
     ./run_with_ssh.sh resnet50_fp32_224 linux arm64 cpu $huawei_ascend_npu_arm64_test_device_name
-    echo "Perform step $test_name 32"
+    echo "Perform step $test_name 44"
     ./run_with_ssh.sh resnet50_fp32_224 linux arm64 huawei_ascend_npu $huawei_ascend_npu_arm64_test_device_name
   fi
   if [ -n "$verisilicon_timvx_armlinux_test_device_name" ]; then
-    echo "Running on device: Khadas VIM3"
-    echo "Perform step $test_name 33"
+    echo "Running on device: Khadas"
+    echo "Perform step $test_name 45"
     ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer linux arm64 cpu $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 34"
+    echo "Perform step $test_name 46"
     ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer linux arm64 verisilicon_timvx $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 35"
+    echo "Perform step $test_name 47"
     ./run_with_ssh.sh mobilenet_v1_fp32_224 linux arm64 cpu $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 36"
+    echo "Perform step $test_name 48"
     ./run_with_ssh.sh mobilenet_v1_fp32_224 linux arm64 verisilicon_timvx $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 37"
+    echo "Perform step $test_name 49"
     ./run_with_ssh.sh resnet50_int8_224_per_layer linux arm64 cpu $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 38"
+    echo "Perform step $test_name 50"
     ./run_with_ssh.sh resnet50_int8_224_per_layer linux arm64 verisilicon_timvx $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 39"
-    # ./run_with_ssh.sh resnet50_fp32_224 linux arm64 cpu $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 40"
+    echo "Perform step $test_name 51"
+    ./run_with_ssh.sh resnet50_fp32_224 linux arm64 cpu $verisilicon_timvx_armlinux_test_device_name
+    echo "Perform step $test_name 52"
     ./run_with_ssh.sh resnet50_fp32_224 linux arm64 verisilicon_timvx $verisilicon_timvx_armlinux_test_device_name
   fi
   if [ -n "$kunlunxin_arm64_test_device_name" ]; then
     echo "Running on device: ARM CPU + Kunlunxin K100"
-    echo "Perform step $test_name 41"
+    echo "Perform step $test_name 53"
     ./run_with_ssh.sh mobilenet_v1_fp32_224 linux arm64 cpu $kunlunxin_arm64_test_device_name
-    echo "Perform step $test_name 42"
+    echo "Perform step $test_name 54"
     ./run_with_ssh.sh mobilenet_v1_fp32_224 linux arm64 kunlunxin_xtcl $kunlunxin_arm64_test_device_name
-    echo "Perform step $test_name 43"
+    echo "Perform step $test_name 55"
     ./run_with_ssh.sh resnet50_fp32_224 linux arm64 cpu $kunlunxin_arm64_test_device_name
-    echo "Perform step $test_name 44"
+    echo "Perform step $test_name 56"
     ./run_with_ssh.sh resnet50_fp32_224 linux arm64 kunlunxin_xtcl $kunlunxin_arm64_test_device_name
   fi
   # linux armhf
   ./build.sh linux armhf
   if [ -n "$rockchip_npu_rv1109_test_device_name" ]; then
     echo "Running on device: Dumu RV1109"
-    echo "Perform step $test_name 45"
+    echo "Perform step $test_name 57"
     ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer linux armhf cpu $rockchip_npu_rv1109_test_device_name
-    echo "Perform step $test_name 46"
+    echo "Perform step $test_name 58"
     ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer linux armhf rockchip_npu $rockchip_npu_rv1109_test_device_name
-    echo "Perform step $test_name 47"
+    echo "Perform step $test_name 59"
     ./run_with_ssh.sh resnet50_int8_224_per_layer linux armhf cpu $rockchip_npu_rv1109_test_device_name
-    echo "Perform step $test_name 48"
+    echo "Perform step $test_name 60"
     ./run_with_ssh.sh resnet50_int8_224_per_layer linux armhf rockchip_npu $rockchip_npu_rv1109_test_device_name
   fi
   # linux amd64
   ./build.sh linux amd64
   if [ -n "$huawei_ascend_npu_amd64_test_device_name" ]; then
     echo "Running on device: Intel x86 + Huawei Atlas 300C(3010)"
-    echo "Perform step $test_name 49"
+    echo "Perform step $test_name 61"
     ./run_with_ssh.sh mobilenet_v1_fp32_224 linux amd64 cpu $huawei_ascend_npu_amd64_test_device_name
-    echo "Perform step $test_name 50"
+    echo "Perform step $test_name 62"
     ./run_with_ssh.sh mobilenet_v1_fp32_224 linux amd64 huawei_ascend_npu $huawei_ascend_npu_amd64_test_device_name
-    echo "Perform step $test_name 51"
+    echo "Perform step $test_name 63"
     ./run_with_ssh.sh resnet50_fp32_224 linux amd64 cpu $huawei_ascend_npu_amd64_test_device_name
-    echo "Perform step $test_name 52"
+    echo "Perform step $test_name 64"
     ./run_with_ssh.sh resnet50_fp32_224 linux amd64 huawei_ascend_npu $huawei_ascend_npu_amd64_test_device_name
   fi
   if [ -n "$kunlunxin_xtcl_amd64_test_device_name" ]; then
     echo "Running on device: x86 CPU + Kunlunxin K100"
-    echo "Perform step $test_name 53"
+    echo "Perform step $test_name 65"
     ./run_with_ssh.sh mobilenet_v1_fp32_224 linux amd64 cpu $kunlunxin_xtcl_amd64_test_device_name
-    echo "Perform step $test_name 54"
+    echo "Perform step $test_name 66"
     ./run_with_ssh.sh mobilenet_v1_fp32_224 linux amd64 kunlunxin_xtcl $kunlunxin_xtcl_amd64_test_device_name
-    echo "Perform step $test_name 55"
+    echo "Perform step $test_name 67"
     ./run_with_ssh.sh resnet50_fp32_224 linux amd64 cpu $kunlunxin_xtcl_amd64_test_device_name
-    echo "Perform step $test_name 56"
+    echo "Perform step $test_name 68"
     ./run_with_ssh.sh resnet50_fp32_224 linux amd64 kunlunxin_xtcl $kunlunxin_xtcl_amd64_test_device_name
   fi
   if [ -n "$cambricon_mlu_amd64_test_device_name" ]; then
     echo "Running on device: x86 CPU + CambriconMLU 370"
-    echo "Perform step $test_name 57"
+    echo "Perform step $test_name 69"
     ./run_with_ssh.sh mobilenet_v1_fp32_224 linux amd64 cpu $cambricon_mlu_amd64_test_device_name
-    echo "Perform step $test_name 58"
+    echo "Perform step $test_name 70"
     ./run_with_ssh.sh mobilenet_v1_fp32_224 linux amd64 cambricon_mlu $cambricon_mlu_amd64_test_device_name
-    echo "Perform step $test_name 59"
+    echo "Perform step $test_name 71"
     ./run_with_ssh.sh resnet50_fp32_224 linux amd64 cpu $cambricon_mlu_amd64_test_device_name
-    echo "Perform step $test_name 60"
+    echo "Perform step $test_name 72"
     ./run_with_ssh.sh resnet50_fp32_224 linux amd64 cambricon_mlu $cambricon_mlu_amd64_test_device_name
   fi
   echo "done"
@@ -239,91 +259,102 @@ build_and_run_ssd_detection_demo() {
     echo "Perform step $test_name 6"
     ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer android armeabi-v7a mediatek_apu $mediatek_apu_test_device_name
   fi
+  if [ -n "$verisilicon_timvx_android_test_device_name" ]; then
+    echo "Running on device: Khadas"
+    echo "Perform step $test_name 7"
+    ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer android armeabi-v7a cpu $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 8"
+    ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer android armeabi-v7a verisilicon_timvx $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 9"
+    ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_fp32_300 android armeabi-v7a cpu $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 10"
+    ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_fp32_300 android armeabi-v7a verisilicon_timvx $verisilicon_timvx_android_test_device_name
+  fi
   # linux arm64
   ./build.sh linux arm64
   if [ -n "$rockchip_npu_rk1808evb_test_device_name" ]; then
     echo "Running on device: RK1808EVB"
-    echo "Perform step $test_name 7"
+    echo "Perform step $test_name 11"
     ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer linux arm64 cpu $rockchip_npu_rk1808evb_test_device_name
-    echo "Perform step $test_name 8"
+    echo "Perform step $test_name 12"
     ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer linux arm64 rockchip_npu $rockchip_npu_rk1808evb_test_device_name
   fi
   if [ -n "$rockchip_npu_tb_rk1808s0_test_device_name" ]; then
     echo "Running on device: Toybirck TB-RK1808S0"
-    echo "Perform step $test_name 9"
+    echo "Perform step $test_name 13"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer linux arm64 cpu $rockchip_npu_tb_rk1808s0_test_device_name
-    echo "Perform step $test_name 10"
+    echo "Perform step $test_name 14"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer linux arm64 rockchip_npu $rockchip_npu_tb_rk1808s0_test_device_name
   fi
   if [ -n "$amlogic_npu_test_device_name" ]; then
     echo "Running on device: Amlogic A311D"
-    echo "Perform step $test_name 11"
+    echo "Perform step $test_name 15"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer linux arm64 cpu $amlogic_npu_test_device_name
-    echo "Perform step $test_name 12"
+    echo "Perform step $test_name 16"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer linux arm64 amlogic_npu $amlogic_npu_test_device_name
   fi
   if [ -n "$imagination_nna_test_device_name" ]; then
     echo "Running on device: ROC1"
-    echo "Perform step $test_name 13"
+    echo "Perform step $test_name 17"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer linux arm64 cpu $imagination_nna_test_device_name
-    echo "Perform step $test_name 14"
+    echo "Perform step $test_name 18"
     # ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer linux arm64 imagination_nna $imagination_nna_test_device_name (Not support)
   fi
   if [ -n "$huawei_ascend_npu_arm64_test_device_name" ]; then
     echo "Running on device: Kunpeng 920 + Huawei Atlas 300C(3000)"
-    echo "Perform step $test_name 15"
+    echo "Perform step $test_name 19"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 linux arm64 cpu $huawei_ascend_npu_arm64_test_device_name
-    echo "Perform step $test_name 16"
+    echo "Perform step $test_name 20"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 linux arm64 huawei_ascend_npu $huawei_ascend_npu_arm64_test_device_name
   fi
   if [ -n "$verisilicon_timvx_armlinux_test_device_name" ]; then
-    echo "Running on device: Khadas VIM3"
-    echo "Perform step $test_name 17"
+    echo "Running on device: Khadas"
+    echo "Perform step $test_name 21"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer linux arm64 cpu $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 18"
+    echo "Perform step $test_name 22"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer linux arm64 verisilicon_timvx $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 19"
+    echo "Perform step $test_name 23"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 linux arm64 cpu $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 20"
+    echo "Perform step $test_name 24"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 linux arm64 verisilicon_timvx $verisilicon_timvx_armlinux_test_device_name
   fi
   if [ -n "$kunlunxin_arm64_test_device_name" ]; then
     echo "Running on device: ARM CPU + Kunlunxin K100"
-    echo "Perform step $test_name 21"
+    echo "Perform step $test_name 25"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 linux arm64 cpu $kunlunxin_arm64_test_device_name
-    echo "Perform step $test_name 22"
+    echo "Perform step $test_name 26"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 linux arm64 kunlunxin_xtcl $kunlunxin_arm64_test_device_name
   fi
   # linux armhf
   ./build.sh linux armhf
   if [ -n "$rockchip_npu_rv1109_test_device_name" ]; then
     echo "Running on device: Dumu RV1109"
-    echo "Perform step $test_name 23"
+    echo "Perform step $test_name 27"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer linux armhf cpu $rockchip_npu_rv1109_test_device_name
-    echo "Perform step $test_name 24"
+    echo "Perform step $test_name 28"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer linux armhf rockchip_npu $rockchip_npu_rv1109_test_device_name
   fi
   # linux amd64
   ./build.sh linux amd64
   if [ -n "$huawei_ascend_npu_amd64_test_device_name" ]; then
     echo "Running on device: Intel x86 + Huawei Atlas 300C(3010)"
-    echo "Perform step $test_name 25"
+    echo "Perform step $test_name 29"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 linux amd64 cpu $huawei_ascend_npu_amd64_test_device_name
-    echo "Perform step $test_name 26"
+    echo "Perform step $test_name 30"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 linux amd64 huawei_ascend_npu $huawei_ascend_npu_amd64_test_device_name
   fi
   if [ -n "$kunlunxin_xtcl_amd64_test_device_name" ]; then
     echo "Running on device: x86 CPU + Kunlunxin K100"
-    echo "Perform step $test_name 27"
+    echo "Perform step $test_name 31"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 linux amd64 cpu $kunlunxin_xtcl_amd64_test_device_name
-    echo "Perform step $test_name 28"
+    echo "Perform step $test_name 32"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 linux amd64 kunlunxin_xtcl $kunlunxin_xtcl_amd64_test_device_name
   fi
   if [ -n "$cambricon_mlu_amd64_test_device_name" ]; then
     echo "Running on device: x86 CPU + CambriconMLU 370"
-    echo "Perform step $test_name 29"
+    echo "Perform step $test_name 33"
     ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 linux amd64 cpu $cambricon_mlu_amd64_test_device_name
-    echo "Perform step $test_name 30"
+    echo "Perform step $test_name 34"
     # ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 linux amd64 cambricon_mlu $cambricon_mlu_amd64_test_device_name (Not support)
   fi
   echo "done"
@@ -362,91 +393,102 @@ build_and_run_yolo_detection_demo() {
     echo "Perform step $test_name 8"
     #./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_channel android armeabi-v7a mediatek_apu $mediatek_apu_test_device_name (Lack of quant model)
   fi
+  if [ -n "$verisilicon_timvx_android_test_device_name" ]; then
+    echo "Running on device: Khadas"
+    echo "Perform step $test_name 9"
+    #./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer android armeabi-v7a cpu $verisilicon_timvx_android_test_device_name (Lack of quant model)
+    echo "Perform step $test_name 10"
+    #./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer android armeabi-v7a verisilicon_timvx $verisilicon_timvx_android_test_device_name (Lack of quant model)
+    echo "Perform step $test_name 11"
+    ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_fp32_608 android armeabi-v7a cpu $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 12"
+    #./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 android armeabi-v7a verisilicon_timvx $verisilicon_timvx_android_test_device_name (Not support)
+  fi
   # linux arm64
   ./build.sh linux arm64
   if [ -n "$rockchip_npu_rk1808evb_test_device_name" ]; then
     echo "Running on device: RK1808EVB"
-    echo "Perform step $test_name 9"
+    echo "Perform step $test_name 13"
     #./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer linux arm64 cpu $rockchip_npu_rk1808evb_test_device_name (Lack of quant model)
-    echo "Perform step $test_name 10"
+    echo "Perform step $test_name 14"
     #./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer linux arm64 rockchip_npu $rockchip_npu_rk1808evb_test_device_name (Lack of quant model)
   fi
   if [ -n "$rockchip_npu_tb_rk1808s0_test_device_name" ]; then
     echo "Running on device: Toybirck TB-RK1808S0"
-    echo "Perform step $test_name 11"
+    echo "Perform step $test_name 15"
     #./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer linux arm64 cpu $rockchip_npu_tb_rk1808s0_test_device_name (Lack of quant model)
-    echo "Perform step $test_name 12"
+    echo "Perform step $test_name 16"
     #./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer linux arm64 rockchip_npu $rockchip_npu_tb_rk1808s0_test_device_name (Lack of quant model)
   fi
   if [ -n "$amlogic_npu_test_device_name" ]; then
     echo "Running on device: Amlogic A311D"
-    echo "Perform step $test_name 13"
+    echo "Perform step $test_name 17"
     #./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer linux arm64 cpu $amlogic_npu_test_device_name (Lack of quant model)
-    echo "Perform step $test_name 14"
+    echo "Perform step $test_name 18"
     #./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer linux arm64 amlogic_npu $amlogic_npu_test_device_name (Lack of quant model)
   fi
   if [ -n "$imagination_nna_test_device_name" ]; then
     echo "Running on device: ROC1"
-    echo "Perform step $test_name 15"
+    echo "Perform step $test_name 19"
     #./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer linux arm64 cpu $imagination_nna_test_device_name (Lack of quant model)
-    echo "Perform step $test_name 16"
+    echo "Perform step $test_name 20"
     #./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer linux arm64 imagination_nna $imagination_nna_test_device_name (Lack of quant model)
   fi
   if [ -n "$huawei_ascend_npu_arm64_test_device_name" ]; then
     echo "Running on device: Kunpeng 920 + Huawei Atlas 300C(3000)"
-    echo "Perform step $test_name 17"
+    echo "Perform step $test_name 21"
     ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux arm64 cpu $huawei_ascend_npu_arm64_test_device_name
-    echo "Perform step $test_name 18"
+    echo "Perform step $test_name 22"
     ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux arm64 huawei_ascend_npu $huawei_ascend_npu_arm64_test_device_name
   fi
   if [ -n "$verisilicon_timvx_armlinux_test_device_name" ]; then
-    echo "Running on device: Khadas VIM3"
-    echo "Perform step $test_name 19"
+    echo "Running on device: Khadas"
+    echo "Perform step $test_name 23"
     #./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer linux arm64 cpu $verisilicon_timvx_armlinux_test_device_name (Lack of quant model)
-    echo "Perform step $test_name 20"
+    echo "Perform step $test_name 24"
     #./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer linux arm64 verisilicon_timvx $verisilicon_timvx_armlinux_test_device_name (Lack of quant model)
-    echo "Perform step $test_name 21"
+    echo "Perform step $test_name 25"
     ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux arm64 cpu $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 22"
+    echo "Perform step $test_name 26"
     #./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux arm64 verisilicon_timvx $verisilicon_timvx_armlinux_test_device_name (Not support)
   fi
   if [ -n "$kunlunxin_arm64_test_device_name" ]; then
     echo "Running on device: ARM CPU + Kunlunxin K100"
-    echo "Perform step $test_name 23"
+    echo "Perform step $test_name 27"
     ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux arm64 cpu $kunlunxin_arm64_test_device_name
-    echo "Perform step $test_name 24"
+    echo "Perform step $test_name 28"
     ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux arm64 kunlunxin_xtcl $kunlunxin_arm64_test_device_name
   fi
   # linux armhf
   ./build.sh linux armhf
   if [ -n "$rockchip_npu_rv1109_test_device_name" ]; then
     echo "Running on device: Dumu RV1109"
-    echo "Perform step $test_name 25"
+    echo "Perform step $test_name 29"
     # ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer linux armhf cpu $rockchip_npu_rv1109_test_device_name (Lack of quant model)
-    echo "Perform step $test_name 26"
+    echo "Perform step $test_name 30"
     # ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer linux armhf rockchip_npu $rockchip_npu_rv1109_test_device_name (Lack of quant model)
   fi
   # linux amd64
   ./build.sh linux amd64
   if [ -n "$huawei_ascend_npu_amd64_test_device_name" ]; then
     echo "Running on device: Intel x86 + Huawei Atlas 300C(3010)"
-    echo "Perform step $test_name 27"
+    echo "Perform step $test_name 31"
     ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux amd64 cpu $huawei_ascend_npu_amd64_test_device_name
-    echo "Perform step $test_name 28"
+    echo "Perform step $test_name 32"
     ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux amd64 huawei_ascend_npu $huawei_ascend_npu_amd64_test_device_name
   fi
   if [ -n "$kunlunxin_xtcl_amd64_test_device_name" ]; then
     echo "Running on device: x86 CPU + Kunlunxin K100"
-    echo "Perform step $test_name 29"
+    echo "Perform step $test_name 33"
     ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux amd64 cpu $kunlunxin_xtcl_amd64_test_device_name
-    echo "Perform step $test_name 30"
+    echo "Perform step $test_name 34"
     ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux amd64 kunlunxin_xtcl $kunlunxin_xtcl_amd64_test_device_name
   fi
   if [ -n "$cambricon_mlu_amd64_test_device_name" ]; then
     echo "Running on device: x86 CPU + Cambricon MLU370"
-    echo "Perform step $test_name 31"
+    echo "Perform step $test_name 35"
     ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux amd64 cpu $cambricon_mlu_amd64_test_device_name
-    echo "Perform step $test_name 32"
+    echo "Perform step $test_name 36"
     ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 linux amd64 cambricon_mlu $cambricon_mlu_amd64_test_device_name
   fi
   echo "done"
@@ -485,91 +527,102 @@ build_and_run_model_test() {
     echo "Perform step $test_name 8"
     ./run_with_adb.sh conv_bn_relu_224_int8_per_channel 0 1,3,224,224 float32 float32 android armeabi-v7a mediatek_apu $mediatek_apu_test_device_name
   fi
+  if [ -n "$verisilicon_timvx_android_test_device_name" ]; then
+    echo "Running on device: Khadas"
+    echo "Perform step $test_name 9"
+    ./run_with_adb.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 android armeabi-v7a cpu $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 10"
+    ./run_with_adb.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 android armeabi-v7a verisilicon_timvx $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 11"
+    ./run_with_adb.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 android armeabi-v7a cpu $verisilicon_timvx_android_test_device_name
+    echo "Perform step $test_name 12"
+    ./run_with_adb.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 android armeabi-v7a verisilicon_timvx $verisilicon_timvx_android_test_device_name
+  fi
   # linux arm64
   ./build.sh linux arm64
   if [ -n "$rockchip_npu_rk1808evb_test_device_name" ]; then
     echo "Running on device: RK1808EVB"
-    echo "Perform step $test_name 9"
+    echo "Perform step $test_name 13"
     ./run_with_adb.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 linux arm64 cpu $rockchip_npu_rk1808evb_test_device_name
-    echo "Perform step $test_name 10"
+    echo "Perform step $test_name 14"
     ./run_with_adb.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 linux arm64 rockchip_npu $rockchip_npu_rk1808evb_test_device_name
   fi
   if [ -n "$rockchip_npu_tb_rk1808s0_test_device_name" ]; then
     echo "Running on device: Toybirck TB-RK1808S0"
-    echo "Perform step $test_name 11"
+    echo "Perform step $test_name 15"
     ./run_with_ssh.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 linux arm64 cpu $rockchip_npu_tb_rk1808s0_test_device_name
-    echo "Perform step $test_name 12"
+    echo "Perform step $test_name 16"
     ./run_with_ssh.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 linux arm64 rockchip_npu $rockchip_npu_tb_rk1808s0_test_device_name
   fi
   if [ -n "$amlogic_npu_test_device_name" ]; then
     echo "Running on device: Amlogic A311D"
-    echo "Perform step $test_name 13"
+    echo "Perform step $test_name 17"
     ./run_with_ssh.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 linux arm64 cpu $amlogic_npu_test_device_name
-    echo "Perform step $test_name 14"
+    echo "Perform step $test_name 18"
     ./run_with_ssh.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 linux arm64 amlogic_npu $amlogic_npu_test_device_name
   fi
   if [ -n "$imagination_nna_test_device_name" ]; then
     echo "Running on device: ROC1"
-    echo "Perform step $test_name 15"
+    echo "Perform step $test_name 19"
     ./run_with_ssh.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 linux arm64 cpu $imagination_nna_test_device_name
-    echo "Perform step $test_name 16"
+    echo "Perform step $test_name 20"
     ./run_with_ssh.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 linux arm64 imagination_nna $imagination_nna_test_device_name
   fi
   if [ -n "$huawei_ascend_npu_arm64_test_device_name" ]; then
     echo "Running on device: Kunpeng 920 + Huawei Atlas 300C(3000)"
-    echo "Perform step $test_name 17"
+    echo "Perform step $test_name 21"
     ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux arm64 cpu $huawei_ascend_npu_arm64_test_device_name
-    echo "Perform step $test_name 18"
+    echo "Perform step $test_name 22"
     ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux arm64 huawei_ascend_npu $huawei_ascend_npu_arm64_test_device_name
   fi
   if [ -n "$verisilicon_timvx_armlinux_test_device_name" ]; then
     echo "Running on device: Khadas VIM3"
-    echo "Perform step $test_name 19"
+    echo "Perform step $test_name 23"
     ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux arm64 cpu $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 20"
+    echo "Perform step $test_name 24"
     ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux arm64 verisilicon_timvx $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 21"
+    echo "Perform step $test_name 25"
     ./run_with_ssh.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 linux arm64 cpu $verisilicon_timvx_armlinux_test_device_name
-    echo "Perform step $test_name 22"
+    echo "Perform step $test_name 26"
     ./run_with_ssh.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 linux arm64 verisilicon_timvx $verisilicon_timvx_armlinux_test_device_name
   fi
   if [ -n "$kunlunxin_arm64_test_device_name" ]; then
     echo "Running on device: ARM CPU + Kunlunxin K100"
-    echo "Perform step $test_name 23"
+    echo "Perform step $test_name 27"
     ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux arm64 cpu $kunlunxin_arm64_test_device_name
-    echo "Perform step $test_name 24"
+    echo "Perform step $test_name 28"
     ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux arm64 kunlunxin_xtcl $kunlunxin_arm64_test_device_name
   fi
   # linux armhf
   ./build.sh linux armhf
   if [ -n "$rockchip_npu_rv1109_test_device_name" ]; then
     echo "Running on device: Dumu RV1109"
-    echo "Perform step $test_name 25"
+    echo "Perform step $test_name 29"
     ./run_with_ssh.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 linux armhf cpu $rockchip_npu_rv1109_test_device_name
-    echo "Perform step $test_name 26"
+    echo "Perform step $test_name 30"
     ./run_with_ssh.sh conv_add_144_192_int8_per_layer 0 1,3,192,144 float32 float32 linux armhf rockchip_npu $rockchip_npu_rv1109_test_device_name
   fi
   # linux amd64
   ./build.sh linux amd64
   if [ -n "$huawei_ascend_npu_amd64_test_device_name" ]; then
     echo "Running on device: Intel x86 + Huawei Atlas 300C(3010)"
-    echo "Perform step $test_name 27"
+    echo "Perform step $test_name 31"
     ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux amd64 cpu $huawei_ascend_npu_amd64_test_device_name
-    echo "Perform step $test_name 28"
+    echo "Perform step $test_name 32"
     ./run_with_ssh.sh  conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux amd64 huawei_ascend_npu $huawei_ascend_npu_amd64_test_device_name
   fi
   if [ -n "$kunlunxin_xtcl_amd64_test_device_name" ]; then
     echo "Running on device: x86 CPU + Kunlunxin K100"
-    echo "Perform step $test_name 29"
+    echo "Perform step $test_name 33"
     ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux amd64 cpu $kunlunxin_xtcl_amd64_test_device_name
-    echo "Perform step $test_name 30"
+    echo "Perform step $test_name 34"
     ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux amd64 kunlunxin_xtcl $kunlunxin_xtcl_amd64_test_device_name
   fi
   if [ -n "$cambricon_mlu_amd64_test_device_name" ]; then
     echo "Running on device: x86 CPU + Cambricon MLU370"
-    echo "Perform step $test_name 31"
+    echo "Perform step $test_name 35"
     ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux amd64 cpu $cambricon_mlu_amd64_test_device_name
-    echo "Perform step $test_name 32"
+    echo "Perform step $test_name 36"
     ./run_with_ssh.sh conv_bn_relu_224_fp32 0 1,3,224,224 float32 float32 linux amd64 cambricon_mlu $cambricon_mlu_amd64_test_device_name
   fi
   echo "done"
