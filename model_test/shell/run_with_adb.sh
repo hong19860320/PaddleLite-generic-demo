@@ -126,7 +126,7 @@ if [ "${TARGET_OS}" == "linux" ]; then
     WORK_SPACE=~/test
 fi
 
-EXPORT_ENVIRONMENT_VARIABLES="export GLOG_v=5; export NNADAPTER_ENABLE_CONVERTER=false; export SUBGRAPH_ONLINE_MODE=true"
+EXPORT_ENVIRONMENT_VARIABLES="export GLOG_v=5; export SUBGRAPH_ONLINE_MODE=true"
 if [ "$NNADAPTER_DEVICE_NAMES" == "rockchip_npu" ]; then
   EXPORT_ENVIRONMENT_VARIABLES="$EXPORT_ENVIRONMENT_VARIABLES; export RKNPU_LOGLEVEL=5; export RKNN_LOG_LEVEL=5; ulimit -c unlimited"
   adb $ADB_DEVICE_NAME shell "echo userspace > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor"

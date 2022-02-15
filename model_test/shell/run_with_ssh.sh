@@ -141,7 +141,7 @@ if [ -n "$SUBGRAPH_PARTITION_CONFIG_FILE" ]; then
     NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH="./$MODEL_NAME/$SUBGRAPH_PARTITION_CONFIG_FILE"
 fi
 
-EXPORT_ENVIRONMENT_VARIABLES="export GLOG_v=5; export NNADAPTER_ENABLE_CONVERTER=true; export SUBGRAPH_ONLINE_MODE=true"
+EXPORT_ENVIRONMENT_VARIABLES="export GLOG_v=5; export SUBGRAPH_ONLINE_MODE=true"
 if [ "$NNADAPTER_DEVICE_NAMES" == "rockchip_npu" ]; then
   EXPORT_ENVIRONMENT_VARIABLES="$EXPORT_ENVIRONMENT_VARIABLES; export RKNPU_LOGLEVEL=5; export RKNN_LOG_LEVEL=5; ulimit -c unlimited"
   sshpass -p $SSH_DEVICE_USR_PWD ssh -v -o ConnectTimeout=60 -o StrictHostKeyChecking=no -p $SSH_DEVICE_SSH_PORT $SSH_DEVICE_USR_ID@$SSH_DEVICE_IP_ADDR "echo userspace > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor"

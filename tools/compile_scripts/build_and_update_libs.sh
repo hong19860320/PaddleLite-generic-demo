@@ -37,6 +37,8 @@ kunlunxin_xtcl_sdk_url=http://baidu-kunlun-product.cdn.bcebos.com/KL-SDK/klsdk-d
 # Cambricon MLU
 build_cambricon_mlu=1
 cambricon_mlu_sdk=$src_dir/neuware
+# Android NNAPI
+build_android_nnapi=1
 
 build_and_update_lib() {
   local os=$1
@@ -58,6 +60,10 @@ build_and_update_lib() {
         build_cmd="$build_cmd --nnadapter_with_huawei_kirin_npu=ON --nnadapter_huawei_kirin_npu_sdk_root=$hiai_ddk_lib"
         device_list=( "${device_list[@]}" "huawei_kirin_npu" )
       fi
+      if [ $build_android_nnapi -ne 0 ]; then
+        build_cmd="$build_cmd --nnadapter_with_android_nnapi=ON"
+        device_list=( "${device_list[@]}" "android_nnapi" )
+      fi
     elif [ "$arch" = "armv7" ]; then
       lib_abi="armeabi-v7a"
       if [ $build_huawei_kirin_npu -ne 0 ]; then
@@ -75,6 +81,10 @@ build_and_update_lib() {
       if [ $build_verisilicon_timvx -ne 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_verisilicon_timvx=ON"
         device_list=( "${device_list[@]}" "verisilicon_timvx" )
+      fi
+      if [ $build_android_nnapi -ne 0 ]; then
+        build_cmd="$build_cmd --nnadapter_with_android_nnapi=ON"
+        device_list=( "${device_list[@]}" "android_nnapi" )
       fi
     else
       echo "Abi $arch is not supported for $os and any devices."
@@ -192,12 +202,12 @@ export LIT_BUILD_THREAD=8
 # disable_huawei_ascend_npu: 0, 1
 
 #:<<!
-# Android arm64-v8a: Huawei Kirin NPU
+# Android arm64-v8a: Huawei Kirin NPU, Android NNAPI
 echo "1/14"
 build_and_update_lib android armv8 clang 1 0 1
 echo "2/14"
 build_and_update_lib android armv8 clang 1 1 1
-# Android armeabi-v7a: Huawei Kirin NPU, MediaTek APU, Amlogic NPU, Verisilicon TIM-VX
+# Android armeabi-v7a: Huawei Kirin NPU, MediaTek APU, Amlogic NPU, Verisilicon TIM-VX, Android NNAPI
 echo "3/14"
 build_and_update_lib android armv7 clang 1 0 1
 echo "4/14"
