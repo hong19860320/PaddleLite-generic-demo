@@ -4,14 +4,14 @@ set -e
 # User config
 src_dir=/Work/Paddle-Lite/experiment/Paddle-Lite
 # Huawei Kirin NPU
-nnadapter_device_name="huawei_kirin_npu"
-nnadapter_device_list="UQG0220A15000356"
+#nnadapter_device_name="huawei_kirin_npu"
+#nnadapter_device_list="UQG0220A15000356"
 # Mediatek APU
 #nnadapter_device_name="mediatek_apu"
 #nnadapter_device_list="0123456789ABCDEF"
 # Rockchip NPU
 #nnadapter_device_name="rockchip_npu"
-#nnadapter_device_list="192.168.180.8,22,toybrick,toybrick"
+#nnadapter_device_list="192.168.182.8,22,toybrick,toybrick"
 # Huawei Ascend NPU
 #nnadapter_device_name="huawei_ascend_npu" # No need to set 'nnadapter_device_list' because this script must be run on the device locally
 # Amlogic NPU
@@ -27,6 +27,9 @@ nnadapter_device_list="UQG0220A15000356"
 #nnadapter_device_name="kunlunxin_xtcl" # No need to set 'nnadapter_device_list' because this script must be run on the device locally
 # Cambricon MLU
 #nnadapter_device_name="cambricon_mlu" # No need to set 'nnadapter_device_list' because this script must be run on the device locally
+# Android NNAPI
+nnadapter_device_name="android_nnapi"
+nnadapter_device_list="UQG0220A15000356"
 
 if [ -z $nnadapter_device_name ]; then
   echo "nnadapter_device_name should not be empty!"
@@ -121,6 +124,18 @@ elif [ "$nnadapter_device_name" = "cambricon_mlu" ]; then
   unit_test_check_list="test_kernel_argmax_compute,test_light_api,test_apis,test_paddle_api,test_cxx_api,test_vector_view"
   unit_test_filter_type=0
   build_target=cambricon_mlu_build_and_test
+elif [ "$nnadapter_device_name" = "android_nnapi" ]; then
+  os=android
+  arch=armv7
+  toolchain=clang
+  unit_test_check_list="test_light_api,test_apis,test_paddle_api,test_cxx_api,test_vector_view,test_gen_code,test_generated_code,test_mobilenetv1_int8,test_mobilenetv1,test_mobilenetv1_int16,test_mobilenetv2,test_resnet50,test_inceptionv4,test_fast_rcnn,test_resnet50_fpga,test_mobilenetv1_opt_quant,sgemv_compute_test,test_kernel_decode_bboxes_compute,test_decode_bboxes_compute_arm"
+  unit_test_filter_type=0
+  #unit_test_check_list="test_kernel_activation_compute"
+  #unit_test_filter_type=1
+  remote_device_type=0
+  remote_device_list=$nnadapter_device_list
+  build_target=android_nnapi_build_and_test
+  remote_device_work_dir="/data/local/tmp/$build_target"
 else
   echo "nnadapter_device_name($nnadapter_device_name) is not supported."
   exit 1
