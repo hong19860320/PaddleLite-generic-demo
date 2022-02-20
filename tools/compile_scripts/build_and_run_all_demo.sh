@@ -101,7 +101,7 @@ build_and_run_image_classification_demo() {
     run_demo ./run_with_adb.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi huawei_kirin_npu "$huawei_kirin_npu_device_list"
   fi
   if [ -n "$android_nnapi_device_list" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi android_nnapi "$android_nnapi_device_list"
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi android_nnapi "$android_nnapi_device_list"
   fi
   # android armeabi-v7a
   os=android
@@ -117,7 +117,7 @@ build_and_run_image_classification_demo() {
     run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi verisilicon_timvx "$verisilicon_timvx_android_device_list"
   fi
   if [ -n "$android_nnapi_device_list" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi android_nnapi "$android_nnapi_device_list"
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi android_nnapi "$android_nnapi_device_list"
   fi
   # linux arm64
   os=linux
@@ -179,7 +179,7 @@ build_and_run_ssd_detection_demo() {
     run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi huawei_kirin_npu "$huawei_kirin_npu_device_list"
   fi
   if [ -n "$android_nnapi_device_list" ]; then
-    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi android_nnapi "$android_nnapi_device_list"
+    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi android_nnapi "$android_nnapi_device_list"
   fi
   # android armeabi-v7a
   os=android
@@ -195,7 +195,7 @@ build_and_run_ssd_detection_demo() {
     run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi verisilicon_timvx "$verisilicon_timvx_android_device_list"
   fi
   if [ -n "$android_nnapi_device_list" ]; then
-    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi android_nnapi "$android_nnapi_device_list"
+    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi android_nnapi "$android_nnapi_device_list"
   fi
   # linux arm64
   os=linux
