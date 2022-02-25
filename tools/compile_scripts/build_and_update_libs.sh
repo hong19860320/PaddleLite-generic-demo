@@ -175,7 +175,7 @@ build_and_update_lib() {
   fi
 
   rm -rf $lib_dir/include/*.h
-  cp $build_dir/$publish_inference_dir/cxx/include/* $lib_dir/include/
+  cp -rf $build_dir/$publish_inference_dir/cxx/include/*.h $lib_dir/include/
   rm -rf $lib_dir/lib/${lib_name}
   cp $build_dir/$publish_inference_dir/cxx/lib/${lib_name} $lib_dir/lib/
 
@@ -183,8 +183,8 @@ build_and_update_lib() {
   do
     echo $device_name
     rm -rf $lib_dir/lib/$device_name/libnnadapter*.so
-    cp $build_dir/lite/backends/nnadapter/nnadapter/libnnadapter.so $lib_dir/lib/$device_name/
-    cp $build_dir/lite/backends/nnadapter/nnadapter/driver/${device_name}/*.so $lib_dir/lib/$device_name/
+    cp $build_dir/lite/backends/nnadapter/nnadapter/src/libnnadapter.so $lib_dir/lib/$device_name/
+    cp $build_dir/lite/backends/nnadapter/nnadapter/src/driver/${device_name}/*.so $lib_dir/lib/$device_name/
   done
 
   echo "done"
