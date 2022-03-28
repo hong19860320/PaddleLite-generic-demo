@@ -8,37 +8,42 @@ readlinkf() {
 root_dir=$(readlinkf $(pwd)/../../)
 
 # User config
-src_dir=/Work/Paddle-Lite/experiment/Paddle-Lite
+sdk_dir=$root_dir/sdk
+src_dir=$root_dir/../Paddle-Lite
 # Huawei Kirin NPU
 build_huawei_kirin_npu=1
-hiai_ddk_lib=$src_dir/hiai_ddk_lib_510
+hiai_ddk_lib=$sdk_dir/huawei_kirin_npu/android/armv8/hiai_ddk_lib_510
 # Mediatek APU
 build_mediatek_apu=1
-apu_ddk=$src_dir/apu_ddk
+apu_ddk=$sdk_dir/mediatek_apu/android/armv7/apu_ddk
 # Rockchip NPU
 build_rockchip_npu=1
-rknpu_ddk=$src_dir/rknpu_ddk
+rknpu_ddk=$sdk_dir/rockchip_npu/linux/armv8/rknpu_ddk
 # Amlogic NPU
 build_amlogic_npu=1
-amlnpu_ddk_android=$src_dir/amlnpu_ddk_android
-amlnpu_ddk_linux=$src_dir/amlnpu_ddk_linux
+amlnpu_ddk_android=$sdk_dir/amlogic_npu/android/armv7/amlnpu_ddk
+amlnpu_ddk_linux=$sdk_dir/amlogic_npu/linux/armv8/amlnpu_ddk
 # Imagination NNA
 build_imagination_nna=1
-imagination_nna_sdk=$src_dir/imagination_nna_sdk
+imagination_nna_sdk=$sdk_dir/imagination_nna/linux/armv8/imagination_nna_sdk
 # Verisilicon TIM-VX
 build_verisilicon_timvx=1 # No need to set the SDK path since it can be downloaded automatically
 # Huawei Ascend NPU
 build_huawei_ascend_npu=1
-ascend_toolkit_aarch64_linux=$src_dir/ascend-toolkit-aarch64-linux/3.3.0
-ascend_toolkit_x86_64_linux=$src_dir/ascend-toolkit-x86_64-linux/3.3.0
+ascend_toolkit_aarch64_linux=$sdk_dir/huawei_ascend_npu/linux/armv8/5.0.4.alpha002
+ascend_toolkit_x86_64_linux=$sdk_dir/huawei_ascend_npu/linux/x86/3.3.0.alpha001
+ascend_toolkit_x86_64_linux=$sdk_dir/huawei_ascend_npu/linux/x86/5.1.RC1.alpha001
 # Kunlunxin XTCL
-build_kunlunxin_xtcl=1
+build_kunlunxin_xtcl=0
 kunlunxin_xtcl_sdk_url=http://baidu-kunlun-product.cdn.bcebos.com/KL-SDK/klsdk-dev/20211228/
 # Cambricon MLU
 build_cambricon_mlu=1
-cambricon_mlu_sdk=$src_dir/neuware
+cambricon_mlu_sdk=$sdk_dir/cambricon_mlu/linux/x86/neuware
 # Android NNAPI
 build_android_nnapi=1
+# Intel OpenVINO
+build_intel_openvino=1
+intel_openvino_sdk=$sdk_dir/intel_openvino/linux/x86/openvino_2022.1.0.643
 
 build_and_update_lib() {
   local os=$1
@@ -50,6 +55,8 @@ build_and_update_lib() {
 
   build_cmd="--arch=$arch --toolchain=$toolchain --with_extra=ON --with_exception=ON --with_nnadapter=ON"
   build_dir=$src_dir/build.lite.$os.$arch.$toolchain
+  rm -rf $src_dir/third-party
+  
   device_list=()
   if [ "$os" = "android" ]; then
     # android
@@ -140,6 +147,10 @@ build_and_update_lib() {
         build_cmd="$build_cmd --nnadapter_with_huawei_ascend_npu=ON --nnadapter_huawei_ascend_npu_sdk_root=$ascend_toolkit_x86_64_linux"
         device_list=( "huawei_ascend_npu" )
       fi
+      if [ $build_intel_openvino -ne 0 ]; then
+        build_cmd="$build_cmd --nnadapter_with_intel_openvino=ON --nnadapter_intel_openvino_sdk_root=$intel_openvino_sdk"
+        device_list=( "intel_openvino" )
+      fi 
     else
       echo "Abi $arch is not supported for $os and any devices."
     fi
@@ -182,6 +193,9 @@ build_and_update_lib() {
   for device_name in ${device_list[@]}
   do
     echo $device_name
+    if [ ! -d $lib_dir/lib/$device_name ]; then
+      mkdir -p $lib_dir/lib/$device_name
+    fi
     rm -rf $lib_dir/lib/$device_name/libnnadapter*.so
     cp $build_dir/lite/backends/nnadapter/nnadapter/src/libnnadapter.so $lib_dir/lib/$device_name/
     cp $build_dir/lite/backends/nnadapter/nnadapter/src/driver/${device_name}/*.so $lib_dir/lib/$device_name/
@@ -212,7 +226,7 @@ echo "3/14"
 build_and_update_lib android armv7 clang 1 0 1
 echo "4/14"
 build_and_update_lib android armv7 clang 1 1 1
-# Linux amd64: KunlunxinXTCL/x86, CambriconMLU/x86
+# Linux amd64: KunlunxinXTCL/x86, CambriconMLU/x86, Intel OpenVINO
 echo "5/14"
 build_and_update_lib linux x86 gcc 1 0 1
 echo "6/14"

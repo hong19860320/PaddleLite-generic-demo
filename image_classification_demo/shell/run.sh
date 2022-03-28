@@ -36,6 +36,7 @@ fi
 # Kirin810/820/985/990/9000/9000E: NNADAPTER_DEVICE_NAMES=huawei_kirin_npu
 # Ascend310: NNADAPTER_DEVICE_NAMES=huawei_ascend_npu
 # CambriconMLU: NNADAPTER_DEVICE_NAMES=cambricon_mlu
+# OpenVINO: NNADAPTER_DEVICE_NAMES=intel_openvino
 # CPU only: NNADAPTER_DEVICE_NAMES=cpu
 NNADAPTER_DEVICE_NAMES="cpu"
 if [ -n "$4" ]; then
@@ -114,6 +115,10 @@ fi
 
 if [ "$NNADAPTER_DEVICE_NAMES" == "cambricon_mlu" ]; then
     export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/neuware/lib64"
+fi
+
+if [ "$NNADAPTER_DEVICE_NAMES" == "intel_openvino" ]; then
+    NNADAPTER_CONTEXT_PROPERTIES="INTEL_OPENVINO_SELECT_DEVICE_NAMES=CPU"
 fi
 
 BUILD_DIR=build.${TARGET_OS}.${TARGET_ABI}
