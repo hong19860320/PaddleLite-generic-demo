@@ -234,7 +234,7 @@ export LIT_BUILD_THREAD=8
 # tiny_publish: 0, 1
 # disable_huawei_ascend_npu: 0, 1
 
-:<<!
+#:<<!
 # Android arm64-v8a: Huawei Kirin NPU, Android NNAPI, Google XNNPACK
 echo "1/14"
 build_and_update_lib android armv8 clang 1 0 1
@@ -272,11 +272,6 @@ if [[ $build_huawei_ascend_npu -ne 0 ]]; then
   echo "14/14"
   build_and_update_lib linux armv8 gcc 1 1 0
 fi
-!
-
-build_and_update_lib android armv8 clang 0 0 1
-#build_and_update_lib android armv7 clang 1 0 1
-#build_and_update_lib linux armv7hf gcc 1 0 1
-#build_and_update_lib linux x86 gcc 1 0 1
+#!
 
 echo "all done."
