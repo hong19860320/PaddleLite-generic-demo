@@ -15,25 +15,25 @@ ANDROID_NDK=/opt/android-ndk-r17c # docker
 # Intel-x86+Ascend310: TARGET_OS=linux and TARGET_ABI=amd64
 TARGET_OS=linux
 if [ -n "$1" ]; then
-    TARGET_OS=$1
+  TARGET_OS=$1
 fi
 
 TARGET_ABI=arm64
 if [ -n "$2" ]; then
-    TARGET_ABI=$2
+  TARGET_ABI=$2
 fi
 
 function readlinkf() {
-    perl -MCwd -e 'print Cwd::abs_path shift' "$1";
+  perl -MCwd -e 'print Cwd::abs_path shift' "$1";
 }
 
 CMAKE_COMMAND_ARGS="-DCMAKE_VERBOSE_MAKEFILE=ON -DUSE_FULL_API=${USE_FULL_API} -DTARGET_OS=${TARGET_OS} -DTARGET_ABI=${TARGET_ABI} -DPADDLE_LITE_DIR=$(readlinkf ../../libs/PaddleLite) -DOpenCV_DIR=$(readlinkf ../../libs/OpenCV)"
 if [ "${TARGET_OS}" == "android" ]; then
-    ANDROID_NATIVE_API_LEVEL=android-23
-    if [ $TARGET_ABI == "armeabi-v7a" ]; then
-        ANDROID_NATIVE_API_LEVEL=android-21
-    fi
-    CMAKE_COMMAND_ARGS="${CMAKE_COMMAND_ARGS} -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake -DANDROID_NDK=${ANDROID_NDK} -DANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL} -DANDROID_STL=c++_shared -DANDROID_ABI=${TARGET_ABI} -DANDROID_ARM_NEON=TRUE"
+  ANDROID_NATIVE_API_LEVEL=android-23
+  if [ $TARGET_ABI == "armeabi-v7a" ]; then
+    ANDROID_NATIVE_API_LEVEL=android-21
+  fi
+  CMAKE_COMMAND_ARGS="${CMAKE_COMMAND_ARGS} -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake -DANDROID_NDK=${ANDROID_NDK} -DANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL} -DANDROID_STL=c++_shared -DANDROID_ABI=${TARGET_ABI} -DANDROID_ARM_NEON=TRUE"
 fi
 
 BUILD_DIR=build.${TARGET_OS}.${TARGET_ABI}

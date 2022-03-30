@@ -24,10 +24,11 @@
 #include <algorithm>
 #include <fstream>
 #include <limits>
+#include <sstream>
 #include <vector>
 
-int WARMUP_COUNT = 5;
-int REPEAT_COUNT = 10;
+int WARMUP_COUNT = 1;
+int REPEAT_COUNT = 5;
 const int CPU_THREAD_NUM = 1;
 const paddle::lite_api::PowerMode CPU_POWER_MODE =
     paddle::lite_api::PowerMode::LITE_POWER_NO_BIND;
@@ -50,6 +51,42 @@ inline int64_t get_current_us() {
   struct timeval time;
   gettimeofday(&time, NULL);
   return 1000000LL * (int64_t)time.tv_sec + (int64_t)time.tv_usec;
+}
+
+template <typename T>
+void get_value_from_sstream(std::stringstream *ss, T *value) {
+  (*ss) >> (*value);
+}
+
+template <>
+void get_value_from_sstream<std::string>(std::stringstream *ss,
+                                         std::string *value) {
+  *value = ss->str();
+}
+
+template <typename T>
+std::vector<T> split_string(const std::string &str, char sep) {
+  std::stringstream ss;
+  std::vector<T> values;
+  T value;
+  values.clear();
+  for (auto c : str) {
+    if (c != sep) {
+      ss << c;
+    } else {
+      get_value_from_sstream<T>(&ss, &value);
+      values.push_back(std::move(value));
+      ss.str({});
+      ss.clear();
+    }
+  }
+  if (!ss.str().empty()) {
+    get_value_from_sstream<T>(&ss, &value);
+    values.push_back(std::move(value));
+    ss.str({});
+    ss.clear();
+  }
+  return values;
 }
 
 bool read_file(const std::string &filename,
@@ -283,7 +320,12 @@ int main(int argc, char **argv) {
   std::string label_path = argv[3];
   std::string image_path = argv[4];
   std::string result_path = argv[5];
-  std::string nnadapter_device_names = argv[6];
+  std::vector<std::string> nnadapter_device_names =
+      split_string<std::string>(argv[6], ',');
+  if (nnadapter_device_names.empty()) {
+    printf("No device specified.");
+    return -1;
+  }
   std::string nnadapter_context_properties =
       strcmp(argv[7], "null") == 0 ? "" : argv[7];
   std::string nnadapter_model_cache_dir =
@@ -324,7 +366,9 @@ int main(int argc, char **argv) {
   cxx_config.set_threads(CPU_THREAD_NUM);
   cxx_config.set_power_mode(CPU_POWER_MODE);
   std::vector<paddle::lite_api::Place> valid_places;
-  if (strcmp(nnadapter_device_names.c_str(), "cpu")) {
+  if (std::find(nnadapter_device_names.begin(),
+                nnadapter_device_names.end(),
+                "cpu") == nnadapter_device_names.end()) {
     valid_places.push_back(
         paddle::lite_api::Place{TARGET(kNNAdapter), PRECISION(kInt8)});
     valid_places.push_back(
@@ -342,7 +386,7 @@ int main(int argc, char **argv) {
       paddle::lite_api::Place{TARGET(kX86), PRECISION(kFloat)});
 #endif
   cxx_config.set_valid_places(valid_places);
-  cxx_config.set_nnadapter_device_names({nnadapter_device_names});
+  cxx_config.set_nnadapter_device_names(nnadapter_device_names);
   cxx_config.set_nnadapter_context_properties(nnadapter_context_properties);
   cxx_config.set_nnadapter_model_cache_dir(nnadapter_model_cache_dir);
   // Set the subgraph custom partition configuration file
@@ -380,7 +424,7 @@ int main(int argc, char **argv) {
   mobile_config.set_model_from_file(model_dir + ".nb");
   mobile_config.set_threads(CPU_THREAD_NUM);
   mobile_config.set_power_mode(CPU_POWER_MODE);
-  mobile_config.set_nnadapter_device_names({nnadapter_device_names});
+  mobile_config.set_nnadapter_device_names(nnadapter_device_names);
   mobile_config.set_nnadapter_context_properties(nnadapter_context_properties);
   // Set the model cache buffer and directory
   mobile_config.set_nnadapter_model_cache_dir(nnadapter_model_cache_dir);
