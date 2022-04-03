@@ -1,7 +1,18 @@
 #!/bin/bash
 MODEL_NAME=yolov3_mobilenet_v1_270e_coco_fp32_608
+#MODEL_NAME=yolov3_darknet53_270e_coco_fp32_608
 if [ -n "$1" ]; then
   MODEL_NAME=$1
+fi
+
+if [ ! -d "../assets/models/$MODEL_NAME" ];then
+  MODEL_URL="http://paddlelite-demo.bj.bcebos.com/devices/generic/models/${MODEL_NAME}.tar.gz"
+  echo "Model $MODEL_NAME not found! Try to download it from $MODEL_URL ..."
+  curl $MODEL_URL -o -| tar -xz -C ../assets/models
+  if [[ $? -ne 0 ]]; then
+    echo "Model $MODEL_NAME download failed!"
+    exit 1
+  fi
 fi
 
 MODEL_TYPE=1 # 1 combined paddle fluid model
@@ -151,8 +162,8 @@ set -e
 sshpass -p $SSH_DEVICE_USR_PWD scp -v -r -o ConnectTimeout=60 -o StrictHostKeyChecking=no -P $SSH_DEVICE_SSH_PORT ../assets/labels/* $SSH_DEVICE_USR_ID@$SSH_DEVICE_IP_ADDR:$WORK_SPACE
 sshpass -p $SSH_DEVICE_USR_PWD scp -v -r -o ConnectTimeout=60 -o StrictHostKeyChecking=no -P $SSH_DEVICE_SSH_PORT ../assets/images/* $SSH_DEVICE_USR_ID@$SSH_DEVICE_IP_ADDR:$WORK_SPACE
 sshpass -p $SSH_DEVICE_USR_PWD scp -v -o ConnectTimeout=60 -o StrictHostKeyChecking=no -P $SSH_DEVICE_SSH_PORT $BUILD_DIR/yolo_detection_demo $SSH_DEVICE_USR_ID@$SSH_DEVICE_IP_ADDR:$WORK_SPACE
-sshpass -p $SSH_DEVICE_USR_PWD ssh -v -o ConnectTimeout=60 -o StrictHostKeyChecking=no -p $SSH_DEVICE_SSH_PORT $SSH_DEVICE_USR_ID@$SSH_DEVICE_IP_ADDR "cd $WORK_SPACE; $EXPORT_ENVIRONMENT_VARIABLES; ./yolo_detection_demo ./$MODEL_NAME $MODEL_TYPE ./$LABEL_NAME ./$IMAGE_NAME ./$RESULT_NAME $NNADAPTER_DEVICE_NAMES $NNADAPTER_CONTEXT_PROPERTIES $NNADAPTER_MODEL_CACHE_DIR $NNADAPTER_MODEL_CACHE_TOKEN $NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH"
-#sshpass -p $SSH_DEVICE_USR_PWD ssh -v -o ConnectTimeout=60 -o StrictHostKeyChecking=no -p $SSH_DEVICE_SSH_PORT $SSH_DEVICE_USR_ID@$SSH_DEVICE_IP_ADDR "cd $WORK_SPACE; $EXPORT_ENVIRONMENT_VARIABLES; ./yolo_detection_demo ./$MODEL_NAME $MODEL_TYPE ./$LABEL_NAME ./$IMAGE_NAME ./$RESULT_NAME $NNADAPTER_DEVICE_NAMES $NNADAPTER_CONTEXT_PROPERTIES $NNADAPTER_MODEL_CACHE_DIR $NNADAPTER_MODEL_CACHE_TOKEN $NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH >${NNADAPTER_DEVICE_NAMES_TEXT}.log 2>&1"
+sshpass -p $SSH_DEVICE_USR_PWD ssh -v -o ConnectTimeout=60 -o StrictHostKeyChecking=no -p $SSH_DEVICE_SSH_PORT $SSH_DEVICE_USR_ID@$SSH_DEVICE_IP_ADDR "cd $WORK_SPACE; $EXPORT_ENVIRONMENT_VARIABLES; ./yolo_detection_demo ./$MODEL_NAME $MODEL_TYPE ./$LABEL_NAME ./$IMAGE_NAME ./$RESULT_NAME $NNADAPTER_DEVICE_NAMES \"$NNADAPTER_CONTEXT_PROPERTIES\" $NNADAPTER_MODEL_CACHE_DIR $NNADAPTER_MODEL_CACHE_TOKEN $NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH"
+#sshpass -p $SSH_DEVICE_USR_PWD ssh -v -o ConnectTimeout=60 -o StrictHostKeyChecking=no -p $SSH_DEVICE_SSH_PORT $SSH_DEVICE_USR_ID@$SSH_DEVICE_IP_ADDR "cd $WORK_SPACE; $EXPORT_ENVIRONMENT_VARIABLES; ./yolo_detection_demo ./$MODEL_NAME $MODEL_TYPE ./$LABEL_NAME ./$IMAGE_NAME ./$RESULT_NAME $NNADAPTER_DEVICE_NAMES \"$NNADAPTER_CONTEXT_PROPERTIES\" $NNADAPTER_MODEL_CACHE_DIR $NNADAPTER_MODEL_CACHE_TOKEN $NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH >${NNADAPTER_DEVICE_NAMES_TEXT}.log 2>&1"
 #sshpass -p $SSH_DEVICE_USR_PWD scp -v -o ConnectTimeout=60 -o StrictHostKeyChecking=no -P $SSH_DEVICE_SSH_PORT $SSH_DEVICE_USR_ID@$SSH_DEVICE_IP_ADDR:$WORK_SPACE/${NNADAPTER_DEVICE_NAMES_TEXT}.log .
 sshpass -p $SSH_DEVICE_USR_PWD scp -v -o ConnectTimeout=60 -o StrictHostKeyChecking=no -P $SSH_DEVICE_SSH_PORT $SSH_DEVICE_USR_ID@$SSH_DEVICE_IP_ADDR:$WORK_SPACE/${MODEL_NAME}.nb ../assets/models/
 sshpass -p $SSH_DEVICE_USR_PWD scp -v -o ConnectTimeout=60 -o StrictHostKeyChecking=no -P $SSH_DEVICE_SSH_PORT $SSH_DEVICE_USR_ID@$SSH_DEVICE_IP_ADDR:$WORK_SPACE/${RESULT_NAME} ../assets/results/

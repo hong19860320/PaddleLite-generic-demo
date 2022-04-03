@@ -48,6 +48,16 @@ if [ -n "$1" ]; then
   MODEL_NAME=$1
 fi
 
+if [ ! -d "../assets/models/$MODEL_NAME" ];then
+  MODEL_URL="http://paddlelite-demo.bj.bcebos.com/devices/generic/models/${MODEL_NAME}.tar.gz"
+  echo "Model $MODEL_NAME not found! Try to download it from $MODEL_URL ..."
+  curl $MODEL_URL -o -| tar -xz -C ../assets/models
+  if [[ $? -ne 0 ]]; then
+    echo "Model $MODEL_NAME download failed!"
+    exit 1
+  fi
+fi
+
 if [ -n "$2" ]; then
   MODEL_TYPE=$2
 fi
@@ -179,4 +189,4 @@ fi
 BUILD_DIR=build.${TARGET_OS}.${TARGET_ABI}
 
 set -e
-./$BUILD_DIR/model_test ../assets/models/$MODEL_NAME $MODEL_TYPE $INPUT_SHAPE $INPUT_TYPE $OUTPUT_TYPE $NNADAPTER_DEVICE_NAMES $NNADAPTER_CONTEXT_PROPERTIES $NNADAPTER_MODEL_CACHE_DIR $NNADAPTER_MODEL_CACHE_TOKEN $NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH
+./$BUILD_DIR/model_test ../assets/models/$MODEL_NAME $MODEL_TYPE $INPUT_SHAPE $INPUT_TYPE $OUTPUT_TYPE $NNADAPTER_DEVICE_NAMES "$NNADAPTER_CONTEXT_PROPERTIES" $NNADAPTER_MODEL_CACHE_DIR $NNADAPTER_MODEL_CACHE_TOKEN $NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH
