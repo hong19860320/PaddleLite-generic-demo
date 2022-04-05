@@ -1,6 +1,5 @@
 # A image to cross compile the libraries for PaddleLite-generic-demo
-
-FROM ubuntu:18.04
+FROM ubuntu:16.04
 MAINTAINER PaddlePaddle Authors <paddle-dev@baidu.com>
 
 RUN cp -a /etc/apt/sources.list /etc/apt/sources.list.bak \
@@ -8,6 +7,7 @@ RUN cp -a /etc/apt/sources.list /etc/apt/sources.list.bak \
     && apt-get -y update
 # Cross compiler for Arm Linux
 RUN apt-get install -y --no-install-recommends \
+        software-properties-common \
         cmake-curses-gui \
         curl \
         fish \
@@ -35,10 +35,10 @@ RUN apt-get install -y --no-install-recommends \
         gcc-aarch64-linux-gnu \
         g++-aarch64-linux-gnu
 
-# Fix the installation of clang-format-3.8
-RUN apt-get install -y --no-install-recommends software-properties-common gpg-agent
-RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
-RUN apt-add-repository "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.8 main" && apt-get -y update
+# Fix the installation of clang-format-3.8 in Ubuntu 18.04
+# RUN apt-get install -y --no-install-recommends gpg-agent
+# RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
+# RUN apt-add-repository "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.8 main" && apt-get -y update
 RUN apt-get install -y --no-install-recommends clang-format-3.8 
 RUN ln -s clang-format-3.8 /usr/bin/clang-format
 RUN pip install --upgrade pip==20.3.4
