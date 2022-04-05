@@ -117,11 +117,15 @@ if [[ "$NNADAPTER_DEVICE_NAMES" =~ "huawei_ascend_npu" ]]; then
   export ASCEND_GLOBAL_LOG_LEVEL=3
 fi
 
-if [ "$NNADAPTER_DEVICE_NAMES" == "kunlunxin_xtcl" ]; then
+if [[ "$NNADAPTER_DEVICE_NAMES" =~ "kunlunxin_xtcl" ]]; then
   export XTCL_AUTO_ALLOC_L3=1
   export XTCL_CONV_USE_FP16=1
   export XTCL_QUANTIZE_WEIGHT=1
   export XTCL_L3_SIZE=16777216
+fi
+
+if [[ "$NNADAPTER_DEVICE_NAMES" =~ "intel_openvino" ]]; then
+  NNADAPTER_CONTEXT_PROPERTIES="INTEL_OPENVINO_SELECT_DEVICE_NAMES=CPU"
 fi
 
 BUILD_DIR=build.${TARGET_OS}.${TARGET_ABI}

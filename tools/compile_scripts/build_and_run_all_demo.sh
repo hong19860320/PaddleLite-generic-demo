@@ -1,13 +1,7 @@
 #!/bin/bash
 set -e
 
-source ./settings.sh
-
-readlinkf() {
-  perl -MCwd -e 'print Cwd::abs_path shift' "$1";
-}
-
-root_dir=$(readlinkf $(pwd)/../../)
+source settings.sh
 
 run_demo() {
   local cmd=$1
@@ -33,7 +27,7 @@ run_demo() {
 }
 
 clean_demo() {
-  local demo_dir=$root_dir/$1
+  local demo_dir=$ROOT_DIR/$1
   echo "clean $demo_dir"
   rm -f $demo_dir/assets/models/*.nb
   rm -f $demo_dir/assets/models/*.nnc
@@ -66,7 +60,7 @@ clean_demo() {
 
 build_and_run_image_classification_demo() {
   echo "build and run image_classification_demo"
-  cd $root_dir/image_classification_demo/shell
+  cd $ROOT_DIR/image_classification_demo/shell
   # android arm64-v8a
   local os=android
   local abi=arm64-v8a
@@ -163,9 +157,8 @@ build_and_run_image_classification_demo() {
 }
 
 build_and_run_ssd_detection_demo() {
-  local test_name="ssd_detection_demo"
-  echo "build and run $test_name"
-  cd $root_dir/$test_name/shell
+  echo "build and run ssd_detection_demo"
+  cd $ROOT_DIR/ssd_detection_demo/shell
   # android arm64-v8a
   local os=android
   local abi=arm64-v8a
@@ -244,9 +237,8 @@ build_and_run_ssd_detection_demo() {
 }
 
 build_and_run_yolo_detection_demo() {
-  local test_name="yolo_detection_demo"
-  echo "build and run $test_name"
-  cd $root_dir/$test_name/shell
+  echo "build and run yolo_detection_demo"
+  cd $ROOT_DIR/yolo_detection_demo/shell
   # android arm64-v8a
   local os=android
   local abi=arm64-v8a
@@ -324,9 +316,8 @@ build_and_run_yolo_detection_demo() {
 }
 
 build_and_run_model_test() {
-  local test_name="model_test"
-  echo "build and run $test_name"
-  cd $root_dir/$test_name/shell
+  echo "build and run model_test"
+  cd $ROOT_DIR/model_test/shell
   # android arm64-v8a
   local os=android
   local abi=arm64-v8a

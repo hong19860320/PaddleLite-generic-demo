@@ -1,13 +1,7 @@
 #!/bin/bash
 set -e
 
-source ./settings.sh
-
-readlinkf() {
-  perl -MCwd -e 'print Cwd::abs_path shift' "$1";
-}
-
-root_dir=$(readlinkf $(pwd)/../../)
+source settings.sh
 
 build_and_update_lib() {
   local os=$1
@@ -18,7 +12,7 @@ build_and_update_lib() {
   local disable_huawei_ascend_npu=$6
 
   build_cmd="--arch=$arch --toolchain=$toolchain --with_extra=ON --with_exception=ON --with_nnadapter=ON --nnadapter_with_fake_device=ON"
-  build_dir=$PADDLE_LITE_SRC_DIR/build.lite.$os.$arch.$toolchain
+  build_dir=$LITE_DIR/build.lite.$os.$arch.$toolchain
   device_list=( "builtin_device" "fake_device" )
   if [ "$os" = "android" ]; then
     # android
@@ -77,7 +71,7 @@ build_and_update_lib() {
         device_list=( "${device_list[@]}" "rockchip_npu" )
       fi
       if [ "$ENABLE_BUILD_IMAGINATION_NNA" == "1" ]; then
-        build_cmd="$build_cmd --nnadapter_with_imagination_nna=ON --nnadapter_imagination_nna_sdk_root=$IMAGINATION_NNA_LINUX_ARM64_SDK_ROOR"
+        build_cmd="$build_cmd --nnadapter_with_imagination_nna=ON --nnadapter_imagination_nna_sdk_root=$IMAGINATION_NNA_LINUX_ARM64_SDK_ROOT"
         device_list=( "${device_list[@]}" "imagination_nna" )
       fi
       if [ "$ENABLE_BUILD_AMLOGIC_NPU" == "1" ]; then
@@ -151,7 +145,7 @@ build_and_update_lib() {
     return 0
   fi
 
-  lib_root=$root_dir/libs/PaddleLite
+  lib_root=$ROOT_DIR/libs/PaddleLite
   lib_dir=$lib_root/$os/$lib_abi
   if [ -d "$build_dir" ] && [ $rebuild_all -eq 0 ]; then
     cd $build_dir
@@ -161,7 +155,7 @@ build_and_update_lib() {
       build_cmd="$build_cmd full_publish"
     fi
     rm -rf $build_dir
-    cd $PADDLE_LITE_SRC_DIR
+    cd $LITE_DIR
     ./lite/tools/build_${os}.sh ${build_cmd}
   fi
 
@@ -192,7 +186,7 @@ build_and_update_lib() {
       mkdir -p $lib_dir/lib/$device_name/include
       cp -rf $build_dir/$publish_inference_dir/cxx/include/nnadapter/* $lib_dir/lib/$device_name/include/
       rm -rf $lib_dir/lib/$device_name/samples/fake_device
-      cp -rf $PADDLE_LITE_SRC_DIR/lite/backends/nnadapter/nnadapter/src/driver/fake_device $lib_root/samples/
+      cp -rf $LITE_DIR/lite/backends/nnadapter/nnadapter/src/driver/fake_device $lib_root/samples/
     else
       cp $build_dir/lite/backends/nnadapter/nnadapter/src/driver/${device_name}/*.so $lib_dir/lib/$device_name/
     fi
