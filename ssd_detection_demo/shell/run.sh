@@ -16,7 +16,7 @@ if [ ! -d "../assets/models/$MODEL_NAME" ];then
 fi
 
 MODEL_TYPE=0 # 1 combined paddle fluid model
-#SUBGRAPH_PARTITION_CONFIG_FILE=subgraph_partition_config_file.txt
+SUBGRAPH_PARTITION_CONFIG_FILE=subgraph_partition_config_file.txt
 LABEL_NAME=pascalvoc_label_list
 IMAGE_NAME=dog.raw
 RESULT_NAME=dog.bin

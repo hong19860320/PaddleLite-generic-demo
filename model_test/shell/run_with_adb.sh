@@ -74,7 +74,7 @@ if [ -n "$5" ]; then
   OUTPUT_TYPE=$5
 fi
 
-#SUBGRAPH_PARTITION_CONFIG_FILE=subgraph_partition_config_file.txt
+SUBGRAPH_PARTITION_CONFIG_FILE=subgraph_partition_config_file.txt
 WORK_SPACE=/data/local/tmp/test
 
 # For TARGET_OS=android, TARGET_ABI should be arm64-v8a or armeabi-v7a.
