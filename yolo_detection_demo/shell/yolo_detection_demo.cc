@@ -281,7 +281,7 @@ void process(const float *image_data,
     output_size *= dim;
   }
   output_result->resize(output_size);
-  memcpy(output_result->data(), &output_data, output_size * sizeof(float));
+  memcpy(output_result->data(), output_data, output_size * sizeof(float));
   double postprocess_start_time = get_current_us();
   std::vector<RESULT> results = postprocess(
       output_data, output_size, input_width, input_height, word_labels);
