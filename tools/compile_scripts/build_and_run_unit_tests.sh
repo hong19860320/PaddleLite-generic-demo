@@ -52,9 +52,9 @@ if [ "$ENABLE_TEST_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX
   #arch=armv8
   arch=x86
   toolchain=gcc
-  #unit_test_check_list="test_light_api,test_apis,test_paddle_api,test_cxx_api,test_vector_view"
+  #unit_test_check_list="test_kernel_topk_compute,test_kernel_topk_v2_compute,test_ssd_mobilenet_v1_voc_int8_per_layer_v1_8_nnadapter,test_light_api,test_apis,test_paddle_api,test_cxx_api,test_vector_view"
   #unit_test_filter_type=0
-  unit_test_check_list="test_kernel_activation_compute"
+  unit_test_check_list="test_kernel_instance_norm_compute"
   unit_test_filter_type=1
   build_target=huawei_ascend_npu_build_and_test
   cd $LITE_DIR
