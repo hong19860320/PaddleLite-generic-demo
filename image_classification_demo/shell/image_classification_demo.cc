@@ -254,7 +254,6 @@ void process(const float *input_image,
     total_time_cost += cur_time_cost;
     prediction_time = total_time_cost / REPEAT_COUNT;
     printf("iter %d cost: %f ms\n", i, cur_time_cost);
-    usleep(10000);
   }
   printf("warmup: %d repeat: %d, average: %f ms, max: %f ms, min: %f ms\n",
          WARMUP_COUNT,
