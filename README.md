@@ -1,5 +1,5 @@
 # PaddleLite-generic-demo
-Paddle Lite classic demo for AI accelerators
+Classic demo provided for AI accelerators adapted in Paddle Lite. Please check the Paddle Lite's document [https://www.paddlepaddle.org.cn/lite](https://www.paddlepaddle.org.cn/lite) for more details.
 
 ## Demo 1. Image classification demo based on MobileNet, ResNet etc.
 ```
