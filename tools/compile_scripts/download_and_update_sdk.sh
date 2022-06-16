@@ -36,7 +36,7 @@ if [ "$ENABLE_BUILD_HUAWEI_ASCEND_NPU" == "1" ]; then
 fi
 
 if [ "$ENABLE_BUILD_CAMBRICON_MLU" == "1" ]; then
-  curl -L http://paddlelite-demo.bj.bcebos.com/devices/cambricon_mlu/neuware_2.6.4.tar.gz -o - | tar -xz -C $SDK_DIR
+  curl -L http://paddlelite-demo.bj.bcebos.com/devices/cambricon_mlu/neuware_2.8.3.tar.gz -o - | tar -xz -C $SDK_DIR
 fi
 
 if [ "$ENABLE_BUILD_INTEL_OPENVINO" == "1" ]; then
