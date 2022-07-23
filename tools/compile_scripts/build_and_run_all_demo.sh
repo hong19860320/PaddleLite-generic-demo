@@ -88,7 +88,7 @@ build_and_run_image_classification_demo() {
     run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:resnet50_int8_224_per_layer $os $abi mediatek_apu "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi verisilicon_timvx "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer $os $abi verisilicon_timvx "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
     run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
@@ -113,7 +113,7 @@ build_and_run_image_classification_demo() {
     run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi verisilicon_timvx "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer $os $abi verisilicon_timvx "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST" ]; then
     run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST"

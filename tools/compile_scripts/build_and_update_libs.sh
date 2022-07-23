@@ -46,7 +46,7 @@ build_and_update_lib() {
         device_list=( "${device_list[@]}" "amlogic_npu" )
       fi
       if [ "$ENABLE_BUILD_VERISILICON_TIMVX" == "1" ]; then
-        build_cmd="$build_cmd --nnadapter_with_verisilicon_timvx=ON --nnadapter_verisilicon_timvx_src_git_tag=$VERISILICON_TIMVX_SRC_GIT_TAG"
+        build_cmd="$build_cmd --with_arm_dotprod=OFF --nnadapter_with_verisilicon_timvx=ON --nnadapter_verisilicon_timvx_src_git_tag=$VERISILICON_TIMVX_SRC_GIT_TAG"
         device_list=( "${device_list[@]}" "verisilicon_timvx" )
       fi
       if [ "$ENABLE_BUILD_ANDROID_NNAPI" == "1" ]; then
@@ -104,6 +104,14 @@ build_and_update_lib() {
       if [ "$ENABLE_BUILD_ROCKCHIP_NPU" == "1" ]; then
         build_cmd="$build_cmd --nnadapter_with_rockchip_npu=ON --nnadapter_rockchip_npu_sdk_root=$ROCKCHIP_NPU_LINUX_ARMHF_SDK_ROOT"
         device_list=( "${device_list[@]}" "rockchip_npu" )
+      fi
+      if [ "$ENABLE_BUILD_VERISILICON_TIMVX" == "1" ]; then
+        build_cmd="$build_cmd --nnadapter_with_verisilicon_timvx=ON --nnadapter_verisilicon_timvx_src_git_tag=$VERISILICON_TIMVX_SRC_GIT_TAG --nnadapter_verisilicon_timvx_viv_sdk_url=$VERISILICON_TIMVX_LINUX_ARM32_6435"
+        device_list=( "${device_list[@]}" "verisilicon_timvx" )
+      fi
+      if [ "$ENABLE_BUILD_EEASYTECH_NPU" == "1" ]; then
+        build_cmd="$build_cmd --nnadapter_with_eeasytech_npu=ON --nnadapter_eeasytech_npu_sdk_root=$EEASYTECH_NPU_LINUX_ARMHF_SDK_ROOT"
+        device_list=( "${device_list[@]}" "eeasytech_npu" )
       fi
       if [ "$ENABLE_BUILD_GOOGLE_XNNPACK" == "1" ]; then
         build_cmd="$build_cmd --nnadapter_with_google_xnnpack=ON --nnadapter_google_xnnpack_src_git_tag=$GOOGLE_XNNPACK_SRC_GIT_TAG"
