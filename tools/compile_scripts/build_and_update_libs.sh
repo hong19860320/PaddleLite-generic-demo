@@ -31,6 +31,10 @@ build_and_update_lib() {
         build_cmd="$build_cmd --nnadapter_with_google_xnnpack=ON --nnadapter_google_xnnpack_src_git_tag=$GOOGLE_XNNPACK_SRC_GIT_TAG"
         device_list=( "${device_list[@]}" "google_xnnpack" )
       fi
+      if [ "$ENABLE_BUILD_QUALCOMM_QNN" == "1" ]; then
+        build_cmd="$build_cmd --nnadapter_with_qualcomm_qnn=ON --nnadapter_qualcomm_qnn_sdk_root=$QUALCOMM_QNN_SDK_ROOT --nnadapter_qualcomm_hexagon_sdk_root=$QUALCOMM_HEXAGON_SDK_ROOT"
+        device_list=( "${device_list[@]}" "qualcomm_qnn" )
+      fi
     elif [ "$arch" = "armv7" ]; then
       lib_abi="armeabi-v7a"
       if [ "$ENABLE_BUILD_HUAWEI_KIRIN_NPU" == "1" ]; then
@@ -57,11 +61,15 @@ build_and_update_lib() {
         build_cmd="$build_cmd --nnadapter_with_google_xnnpack=ON --nnadapter_google_xnnpack_src_git_tag=$GOOGLE_XNNPACK_SRC_GIT_TAG"
         device_list=( "${device_list[@]}" "google_xnnpack" )
       fi
+      if [ "$ENABLE_BUILD_QUALCOMM_QNN" == "1" ]; then
+        build_cmd="$build_cmd --nnadapter_with_qualcomm_qnn=ON --nnadapter_qualcomm_qnn_sdk_root=$QUALCOMM_QNN_SDK_ROOT --nnadapter_qualcomm_hexagon_sdk_root=$QUALCOMM_HEXAGON_SDK_ROOT"
+        device_list=( "${device_list[@]}" "qualcomm_qnn" )
+      fi
     else
       echo "Abi $arch is not supported for $os and any devices."
     fi
     lib_os="android"
-  else
+  elif [ "$os" = "linux" ]; then
     # linux
     if [ "$arch" = "armv8" ]; then
       lib_abi="arm64"
@@ -139,6 +147,10 @@ build_and_update_lib() {
         build_cmd="$build_cmd --nnadapter_with_intel_openvino=ON --nnadapter_intel_openvino_sdk_root=$INTEL_OPENVINO_LINUX_AMD64_SDK_ROOT"
         device_list=( "${device_list[@]}" "intel_openvino" )
       fi
+      if [ "$ENABLE_BUILD_QUALCOMM_QNN" == "1" ]; then
+        build_cmd="$build_cmd --nnadapter_with_qualcomm_qnn=ON --nnadapter_qualcomm_qnn_sdk_root=$QUALCOMM_QNN_SDK_ROOT --nnadapter_qualcomm_hexagon_sdk_root=$QUALCOMM_HEXAGON_SDK_ROOT"
+        device_list=( "${device_list[@]}" "qualcomm_qnn" )
+      fi
       if [ "$ENABLE_BUILD_HUAWEI_ASCEND_NPU" == "1" ] && [ $disable_huawei_ascend_npu -eq 0 ]; then
         build_cmd="$build_cmd --nnadapter_with_huawei_ascend_npu=ON --nnadapter_huawei_ascend_npu_sdk_root=$HUAWEI_ASCEND_NPU_LINUX_AMD64_SDK_ROOT"
         device_list=( "huawei_ascend_npu" )
@@ -147,6 +159,19 @@ build_and_update_lib() {
       echo "Abi $arch is not supported for $os and any devices."
     fi
     lib_os="armlinux"
+  else
+    # qnx
+    if [ "$arch" = "armv8" ]; then
+      lib_abi="arm64"
+      build_cmd="$build_cmd --with_cv=ON"
+      if [ "$ENABLE_BUILD_QUALCOMM_QNN" == "1" ]; then
+        build_cmd="$build_cmd --nnadapter_with_qualcomm_qnn=ON --nnadapter_qualcomm_qnn_sdk_root=$QUALCOMM_QNN_SDK_ROOT --nnadapter_qualcomm_hexagon_sdk_root=$QUALCOMM_HEXAGON_SDK_ROOT"
+        device_list=( "${device_list[@]}" "qualcomm_qnn" )
+      fi
+    else
+      echo "Abi $arch is not supported for $os and any devices."
+    fi
+    lib_os="qnx"
   fi
   device_count=${#device_list[@]}
   if [ $device_count -eq 0 ]; then
@@ -215,43 +240,48 @@ export LIT_BUILD_THREAD=8
 # disable_huawei_ascend_npu: 0, 1
 
 #:<<!
-# Android arm64-v8a: Huawei Kirin NPU, Android NNAPI, Google XNNPACK
-echo "1/14"
+# Android arm64-v8a: Huawei Kirin NPU, Android NNAPI, Google XNNPACK, Qualcomm QNN
+echo "1"
 build_and_update_lib android armv8 clang 1 0 1
-echo "2/14"
+echo "2"
 build_and_update_lib android armv8 clang 1 1 1
-# Android armeabi-v7a: Huawei Kirin NPU, MediaTek APU, Amlogic NPU, Verisilicon TIM-VX, Android NNAPI, Google XNNPACK
-echo "3/14"
+# Android armeabi-v7a: Huawei Kirin NPU, MediaTek APU, Amlogic NPU, Verisilicon TIM-VX, Android NNAPI, Google XNNPACK, Qualcomm QNN
+echo "3"
 build_and_update_lib android armv7 clang 1 0 1
-echo "4/14"
+echo "4"
 build_and_update_lib android armv7 clang 1 1 1
-# Linux amd64: KunlunxinXTCL/x86, CambriconMLU/x86, Google XNNPACK
-echo "5/14"
+# Linux amd64: KunlunxinXTCL/x86, CambriconMLU/x86, Google XNNPACK, Qualcomm QNN
+echo "5"
 build_and_update_lib linux x86 gcc 1 0 1
-echo "6/14"
+echo "6"
 build_and_update_lib linux x86 gcc 1 1 1
 # Linux arm64: Rockchip NPU, Amlogic NPU, Imagination NNA, Verisilicon TIM-VX, Kunlunxin XTCL, Google XNNPACK
-echo "7/14"
+echo "7"
 build_and_update_lib linux armv8 gcc 1 0 1
-echo "8/14"
+echo "8"
 build_and_update_lib linux armv8 gcc 1 1 1
 # Linux armhf: Rockchip NPU, Google XNNPACK
-echo "9/14"
+echo "9"
 build_and_update_lib linux armv7hf gcc 1 0 1
-echo "10/14"
+echo "10"
 build_and_update_lib linux armv7hf gcc 1 1 1
 if [ "$ENABLE_BUILD_HUAWEI_ASCEND_NPU" == "1" ]; then
   # Linux amd64: Huawei Ascend NPU / x86
-  echo "11/14"
+  echo "11"
   build_and_update_lib linux x86 gcc 1 0 0
-  echo "12/14"
+  echo "12"
   build_and_update_lib linux x86 gcc 1 1 0
   # Linux arm64: Huawei Ascend NPU / aarch64
-  echo "13/14"
+  echo "13"
   build_and_update_lib linux armv8 gcc 1 0 0
-  echo "14/14"
+  echo "14"
   build_and_update_lib linux armv8 gcc 1 1 0
 fi
+# QNX arm64: Qualcomm QNN
+echo "15"
+build_and_update_lib qnx armv8 gcc 1 0 1
+echo "16"
+build_and_update_lib qnx armv8 gcc 1 1 1
 #!
 
 echo "all done."

@@ -56,6 +56,8 @@ clean_demo() {
   rm -rf $demo_dir/shell/build.linux.armhf/CMakeFiles
   rm -f $demo_dir/shell/build.linux.armhf/Makefile
   rm -f $demo_dir/shell/build.linux.armhf/cmake_install.cmake
+  rm -f $demo_dir/shell/build.qnx.arm64/Makefile
+  rm -f $demo_dir/shell/build.qnx.arm64/cmake_install.cmake
 }
 
 build_and_run_image_classification_demo() {
@@ -73,6 +75,9 @@ build_and_run_image_classification_demo() {
   fi
   if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
     run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
+  fi
+  if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
   # android armeabi-v7a
   os=android
@@ -92,6 +97,9 @@ build_and_run_image_classification_demo() {
   fi
   if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
     run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  fi
+  if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   # linux arm64
   os=linux
@@ -153,6 +161,9 @@ build_and_run_image_classification_demo() {
   if [ "$ENABLE_DEMO_INTEL_OPENVINO" == "1" ] && [ -n "$INTEL_OPENVINO_LINUX_AMD64_DEVICE_LIST" ]; then
     run_demo ./run_with_ssh.sh resnet50_fp32_224 $os $abi intel_openvino "$INTEL_OPENVINO_LINUX_AMD64_DEVICE_LIST"
   fi
+  if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:resnet50_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi qualcomm_qnn "${QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST}"
+  fi
   echo "done"
 }
 
@@ -169,6 +180,9 @@ build_and_run_ssd_detection_demo() {
   if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
     run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
+  if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
+    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST"
+  fi
   # android armeabi-v7a
   os=android
   abi=armeabi-v7a
@@ -184,6 +198,9 @@ build_and_run_ssd_detection_demo() {
   fi
   if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
     run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  fi
+  if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   # linux arm64
   os=linux
@@ -233,6 +250,9 @@ build_and_run_ssd_detection_demo() {
   if [ "$ENABLE_DEMO_NVIDIA_TENSORRT" == "1" ] && [ -n "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST" ]; then
     run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST"
   fi
+  if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
+    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
+  fi
   echo "done"
 }
 
@@ -249,6 +269,9 @@ build_and_run_yolo_detection_demo() {
   #if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
     # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer:yolov3_mobilenet_v1_270e_coco_int8_608_per_channel:yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
   #fi
+  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer:yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
+  #fi
   os=android
   abi=armeabi-v7a
   ./build.sh $os $abi
@@ -263,6 +286,9 @@ build_and_run_yolo_detection_demo() {
   #fi
   #if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
     # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer:yolov3_mobilenet_v1_270e_coco_int8_608_per_channel:yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer:yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   #fi
   # linux arm64
   os=linux
@@ -312,6 +338,9 @@ build_and_run_yolo_detection_demo() {
   if [ "$ENABLE_DEMO_NVIDIA_TENSORRT" == "1" ] && [ -n "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST" ]; then
     run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST"
   fi
+  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
+  #  run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
+  #fi
   echo "done"
 }
 
@@ -334,6 +363,9 @@ build_and_run_model_test() {
   if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
     run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#0#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
+  if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
+    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST"
+  fi
   # android armeabi-v7a
   os=android
   abi=armeabi-v7a
@@ -355,6 +387,9 @@ build_and_run_model_test() {
   fi
   if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
     run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#0#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  fi
+  if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   # linux arm64
   os=linux
@@ -424,6 +459,9 @@ build_and_run_model_test() {
   fi
   if [ "$ENABLE_DEMO_INTEL_OPENVINO" == "1" ] && [ -n "$INTEL_OPENVINO_LINUX_AMD64_DEVICE_LIST" ]; then
     run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi intel_openvino "$INTEL_OPENVINO_LINUX_AMD64_DEVICE_LIST"
+  fi
+  if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
   fi
   echo "done"
 }
