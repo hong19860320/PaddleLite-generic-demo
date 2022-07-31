@@ -56,6 +56,8 @@ clean_demo() {
   rm -rf $demo_dir/shell/build.linux.armhf/CMakeFiles
   rm -f $demo_dir/shell/build.linux.armhf/Makefile
   rm -f $demo_dir/shell/build.linux.armhf/cmake_install.cmake
+  rm -f $demo_dir/shell/build.qnx.arm64/CMakeCache.txt
+  rm -rf $demo_dir/shell/build.qnx.arm64/CMakeFiles
   rm -f $demo_dir/shell/build.qnx.arm64/Makefile
   rm -f $demo_dir/shell/build.qnx.arm64/cmake_install.cmake
 }
