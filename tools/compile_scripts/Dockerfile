@@ -6,14 +6,16 @@ RUN cp -a /etc/apt/sources.list /etc/apt/sources.list.bak \
     && sed -i "s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g" /etc/apt/sources.list \
     && apt-get -y update
 # Cross compiler for Arm Linux
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test
+RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
-        software-properties-common \
         cmake-curses-gui \
         curl \
         fish \
         gawk \
-        gcc \
-        g++ \
+        gcc-7 \
+        g++-7 \
         git \
         graphviz \
         less \
@@ -34,6 +36,9 @@ RUN apt-get install -y --no-install-recommends \
         gcc-arm-linux-gnueabihf \
         gcc-aarch64-linux-gnu \
         g++-aarch64-linux-gnu
+
+RUN ln -fs /usr/bin/gcc-7 /usr/bin/gcc
+RUN ln -fs /usr/bin/g++-7 /usr/bin/g++
 
 # Fix the installation of clang-format-3.8 in Ubuntu 18.04
 # RUN apt-get install -y --no-install-recommends gpg-agent
