@@ -74,6 +74,7 @@ if [ -n "$5" ]; then
   OUTPUT_TYPE=$5
 fi
 
+DEMO_NAME=model_test
 SUBGRAPH_PARTITION_CONFIG_FILE=subgraph_partition_config_file.txt
 WORK_SPACE="~/test"
 
@@ -148,10 +149,10 @@ if [[ "$NNADAPTER_DEVICE_NAMES" =~ "imagination_nna" ]]; then
   echo performance > /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
 fi
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.:../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib:../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/cpu
+export LD_LIBRARY_PATH=.:../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib:../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/cpu:$LD_LIBRARY_PATH
 for NNADAPTER_DEVICE_NAME in ${NNADAPTER_DEVICE_NAMES_LIST[@]}
 do
-  LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/$NNADAPTER_DEVICE_NAME
+  export LD_LIBRARY_PATH=../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/$NNADAPTER_DEVICE_NAME:$LD_LIBRARY_PATH
 done
 if [[ "$NNADAPTER_DEVICE_NAMES" =~ "huawei_ascend_npu" ]]; then
   HUAWEI_ASCEND_TOOLKIT_HOME="/usr/local/Ascend/ascend-toolkit/latest"
@@ -191,10 +192,12 @@ if [[ "$NNADAPTER_DEVICE_NAMES" =~ "intel_openvino" ]]; then
 fi
 
 if [[ "$NNADAPTER_DEVICE_NAMES" =~ "qualcomm_qnn" ]]; then
+  export ADSP_LIBRARY_PATH="../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/qualcomm_qnn/hexagon-v68/lib/unsigned"
   NNADAPTER_CONTEXT_PROPERTIES="QUALCOMM_QNN_DEVICE=HTP"
 fi
 
 BUILD_DIR=build.${TARGET_OS}.${TARGET_ABI}
 
 set -e
-./$BUILD_DIR/model_test ../assets/models/$MODEL_NAME $MODEL_TYPE $INPUT_SHAPE $INPUT_TYPE $OUTPUT_TYPE $NNADAPTER_DEVICE_NAMES "$NNADAPTER_CONTEXT_PROPERTIES" $NNADAPTER_MODEL_CACHE_DIR $NNADAPTER_MODEL_CACHE_TOKEN $NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH
+chmod +x ./$BUILD_DIR/$DEMO_NAME
+./$BUILD_DIR/$DEMO_NAME ../assets/models/$MODEL_NAME $MODEL_TYPE $INPUT_SHAPE $INPUT_TYPE $OUTPUT_TYPE $NNADAPTER_DEVICE_NAMES "$NNADAPTER_CONTEXT_PROPERTIES" $NNADAPTER_MODEL_CACHE_DIR $NNADAPTER_MODEL_CACHE_TOKEN $NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH
