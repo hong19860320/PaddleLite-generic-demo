@@ -3,7 +3,7 @@ set -e
 
 source settings.sh
 
-if [ "$ENABLE_TEST_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
+if [ -n "$ENABLE_TEST_HUAWEI_KIRIN_NPU" ] && [ "$ENABLE_TEST_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
   os=android
   arch=armv7
   toolchain=clang
@@ -19,7 +19,7 @@ if [ "$ENABLE_TEST_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID
   ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --os_list=$os --arch_list=$arch --toolchain_list=$toolchain --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
 fi
 
-if [ "$ENABLE_TEST_MEDIATEK_APU" == "1" ] && [ -n "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+if [ -n "$ENABLE_TEST_MEDIATEK_APU" ] && [ "$ENABLE_TEST_MEDIATEK_APU" == "1" ] && [ -n "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
   os=android
   arch=armv7
   toolchain=clang
@@ -33,7 +33,7 @@ if [ "$ENABLE_TEST_MEDIATEK_APU" == "1" ] && [ -n "$MEDIATEK_APU_ANDROID_ARMEABI
   ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --os_list=$os --arch_list=$arch --toolchain_list=$toolchain --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
 fi
 
-if [ "$ENABLE_TEST_ROCKCHIP_NPU" == "1" ] && [ -n "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
+if [ -n "$ENABLE_TEST_ROCKCHIP_NPU" ] && [ "$ENABLE_TEST_ROCKCHIP_NPU" == "1" ] && [ -n "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
   os=armlinux
   arch=armv8
   toolchain=gcc
@@ -47,21 +47,19 @@ if [ "$ENABLE_TEST_ROCKCHIP_NPU" == "1" ] && [ -n "$ROCKCHIP_NPU_LINUX_ARM64_DEV
   ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --os_list=$os --arch_list=$arch --toolchain_list=$toolchain --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
 fi
 
-if [ "$ENABLE_TEST_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST" ]; then
-  #os=armlinux
+if [ -n "$ENABLE_TEST_HUAWEI_ASCEND_NPU" ] && [ "$ENABLE_TEST_HUAWEI_ASCEND_NPU" == "1" ]; then
   #arch=armv8
   arch=x86
-  toolchain=gcc
   #unit_test_check_list="test_kernel_topk_compute,test_kernel_topk_v2_compute,test_ssd_mobilenet_v1_voc_int8_per_layer_v1_8_nnadapter,test_light_api,test_apis,test_paddle_api,test_cxx_api,test_vector_view"
   #unit_test_filter_type=0
   unit_test_check_list="test_kernel_instance_norm_compute"
   unit_test_filter_type=1
   build_target=huawei_ascend_npu_build_and_test
   cd $LITE_DIR
-  ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --os_list=$os --arch_list=$arch --toolchain_list=$toolchain --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
+  ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --arch_list=$arch --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
 fi
 
-if [ "$ENABLE_TEST_AMLOGIC_NPU" == "1" ] && [ -n "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
+if [ -n "$ENABLE_TEST_AMLOGIC_NPU" ] && [ "$ENABLE_TEST_AMLOGIC_NPU" == "1" ] && [ -n "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
   os=armlinux
   arch=armv8
   toolchain=gcc
@@ -73,9 +71,9 @@ if [ "$ENABLE_TEST_AMLOGIC_NPU" == "1" ] && [ -n "$AMLOGIC_NPU_LINUX_ARM64_DEVIC
   remote_device_work_dir="~/$build_target"
   cd $LITE_DIR
   ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --os_list=$os --arch_list=$arch --toolchain_list=$toolchain --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
-if
+fi
 
-if [ "$ENABLE_TEST_IMAGINATION_NNA" == "1" ] && [ -n "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST" ]; then
+if [ -n "$ENABLE_TEST_IMAGINATION_NNA" ] && [ "$ENABLE_TEST_IMAGINATION_NNA" == "1" ] && [ -n "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST" ]; then
   os=armlinux
   arch=armv8
   toolchain=gcc
@@ -89,7 +87,7 @@ if [ "$ENABLE_TEST_IMAGINATION_NNA" == "1" ] && [ -n "$IMAGINATION_NNA_LINUX_ARM
   ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --os_list=$os --arch_list=$arch --toolchain_list=$toolchain --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
 fi
 
-if [ "$ENABLE_TEST_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+if [ -n "$ENABLE_TEST_VERISILICON_TIMVX" ] && [ "$ENABLE_TEST_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
   os=android
   arch=armv7
   toolchain=clang
@@ -104,7 +102,7 @@ if [ "$ENABLE_TEST_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_ANDRO
   ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --os_list=$os --arch_list=$arch --toolchain_list=$toolchain --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
 fi
 
-if [ "$ENABLE_TEST_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST" ]; then
+if [ -n "$ENABLE_TEST_KUNLUNXIN_XTCL" ] && [ "$ENABLE_TEST_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST" ]; then
   #os=armlinux
   #arch=armv8
   arch=x86
@@ -118,17 +116,15 @@ if [ "$ENABLE_TEST_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_AMD64
   ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --os_list=$os --arch_list=$arch --toolchain_list=$toolchain --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
 fi
 
-if [ "$ENABLE_TEST_CAMBRICON_MLU" == "1" ] && [ -n "$CAMBRICON_MLU_LINUX_AMD64_DEVICE_LIST" ]; then
-  arch=x86
-  toolchain=gcc
+if [ -n "$ENABLE_TEST_CAMBRICON_MLU" ] && [ "$ENABLE_TEST_CAMBRICON_MLU" == "1" ]; then
   unit_test_check_list="test_kernel_argmax_compute,test_light_api,test_apis,test_paddle_api,test_cxx_api,test_vector_view"
   unit_test_filter_type=0
   build_target=cambricon_mlu_build_and_test
   cd $LITE_DIR
-  ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --os_list=$os --arch_list=$arch --toolchain_list=$toolchain --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
+  ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 $build_target
 fi
 
-if [ "$ENABLE_TEST_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+if [ -n "$ENABLE_TEST_ANDROID_NNAPI" ] && [ "$ENABLE_TEST_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
   os=android
   arch=armv7
   toolchain=clang
@@ -142,6 +138,21 @@ if [ "$ENABLE_TEST_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEA
   remote_device_work_dir="/data/local/tmp/$build_target"
   cd $LITE_DIR
   ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --os_list=$os --arch_list=$arch --toolchain_list=$toolchain --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
+fi
+
+if [ -n "$ENABLE_TEST_QUALCOMM_QNN" ] && [ "$ENABLE_TEST_QUALCOMM_QNN" == "1" ]; then
+  export QUALCOMM_QNN_DEVICE=HTP
+  export QUALCOMM_QNN_ENABLE_FP16=1
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$QUALCOMM_QNN_SDK_ROOT/target/x86_64-linux-clang/lib
+  arch=x86
+  unit_test_check_list="test_cxx_api,test_light_api,test_apis,test_paddle_api,test_tensor"
+  unit_test_filter_type=0
+  #unit_test_check_list="test_kernel_activation_compute"
+  #unit_test_filter_type=1
+  build_target=qualcomm_qnn_build_and_test
+  extra_arguments="--nnadapter_qualcomm_qnn_sdk_root=$QUALCOMM_QNN_SDK_ROOT --nnadapter_qualcomm_hexagon_sdk_root=$QUALCOMM_HEXAGON_SDK_ROOT"
+  cd $LITE_DIR
+  ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --arch_list=$arch --toolchain_list=clang --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 $extra_arguments $build_target
 fi
 
 echo "all done."
