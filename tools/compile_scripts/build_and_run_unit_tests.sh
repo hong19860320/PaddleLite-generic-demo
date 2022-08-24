@@ -141,8 +141,8 @@ if [ -n "$ENABLE_TEST_ANDROID_NNAPI" ] && [ "$ENABLE_TEST_ANDROID_NNAPI" == "1" 
 fi
 
 if [ -n "$ENABLE_TEST_QUALCOMM_QNN" ] && [ "$ENABLE_TEST_QUALCOMM_QNN" == "1" ]; then
-  export QUALCOMM_QNN_DEVICE=HTP
-  export QUALCOMM_QNN_ENABLE_FP16=1
+  export QUALCOMM_QNN_DEVICE_TYPE=HTP
+  export QUALCOMM_QNN_ENABLE_FP16=true
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$QUALCOMM_QNN_SDK_ROOT/target/x86_64-linux-clang/lib
   arch=x86
   unit_test_check_list="test_cxx_api,test_light_api,test_apis,test_paddle_api,test_tensor"
