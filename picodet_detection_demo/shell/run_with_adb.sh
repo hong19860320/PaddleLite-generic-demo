@@ -1,6 +1,5 @@
 #!/bin/bash
-MODEL_NAME=yolov3_mobilenet_v1_270e_coco_fp32_608
-#MODEL_NAME=yolov3_darknet53_270e_coco_fp32_608
+MODEL_NAME=picodet_relu6_int8_416_per_channel
 if [ -n "$1" ]; then
   MODEL_NAME=$1
 fi
@@ -15,7 +14,7 @@ if [ ! -d "../assets/models/$MODEL_NAME" ];then
   fi
 fi
 
-DEMO_NAME=yolo_detection_demo
+DEMO_NAME=picodet_detection_demo
 MODEL_TYPE=1 # 1 combined paddle fluid model
 LABEL_NAME=coco-labels-2014_2017.txt
 IMAGE_NAME=dog.raw

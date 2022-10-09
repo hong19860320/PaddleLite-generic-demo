@@ -1,49 +1,5 @@
 #!/bin/bash
-#MODEL_NAME=conv_add_relu_dwconv_add_relu_224_int8_per_layer
-#MODEL_NAME=conv_bn_relu_224_int8_per_channel
-#MODEL_NAME=conv_bn_relu_dwconv_bn_relu_224_int8_per_channel
-#MODEL_NAME=conv_add_relu_dwconv_add_relu_x4_224_int8_per_channel
-#MODEL_NAME=conv_add_relu_dwconv_add_relu_x27_pool2d_224_int8_per_channel
-#MODEL_NAME=conv_add_relu_dwconv_add_relu_x27_pool2d_mul_add_224_int8_per_channel
-#MODEL_NAME=conv_add_relu_dwconv_add_relu_conv_add_relu_dwconv_add_relu_224_int8_per_channel
-#MODEL_NAME=conv_bn_relu_224_fp32
-#MODEL_NAME=conv_bn_relu_dwconv_bn_relu_224_fp32
-#MODEL_NAME=conv_bn_relu_dwconv_bn_relu_x27_224_fp32
-#MODEL_NAME=conv_bn_relu_dwconv_bn_relu_x27_pool2d_224_fp32
-#MODEL_NAME=conv_bn_relu_dwconv_bn_relu_x27_pool2d_mul_add_224_fp32
-#MODEL_NAME=conv_bn_relu_pool2d_224_fp32
-#MODEL_NAME=conv_bn_relu_pool2d_res2a_224_fp32
-#MODEL_NAME=conv_bn_relu_pool2d_res2a_res2b_224_fp32
-#MODEL_NAME=conv_bn_relu_pool2d_res2a_res2b_res2c_224_fp32
-#INPUT_SHAPE="1,3,224,224"
-#INPUT_TYPE="float32"
-#OUTPUT_TYPE="float32"
-#MODEL_TYPE=0
-
-#MODEL_NAME=conv_add_144_192_int8_per_layer
-#MODEL_NAME=conv_add_scale_144_192_int8_per_layer
-#MODEL_NAME=conv_add_scale_relu6_144_192_int8_per_layer
-#MODEL_NAME=conv_add_scale_relu6_mul_144_192_int8_per_layer
-#MODEL_NAME=conv_add_scale_sigmoid_144_192_int8_per_layer
-#MODEL_NAME=conv_add_scale_sigmoid_relu_144_192_int8_per_layer
-#MODEL_NAME=conv_add_scale_sigmoid_relu_mul_144_192_int8_per_layer
-#INPUT_SHAPE="1,3,192,144"
-#INPUT_TYPE="float32"
-#OUTPUT_TYPE="float32"
-#MODEL_TYPE=0
-
-#MODEL_NAME=eltwise_mul_broadcast_per_layer
-#INPUT_SHAPE="1,3,384,384"
-#INPUT_TYPE="float32"
-#OUTPUT_TYPE="float32"
-#MODEL_TYPE=0
-
-#MODEL_NAME=dwconv_ic_128_groups_128_oc_256_per_layer
-#INPUT_SHAPE="1,3,320,320"
-#INPUT_TYPE="float32"
-#OUTPUT_TYPE="float32"
-#MODEL_TYPE=0
-
+MODEL_NAME=picodetv2_relu6_coco_no_fuse_int8_416_per_channel
 if [ -n "$1" ]; then
   MODEL_NAME=$1
 fi
@@ -58,23 +14,11 @@ if [ ! -d "../assets/models/$MODEL_NAME" ];then
   fi
 fi
 
-if [ -n "$2" ]; then
-  MODEL_TYPE=$2
-fi
-
-if [ -n "$3" ]; then
-  INPUT_SHAPE=$3
-fi
-
-if [ -n "$4" ]; then
-  INPUT_TYPE=$4
-fi
-
-if [ -n "$5" ]; then
-  OUTPUT_TYPE=$5
-fi
-
-DEMO_NAME=model_test
+DEMO_NAME=picodet_detection_demo
+MODEL_TYPE=1 # 1 combined paddle fluid model
+LABEL_NAME=coco-labels-2014_2017.txt
+IMAGE_NAME=dog.raw
+RESULT_NAME=dog.bin
 
 # For TARGET_OS=android, TARGET_ABI should be arm64-v8a or armeabi-v7a.
 # For TARGET_OS=linux, TARGET_ABI should be arm64, armhf or amd64.
@@ -85,13 +29,13 @@ DEMO_NAME=model_test
 # Intel-x86+Ascend310: TARGET_OS=linux and TARGET_ABI=amd64
 # Intel-x86+CambriconMLU: TARGET_OS=linux and TARGET_ABI=amd64
 TARGET_OS=linux
-if [ -n "$6" ]; then
-  TARGET_OS=$6
+if [ -n "$2" ]; then
+  TARGET_OS=$2
 fi
 
 TARGET_ABI=arm64
-if [ -n "$7" ]; then
-  TARGET_ABI=$7
+if [ -n "$3" ]; then
+  TARGET_ABI=$3
 fi
 
 # RK1808EVB, TB-RK1808S0, RK1806EVB, RV1109/1126 EVB: NNADAPTER_DEVICE_NAMES=rockchip_npu
@@ -101,31 +45,31 @@ fi
 # CambriconMLU: NNADAPTER_DEVICE_NAMES=cambricon_mlu
 # CPU only: NNADAPTER_DEVICE_NAMES=cpu
 NNADAPTER_DEVICE_NAMES="cpu"
-if [ -n "$8" ]; then
-  NNADAPTER_DEVICE_NAMES="$8"
+if [ -n "$4" ]; then
+  NNADAPTER_DEVICE_NAMES="$4"
 fi
 NNADAPTER_DEVICE_NAMES_LIST=(${NNADAPTER_DEVICE_NAMES//,/ })
 NNADAPTER_DEVICE_NAMES_TEXT=${NNADAPTER_DEVICE_NAMES//,/_}
 
-if [ -n "$9" ] && [ "$9" != "null" ]; then
-  NNADAPTER_CONTEXT_PROPERTIES="$9"
+if [ -n "$5" ] && [ "$5" != "null" ]; then
+  NNADAPTER_CONTEXT_PROPERTIES="$5"
 fi
 
 NNADAPTER_MODEL_CACHE_DIR="null"
-if [ -n "${10}" ]; then
-  NNADAPTER_MODEL_CACHE_DIR="${10}"
+if [ -n "$6" ]; then
+  NNADAPTER_MODEL_CACHE_DIR="$6"
 fi
 
 NNADAPTER_MODEL_CACHE_TOKEN="null"
-if [ -n "${11}" ]; then
-  NNADAPTER_MODEL_CACHE_TOKEN="${11}"
+if [ -n "$7" ]; then
+  NNADAPTER_MODEL_CACHE_TOKEN="$7"
 fi
 
 #NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH="null"
-NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH="../assets/models/$MODEL_NAME/subgraph_partition_config_file.txt"
+NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH="../assets/models/$MODEL_NAME/${NNADAPTER_DEVICE_NAMES_TEXT}_subgraph_partition_config_file.txt"
 
 #NNADAPTER_MIXED_PRECISION_QUANTIZATION_CONFIG_PATH="null"
-NNADAPTER_MIXED_PRECISION_QUANTIZATION_CONFIG_PATH="../assets/models/$MODEL_NAME/mixed_precision_quantization_config_file.txt"
+NNADAPTER_MIXED_PRECISION_QUANTIZATION_CONFIG_PATH="../assets/models/$MODEL_NAME/${NNADAPTER_DEVICE_NAMES_TEXT}_mixed_precision_quantization_config_file.txt"
 
 export GLOG_v=5
 export SUBGRAPH_ONLINE_MODE=true
@@ -211,4 +155,4 @@ if [ "$NNADAPTER_MODEL_CACHE_DIR" != "null" ]; then
   mkdir -p $NNADAPTER_MODEL_CACHE_DIR
 fi
 chmod +x ./$BUILD_DIR/$DEMO_NAME
-./$BUILD_DIR/$DEMO_NAME ../assets/models/$MODEL_NAME $MODEL_TYPE $INPUT_SHAPE $INPUT_TYPE $OUTPUT_TYPE $NNADAPTER_DEVICE_NAMES "$NNADAPTER_CONTEXT_PROPERTIES" $NNADAPTER_MODEL_CACHE_DIR $NNADAPTER_MODEL_CACHE_TOKEN $NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH $NNADAPTER_MIXED_PRECISION_QUANTIZATION_CONFIG_PATH
+./$BUILD_DIR/$DEMO_NAME ../assets/models/$MODEL_NAME $MODEL_TYPE ../assets/labels/$LABEL_NAME ../assets/images/$IMAGE_NAME ../assets/results/$RESULT_NAME $NNADAPTER_DEVICE_NAMES "$NNADAPTER_CONTEXT_PROPERTIES" $NNADAPTER_MODEL_CACHE_DIR $NNADAPTER_MODEL_CACHE_TOKEN $NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH $NNADAPTER_MIXED_PRECISION_QUANTIZATION_CONFIG_PATH

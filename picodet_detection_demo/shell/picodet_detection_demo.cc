@@ -16,6 +16,7 @@
 #if defined(__ARM_NEON) || defined(__ARM_NEON__)
 #include <arm_neon.h>
 #endif
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
@@ -31,14 +32,19 @@ int REPEAT_COUNT = 5;
 const int CPU_THREAD_NUM = 1;
 const paddle::lite_api::PowerMode CPU_POWER_MODE =
     paddle::lite_api::PowerMode::LITE_POWER_NO_BIND;
-const std::vector<int64_t> INPUT_SHAPE = {1, 3, 224, 224};
-const std::vector<float> INPUT_MEAN = {0.485f, 0.456f, 0.406f};
-const std::vector<float> INPUT_STD = {0.229f, 0.224f, 0.225f};
+const std::vector<int64_t> INPUT_SHAPE = {1, 3, 416, 416};
+const std::vector<float> INPUT_MEAN = {0.f, 0.f, 0.f};
+const std::vector<float> INPUT_STD = {1.f, 1.f, 1.f};
+
+const float SCORE_THRESHOLD = 0.5f;
 
 struct RESULT {
   std::string class_name;
-  int class_id;
   float score;
+  float x0;
+  float y0;
+  float x1;
+  float y1;
 };
 
 inline int64_t get_current_us() {
@@ -128,10 +134,6 @@ std::vector<std::string> load_labels(const std::string &path) {
   while (file) {
     std::string line;
     std::getline(file, line);
-    std::string::size_type pos = line.find(" ");
-    if (pos != std::string::npos) {
-      line = line.substr(pos);
-    }
     labels.push_back(line);
   }
   file.clear();
@@ -182,61 +184,64 @@ void preprocess(const float *input_image,
   }
 }
 
-bool topk_compare_func(std::pair<float, int> a, std::pair<float, int> b) {
-  return (a.first > b.first);
-}
-
 std::vector<RESULT> postprocess(const float *output_data,
                                 int64_t output_size,
+                                int input_width,
+                                int input_height,
                                 const std::vector<std::string> &word_labels) {
-  const int TOPK = 3;
-  std::vector<std::pair<float, int>> vec;
-  for (int i = 0; i < output_size; i++) {
-    vec.push_back(std::make_pair(output_data[i], i));
-  }
-  std::partial_sort(
-      vec.begin(), vec.begin() + TOPK, vec.end(), topk_compare_func);
-  std::vector<RESULT> results(TOPK);
-  for (int i = 0; i < TOPK; i++) {
-    results[i].score = vec[i].first;
-    results[i].class_id = vec[i].second;
-    results[i].class_name = "Unknown";
-    if (results[i].class_id >= 0 && results[i].class_id < word_labels.size()) {
-      results[i].class_name = word_labels[results[i].class_id];
-    }
+  std::vector<RESULT> results;
+  for (int64_t i = 0; i < output_size; i += 6) {
+    // Class id
+    auto class_id = static_cast<int>(round(output_data[i]));
+    // Confidence score
+    auto score = output_data[i + 1];
+    if (score < SCORE_THRESHOLD) continue;
+    RESULT object;
+    object.class_name = class_id >= 0 && class_id < word_labels.size()
+                            ? word_labels[class_id]
+                            : "Unknow";
+    object.score = score;
+    object.x0 = output_data[i + 2];
+    object.y0 = output_data[i + 3];
+    object.x1 = output_data[i + 4];
+    object.y1 = output_data[i + 5];
+    results.push_back(object);
   }
   return results;
 }
 
-void process(const float *input_image,
+void process(const float *image_data,
+             std::vector<float> *output_result,
              const std::vector<std::string> &word_labels,
              std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor) {
   // Preprocess image and fill the data of input tensor
-  std::unique_ptr<paddle::lite_api::Tensor> input_tensor(
-      std::move(predictor->GetInput(0)));
-  input_tensor->Resize(INPUT_SHAPE);
   int input_width = INPUT_SHAPE[3];
   int input_height = INPUT_SHAPE[2];
-  auto *input_data = input_tensor->mutable_data<float>();
+  // image tensor
+  auto input_tensor = predictor->GetInput(0);
+  input_tensor->Resize(INPUT_SHAPE);
+  auto input_data = input_tensor->mutable_data<float>();
+  // scale_factor tensor
+  auto scale_factor_tensor = predictor->GetInput(1);
+  scale_factor_tensor->Resize({1, 2});
+  auto scale_factor_data = scale_factor_tensor->mutable_data<float>();
+  scale_factor_data[0] = 1.0f;
+  scale_factor_data[1] = 1.0f;
   double preprocess_start_time = get_current_us();
-  preprocess(input_image,
-             INPUT_MEAN,
-             INPUT_STD,
-             input_width,
-             input_height,
-             input_data);
+  preprocess(
+      image_data, INPUT_MEAN, INPUT_STD, input_width, input_height, input_data);
   double preprocess_end_time = get_current_us();
   double preprocess_time =
       (preprocess_end_time - preprocess_start_time) / 1000.0f;
 
-  double prediction_time;
-  // Run predictor
-  // warm up to skip the first inference and get more stable time, remove it in
+  // Start to run inference
+  // Warm up to skip the first inference and get more stable time, remove it in
   // actual products
   for (int i = 0; i < WARMUP_COUNT; i++) {
     predictor->Run();
   }
-  // repeat to obtain the average time, set REPEAT_COUNT=1 in actual products
+  // Repeat to obtain the average time, set REPEAT_COUNT=1 in actual products
+  double prediction_time;
   double max_time_cost = 0.0f;
   double min_time_cost = std::numeric_limits<float>::max();
   double total_time_cost = 0.0f;
@@ -263,36 +268,43 @@ void process(const float *input_image,
          min_time_cost);
 
   // Get the data of output tensor and postprocess to output detected objects
-  std::unique_ptr<const paddle::lite_api::Tensor> output_tensor(
-      std::move(predictor->GetOutput(0)));
-  const float *output_data = output_tensor->mutable_data<float>();
+  auto output_tensor = predictor->GetOutput(0);
+  const float *output_data = output_tensor->data<float>();
   int64_t output_size = 1;
   for (auto dim : output_tensor->shape()) {
     output_size *= dim;
   }
+  output_result->resize(output_size);
+  memcpy(output_result->data(), output_data, output_size * sizeof(float));
   double postprocess_start_time = get_current_us();
-  std::vector<RESULT> results =
-      postprocess(output_data, output_size, word_labels);
+  std::vector<RESULT> results = postprocess(
+      output_data, output_size, input_width, input_height, word_labels);
   double postprocess_end_time = get_current_us();
   double postprocess_time =
       (postprocess_end_time - postprocess_start_time) / 1000.0f;
-
   printf("results: %d\n", results.size());
   for (int i = 0; i < results.size(); i++) {
-    printf(
-        "Top%d %s - %f\n", i, results[i].class_name.c_str(), results[i].score);
+    printf("[%d] %s - %f %f,%f,%f,%f\n",
+           i,
+           results[i].class_name.c_str(),
+           results[i].score,
+           results[i].x0,
+           results[i].y0,
+           results[i].x1,
+           results[i].y1);
   }
+
   printf("Preprocess time: %f ms\n", preprocess_time);
   printf("Prediction time: %f ms\n", prediction_time);
   printf("Postprocess time: %f ms\n\n", postprocess_time);
 }
 
 int main(int argc, char **argv) {
-  if (argc < 11) {
+  if (argc < 12) {
     printf(
         "Usage: \n"
-        "./image_classification_demo model_path mode_type label_path "
-        "image_path nnadapter_device_names nnadapter_context_properties "
+        "./picodet_detection_demo model_path mode_type label_path image_path "
+        "result_path nnadapter_device_names nnadapter_context_properties "
         "nnadapter_model_cache_dir nnadapter_model_cache_token "
         "nnadapter_subgraph_partition_config_path "
         "nnadapter_mixed_precision_quantization_config_path");
@@ -302,22 +314,23 @@ int main(int argc, char **argv) {
   int model_type = atoi(argv[2]);
   std::string label_path = argv[3];
   std::string image_path = argv[4];
+  std::string result_path = argv[5];
   std::vector<std::string> nnadapter_device_names =
-      split_string<std::string>(argv[5], ',');
+      split_string<std::string>(argv[6], ',');
   if (nnadapter_device_names.empty()) {
     printf("No device specified.");
     return -1;
   }
   std::string nnadapter_context_properties =
-      strcmp(argv[6], "null") == 0 ? "" : argv[6];
-  std::string nnadapter_model_cache_dir =
       strcmp(argv[7], "null") == 0 ? "" : argv[7];
-  std::string nnadapter_model_cache_token =
+  std::string nnadapter_model_cache_dir =
       strcmp(argv[8], "null") == 0 ? "" : argv[8];
-  std::string nnadapter_subgraph_partition_config_path =
+  std::string nnadapter_model_cache_token =
       strcmp(argv[9], "null") == 0 ? "" : argv[9];
-  std::string nnadapter_mixed_precision_quantization_config_path =
+  std::string nnadapter_subgraph_partition_config_path =
       strcmp(argv[10], "null") == 0 ? "" : argv[10];
+  std::string nnadapter_mixed_precision_quantization_config_path =
+      strcmp(argv[11], "null") == 0 ? "" : argv[11];
 
   // Load Labels
   std::vector<std::string> word_labels = load_labels(label_path);
@@ -387,8 +400,10 @@ int main(int argc, char **argv) {
             nnadapter_subgraph_partition_config_string);
       }
     } else {
-      printf("Failed to load the subgraph partition configuration file %s\n",
-             nnadapter_subgraph_partition_config_path.c_str());
+      printf(
+          "Failed to load the subgraph partition configuration file "
+          "%s\n",
+          nnadapter_subgraph_partition_config_path.c_str());
     }
   }
   // Set the mixed precision quantization configuration file
@@ -449,7 +464,14 @@ int main(int argc, char **argv) {
     predictor =
         paddle::lite_api::CreatePaddlePredictor<paddle::lite_api::MobileConfig>(
             mobile_config);
-    process(image_data.data(), word_labels, predictor);
+    std::vector<float> result_data;
+    process(image_data.data(), &result_data, word_labels, predictor);
+    std::ofstream result_file(
+        result_path,
+        std::ios::out | std::ios::binary);  // dump the output tensor to file
+    result_file.write(reinterpret_cast<char *>(result_data.data()),
+                      result_data.size() * sizeof(float));
+    result_file.close();
   } catch (std::exception e) {
     printf("An internal error occurred in PaddleLite(mobile config).\n");
     return -1;

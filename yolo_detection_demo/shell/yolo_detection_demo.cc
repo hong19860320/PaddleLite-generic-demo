@@ -306,13 +306,14 @@ void process(const float *image_data,
 }
 
 int main(int argc, char **argv) {
-  if (argc < 11) {
+  if (argc < 12) {
     printf(
         "Usage: \n"
         "./yolo_detection_demo model_path mode_type label_path image_path "
         "result_path nnadapter_device_names nnadapter_context_properties "
         "nnadapter_model_cache_dir nnadapter_model_cache_token "
-        "nnadapter_subgraph_partition_config_path");
+        "nnadapter_subgraph_partition_config_path "
+        "nnadapter_mixed_precision_quantization_config_path");
     return -1;
   }
   std::string model_dir = argv[1];
@@ -334,6 +335,8 @@ int main(int argc, char **argv) {
       strcmp(argv[9], "null") == 0 ? "" : argv[9];
   std::string nnadapter_subgraph_partition_config_path =
       strcmp(argv[10], "null") == 0 ? "" : argv[10];
+  std::string nnadapter_mixed_precision_quantization_config_path =
+      strcmp(argv[11], "null") == 0 ? "" : argv[11];
 
   // Load Labels
   std::vector<std::string> word_labels = load_labels(label_path);
@@ -389,7 +392,7 @@ int main(int argc, char **argv) {
   cxx_config.set_nnadapter_device_names(nnadapter_device_names);
   cxx_config.set_nnadapter_context_properties(nnadapter_context_properties);
   cxx_config.set_nnadapter_model_cache_dir(nnadapter_model_cache_dir);
-  // Set the subgraph custom partition configuration file
+  // Set the subgraph partition configuration file
   if (!nnadapter_subgraph_partition_config_path.empty()) {
     std::vector<char> nnadapter_subgraph_partition_config_buffer;
     if (read_file(nnadapter_subgraph_partition_config_path,
@@ -404,9 +407,29 @@ int main(int argc, char **argv) {
       }
     } else {
       printf(
-          "Failed to load the subgraph custom partition configuration file "
+          "Failed to load the subgraph partition configuration file "
           "%s\n",
           nnadapter_subgraph_partition_config_path.c_str());
+    }
+  }
+  // Set the mixed precision quantization configuration file
+  if (!nnadapter_mixed_precision_quantization_config_path.empty()) {
+    std::vector<char> nnadapter_mixed_precision_quantization_config_buffer;
+    if (read_file(nnadapter_mixed_precision_quantization_config_path,
+                  &nnadapter_mixed_precision_quantization_config_buffer,
+                  false)) {
+      if (!nnadapter_mixed_precision_quantization_config_buffer.empty()) {
+        std::string nnadapter_mixed_precision_quantization_config_string(
+            nnadapter_mixed_precision_quantization_config_buffer.data(),
+            nnadapter_mixed_precision_quantization_config_buffer.size());
+        cxx_config.set_nnadapter_mixed_precision_quantization_config_buffer(
+            nnadapter_mixed_precision_quantization_config_string);
+      }
+    } else {
+      printf(
+          "Failed to load the mixed precision quantization configuration file "
+          "%s\n",
+          nnadapter_mixed_precision_quantization_config_path.c_str());
     }
   }
   try {
