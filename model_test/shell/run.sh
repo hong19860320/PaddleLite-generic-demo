@@ -189,6 +189,12 @@ if [[ "$NNADAPTER_DEVICE_NAMES" =~ "qualcomm_qnn" ]]; then
   fi
 fi
 
+if [[ "$NNADAPTER_DEVICE_NAMES" =~ "verisilicon_timvx" ]]; then
+  export VIV_VX_ENABLE_GRAPH_TRANSFORM=-pcq:1
+  export VIV_VX_SET_PER_CHANNEL_ENTROPY=100
+  export VSI_NN_LOG_LEVEL=5
+fi
+
 if [ -z "$NNADAPTER_CONTEXT_PROPERTIES" ]; then
   NNADAPTER_CONTEXT_PROPERTIES="null"
 fi
