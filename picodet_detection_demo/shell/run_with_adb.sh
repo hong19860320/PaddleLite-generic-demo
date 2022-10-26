@@ -1,14 +1,9 @@
 #!/bin/bash
-MODEL_NAME=mobilenet_v1_fp32_224
-#MODEL_NAME=mobilenet_v1_int8_224_per_layer
-#MODEL_NAME=mobilenet_v1_int8_224_per_channel
-#MODEL_NAME=mobilenet_v2_int8_224_per_layer
-#MODEL_NAME=resnet50_fp32_224
-#MODEL_NAME=resnet50_int8_224_per_layer
-#MODEL_NAME=shufflenet_v2_int8_224_per_layer
+MODEL_NAME=picodet_relu6_int8_416_per_channel
 if [ -n "$1" ]; then
   MODEL_NAME=$1
 fi
+
 if [ ! -d "../assets/models/$MODEL_NAME" ];then
   MODEL_URL="http://paddlelite-demo.bj.bcebos.com/devices/generic/models/${MODEL_NAME}.tar.gz"
   echo "Model $MODEL_NAME not found! Try to download it from $MODEL_URL ..."
@@ -19,15 +14,12 @@ if [ ! -d "../assets/models/$MODEL_NAME" ];then
   fi
 fi
 
-CONFIG_NAME=imagenet_224.txt
-if [ -n "$2" ]; then
-  CONFIG_NAME=$2
-fi
-
-DATASET_NAME=test
-if [ -n "$3" ]; then
-  DATASET_NAME=$3
-fi
+DEMO_NAME=picodet_detection_demo
+MODEL_TYPE=1 # 1 combined paddle fluid model
+LABEL_NAME=coco-labels-2014_2017.txt
+IMAGE_NAME=dog.raw
+RESULT_NAME=dog.bin
+WORK_SPACE=/data/local/tmp/test
 
 # For TARGET_OS=android, TARGET_ABI should be arm64-v8a or armeabi-v7a.
 # For TARGET_OS=linux, TARGET_ABI should be arm64, armhf or amd64.
@@ -37,18 +29,17 @@ fi
 # RK1806EVB, RV1109/1126 EVB: TARGET_OS=linux and TARGET_ABI=armhf 
 # Intel-x86+Ascend310: TARGET_OS=linux and TARGET_ABI=amd64
 TARGET_OS=android
-if [ -n "$4" ]; then
-  TARGET_OS=$4
+if [ -n "$2" ]; then
+  TARGET_OS=$2
 fi
 
-WORK_SPACE=/data/local/tmp/test
 if [ "$TARGET_OS" == "linux" ]; then
   WORK_SPACE=/var/tmp/test
 fi
 
 TARGET_ABI=arm64-v8a
-if [ -n "$5" ]; then
-  TARGET_ABI=$5
+if [ -n "$3" ]; then
+  TARGET_ABI=$3
 fi
 
 # RK1808EVB, TB-RK1808S0, RK1806EVB, RV1109/1126 EVB: NNADAPTER_DEVICE_NAMES=rockchip_npu
@@ -56,29 +47,29 @@ fi
 # Kirin810/820/985/990/9000/9000E: NNADAPTER_DEVICE_NAMES=huawei_kirin_npu
 # CPU only: NNADAPTER_DEVICE_NAMES=cpu
 NNADAPTER_DEVICE_NAMES="cpu"
-if [ -n "$6" ]; then
-  NNADAPTER_DEVICE_NAMES="$6"
+if [ -n "$4" ]; then
+  NNADAPTER_DEVICE_NAMES="$4"
 fi
 NNADAPTER_DEVICE_NAMES_LIST=(${NNADAPTER_DEVICE_NAMES//,/ })
 NNADAPTER_DEVICE_NAMES_TEXT=${NNADAPTER_DEVICE_NAMES//,/_}
 
 ADB_DEVICE_NAME=
-if [ -n "$7" ]; then
-  ADB_DEVICE_NAME="-s $7"
+if [ -n "$5" ]; then
+  ADB_DEVICE_NAME="-s $5"
 fi
 
-if [ -n "$8" ] && [ "$8" != "null" ]; then
-  NNADAPTER_CONTEXT_PROPERTIES="$8"
+if [ -n "$6" ] && [ "$6" != "null" ]; then
+  NNADAPTER_CONTEXT_PROPERTIES="$6"
 fi
 
 NNADAPTER_MODEL_CACHE_DIR="null"
-if [ -n "$9" ]; then
-  NNADAPTER_MODEL_CACHE_DIR="$9"
+if [ -n "$7" ]; then
+  NNADAPTER_MODEL_CACHE_DIR="$7"
 fi
 
 NNADAPTER_MODEL_CACHE_TOKEN="null"
-if [ -n "${10}" ]; then
-  NNADAPTER_MODEL_CACHE_TOKEN="${10}"
+if [ -n "$8" ]; then
+  NNADAPTER_MODEL_CACHE_TOKEN="$8"
 fi
 
 #NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH="null"
@@ -102,7 +93,6 @@ fi
 if [[ "$NNADAPTER_DEVICE_NAMES" =~ "verisilicon_timvx" ]]; then
   EXPORT_ENVIRONMENT_VARIABLES="${EXPORT_ENVIRONMENT_VARIABLES}export VIV_VX_ENABLE_GRAPH_TRANSFORM=-pcq:1; export VIV_VX_SET_PER_CHANNEL_ENTROPY=100; export VSI_NN_LOG_LEVEL=5;"
 fi
-
 EXPORT_ENVIRONMENT_VARIABLES="${EXPORT_ENVIRONMENT_VARIABLES}export LD_LIBRARY_PATH=."
 for NNADAPTER_DEVICE_NAME in ${NNADAPTER_DEVICE_NAMES_LIST[@]}
 do
@@ -116,6 +106,7 @@ fi
 
 BUILD_DIR=build.${TARGET_OS}.${TARGET_ABI}
 
+# Please install adb, and DON'T run this in the docker.
 set -e
 adb $ADB_DEVICE_NAME shell "rm -rf $WORK_SPACE"
 adb $ADB_DEVICE_NAME shell "mkdir -p $WORK_SPACE"
@@ -126,8 +117,6 @@ do
 done
 adb $ADB_DEVICE_NAME push ../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/cpu $WORK_SPACE
 adb $ADB_DEVICE_NAME push ../assets/models/$MODEL_NAME $WORK_SPACE
-adb $ADB_DEVICE_NAME push ../assets/configs/. $WORK_SPACE
-adb $ADB_DEVICE_NAME push $BUILD_DIR/demo $WORK_SPACE
 set +e
 adb $ADB_DEVICE_NAME push ../assets/models/${MODEL_NAME}.nb $WORK_SPACE
 if [ "$NNADAPTER_MODEL_CACHE_DIR" != "null" ]; then
@@ -135,44 +124,14 @@ if [ "$NNADAPTER_MODEL_CACHE_DIR" != "null" ]; then
   adb $ADB_DEVICE_NAME shell "mkdir -p $WORK_SPACE/$NNADAPTER_MODEL_CACHE_DIR"
 fi
 set -e
-COMMAND_LINE="cd $WORK_SPACE; $EXPORT_ENVIRONMENT_VARIABLES chmod +x ./demo; ./demo ./$MODEL_NAME ./$CONFIG_NAME ./$DATASET_NAME $NNADAPTER_DEVICE_NAMES \"$NNADAPTER_CONTEXT_PROPERTIES\" $NNADAPTER_MODEL_CACHE_DIR $NNADAPTER_MODEL_CACHE_TOKEN $NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH $NNADAPTER_MIXED_PRECISION_QUANTIZATION_CONFIG_PATH"
-rm -rf ../assets/datasets/$DATASET_NAME/outputs
-mkdir -p ../assets/datasets/$DATASET_NAME/outputs
-SPLIT_COUNT=200
-SPLIT_INDEX=0
-SAMPLE_INDEX=0
-SAMPLE_START=0
-for SAMPLE_NAME in $(cat ../assets/datasets/$DATASET_NAME/list.txt); do
-  echo $SAMPLE_INDEX + ": " + $SAMPLE_NAME
-  if [ $SAMPLE_INDEX -ge $SAMPLE_START ] ; then 
-    if [ $SPLIT_INDEX -eq $SPLIT_COUNT ] ; then
-      adb $ADB_DEVICE_NAME push list.txt $WORK_SPACE/$DATASET_NAME/
-      adb $ADB_DEVICE_NAME shell "$COMMAND_LINE"
-      adb $ADB_DEVICE_NAME pull $WORK_SPACE/$DATASET_NAME/outputs/ ../assets/datasets/$DATASET_NAME/outputs/
-      SPLIT_INDEX=0
-    fi
-    if [ $SPLIT_INDEX -eq 0 ] ; then 
-      adb $ADB_DEVICE_NAME shell "rm -rf $WORK_SPACE/$DATASET_NAME/inputs"
-      adb $ADB_DEVICE_NAME shell "mkdir -p $WORK_SPACE/$DATASET_NAME/inputs"
-      adb $ADB_DEVICE_NAME shell "rm -rf $WORK_SPACE/$DATASET_NAME/outputs"
-      adb $ADB_DEVICE_NAME shell "mkdir -p $WORK_SPACE/$DATASET_NAME/outputs"
-      rm -rf list.txt
-    fi
-    adb $ADB_DEVICE_NAME push ../assets/datasets/$DATASET_NAME/inputs/$SAMPLE_NAME $WORK_SPACE/$DATASET_NAME/inputs/
-    echo -e "$SAMPLE_NAME" >> list.txt
-    SPLIT_INDEX=$(($SPLIT_INDEX + 1))
-  else
-    echo "skip..."
-  fi 
-  SAMPLE_INDEX=$(($SAMPLE_INDEX + 1))
-done
-if [ $SPLIT_INDEX -gt 0 ] ; then
-  adb $ADB_DEVICE_NAME push list.txt $WORK_SPACE/$DATASET_NAME/
-  adb $ADB_DEVICE_NAME shell "$COMMAND_LINE"
-  adb $ADB_DEVICE_NAME pull $WORK_SPACE/$DATASET_NAME/outputs/ ../assets/datasets/$DATASET_NAME/outputs/
-fi
-rm -rf list.txt
-adb $ADB_DEVICE_NAME pull ${WORK_SPACE}/${MODEL_NAME}.nb ../assets/models/
+adb $ADB_DEVICE_NAME push ../assets/labels/. $WORK_SPACE
+adb $ADB_DEVICE_NAME push ../assets/images/. $WORK_SPACE
+adb $ADB_DEVICE_NAME push $BUILD_DIR/$DEMO_NAME $WORK_SPACE
+adb $ADB_DEVICE_NAME shell "cd $WORK_SPACE; ${EXPORT_ENVIRONMENT_VARIABLES} chmod +x ./$DEMO_NAME; ./$DEMO_NAME ./$MODEL_NAME $MODEL_TYPE ./$LABEL_NAME ./$IMAGE_NAME ./$RESULT_NAME $NNADAPTER_DEVICE_NAMES \"$NNADAPTER_CONTEXT_PROPERTIES\" $NNADAPTER_MODEL_CACHE_DIR $NNADAPTER_MODEL_CACHE_TOKEN $NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH $NNADAPTER_MIXED_PRECISION_QUANTIZATION_CONFIG_PATH"
+#adb $ADB_DEVICE_NAME shell "cd $WORK_SPACE; ${EXPORT_ENVIRONMENT_VARIABLES} chmod +x ./$DEMO_NAME; ./$DEMO_NAME ./$MODEL_NAME $MODEL_TYPE ./$LABEL_NAME ./$IMAGE_NAME ./$RESULT_NAME $NNADAPTER_DEVICE_NAMES \"$NNADAPTER_CONTEXT_PROPERTIES\" $NNADAPTER_MODEL_CACHE_DIR $NNADAPTER_MODEL_CACHE_TOKEN $NNADAPTER_SUBGRAPH_PARTITION_CONFIG_PATH $NNADAPTER_MIXED_PRECISION_QUANTIZATION_CONFIG_PATH >${NNADAPTER_DEVICE_NAMES_TEXT}.log 2>&1"
+#adb $ADB_DEVICE_NAME pull $WORK_SPACE/${NNADAPTER_DEVICE_NAMES_TEXT}.log .
+adb $ADB_DEVICE_NAME pull $WORK_SPACE/${MODEL_NAME}.nb ../assets/models/
+adb $ADB_DEVICE_NAME pull $WORK_SPACE/$RESULT_NAME ../assets/results/
 if [ "$NNADAPTER_MODEL_CACHE_DIR" != "null" ]; then
   adb $ADB_DEVICE_NAME pull $WORK_SPACE/$NNADAPTER_MODEL_CACHE_DIR ../assets/models/
 fi
