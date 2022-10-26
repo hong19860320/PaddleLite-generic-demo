@@ -20,35 +20,35 @@ from paddle.fluid import core
 
 paddle.enable_static()
 
-src_model_dir = "./simple_model"
-dst_model_dir = "./output_model"
-model_file = "model.pdmodel"
-params_file = "model.pdiparams"
+SRC_MODEL_DIR = "./simple_model"
+DST_MODEL_DIR = "./output_model"
+MODEL_FILE = "model.pdmodel"
+PARAMS_FILE = "model.pdiparams"
 
-#model_file = ""
-#params_file = ""
+#MODEL_FILE = ""
+#PARAMS_FILE = ""
 
 
 def main(argv=None):
     place = paddle.CPUPlace()
     exe = paddle.static.Executor(place=place)
-    if len(model_file) == 0 and len(params_file) == 0:
+    if len(MODEL_FILE) == 0 and len(PARAMS_FILE) == 0:
         [program, feed_target_names,
-         fetch_targets] = fluid.io.load_inference_model(src_model_dir, exe)
+         fetch_targets] = fluid.io.load_inference_model(SRC_MODEL_DIR, exe)
     else:
         [program, feed_target_names,
          fetch_targets] = fluid.io.load_inference_model(
-             src_model_dir,
+             SRC_MODEL_DIR,
              exe,
-             model_filename=model_file,
-             params_filename=params_file)
+             model_filename=MODEL_FILE,
+             params_filename=PARAMS_FILE)
     exe.run(paddle.static.default_startup_program())
     print('--- feed_target_names ---')
     print(feed_target_names)
     print('--- fetch_targets ---')
     print(fetch_targets)
     try:
-        os.makedirs(dst_model_dir)
+        os.makedirs(DST_MODEL_DIR)
     except OSError as e:
         if e.errno != 17:
             raise
@@ -75,7 +75,7 @@ def main(argv=None):
             out_names = op_desc.output(arg_name)
             for j in range(len(out_names)):
                 if out_names[j] == output_name:
-                    print("found op %s!" % op_type)
+                    print("Found op %s!" % op_type)
                     found = True
                     out_names[j] = input_name
                     op_desc.set_output(arg_name, out_names)
@@ -105,22 +105,23 @@ def main(argv=None):
                 break
         if found:
             break
-    if len(model_file) == 0 and len(params_file) == 0:
+    if len(MODEL_FILE) == 0 and len(PARAMS_FILE) == 0:
         fluid.io.save_inference_model(
-            dst_model_dir,
+            DST_MODEL_DIR,
             feed_target_names,
             fetch_targets,
             exe,
             main_program=program)
     else:
         fluid.io.save_inference_model(
-            dst_model_dir,
+            DST_MODEL_DIR,
             feed_target_names,
             fetch_targets,
             exe,
             main_program=program,
-            model_filename=model_file,
-            params_filename=params_file)
+            model_filename=MODEL_FILE,
+            params_filename=PARAMS_FILE)
+    print("Done.")
 
 
 if __name__ == '__main__':

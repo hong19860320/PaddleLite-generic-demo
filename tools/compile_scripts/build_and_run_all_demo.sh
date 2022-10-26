@@ -70,321 +70,248 @@ build_and_run_image_classification_demo() {
   local abi=arm64-v8a
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_FAKE_DEVICE" == "1" ] && [ -n "$FAKE_DEVICE_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224 $os $abi fake_device,builtin_device "$FAKE_DEVICE_ANDROID_ARM64_V8A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test $os $abi fake_device,builtin_device "$FAKE_DEVICE_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_BUILTIN_DEVICE" == "1" ] && [ -n "$BUILTIN_DEVICE_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224 $os $abi builtin_device "$BUILTIN_DEVICE_ANDROID_ARM64_V8A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test $os $abi builtin_device "$BUILTIN_DEVICE_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_int8_224_per_layer#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_int8_224_per_layer#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
   # android armeabi-v7a
   os=android
   abi=armeabi-v7a
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_FAKE_DEVICE" == "1" ] && [ -n "$FAKE_DEVICE_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224 $os $abi fake_device,builtin_device "$BUILTIN_DEVICE_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test $os $abi fake_device,builtin_device "$BUILTIN_DEVICE_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_BUILTIN_DEVICE" == "1" ] && [ -n "$BUILTIN_DEVICE_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224 $os $abi builtin_device "$BUILTIN_DEVICE_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test $os $abi builtin_device "$BUILTIN_DEVICE_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_MEDIATEK_APU" == "1" ] && [ -n "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:resnet50_int8_224_per_layer $os $abi mediatek_apu "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:resnet50_int8_224_per_layer#imagenet_224.txt#test $os $abi mediatek_apu "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer $os $abi verisilicon_timvx "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_int8_224_per_layer#imagenet_224.txt#test $os $abi verisilicon_timvx "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_int8_224_per_layer#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer:resnet50_fp32_224 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_int8_224_per_laye#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   # linux arm64
   os=linux
   abi=arm64
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_FAKE_DEVICE" == "1" ] && [ -n "$FAKE_DEVICE_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224 $os $abi fake_device,builtin_device "$FAKE_DEVICE_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test $os $abi fake_device,builtin_device "$FAKE_DEVICE_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_BUILTIN_DEVICE" == "1" ] && [ -n "$BUILTIN_DEVICE_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224 $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_ROCKCHIP_NPU" == "1" ] && [ -n "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:resnet50_int8_224_per_layer $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:resnet50_int8_224_per_layer#imagenet_224.txt#test $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_AMLOGIC_NPU" == "1" ] && [ -n "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:resnet50_int8_224_per_layer $os $abi amlogic_npu "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:resnet50_int8_224_per_layer#imagenet_224.txt#test $os $abi amlogic_npu "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_IMAGINATION_NNA" == "1" ] && [ -n "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer $os $abi imagination_nna "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test $os $abi imagination_nna "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_int8_224_per_layer $os $abi verisilicon_timvx "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_int8_224_per_layer#imagenet_224.txt#test $os $abi verisilicon_timvx "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_NVIDIA_TENSORRT" == "1" ] && [ -n "$NVIDIA_TENSORRT_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_ARM64_DEVICE_LIST"
   fi
   # linux armhf
   os=linux
   abi=armhf
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_FAKE_DEVICE" == "1" ] && [ -n "$FAKE_DEVICE_LINUX_ARMHF_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224 $os $abi fake_device,builtin_device "$FAKE_DEVICE_LINUX_ARMHF_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test $os $abi fake_device,builtin_device "$FAKE_DEVICE_LINUX_ARMHF_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_BUILTIN_DEVICE" == "1" ] && [ -n "$BUILTIN_DEVICE_LINUX_ARMHF_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224 $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_ARMHF_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_ARMHF_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_ROCKCHIP_NPU" == "1" ] && [ -n "$ROCKCHIP_NPU_LINUX_ARMHF_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:resnet50_int8_224_per_layer $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARMHF_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:resnet50_int8_224_per_layer#imagenet_224.txt#test $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARMHF_DEVICE_LIST"
   fi
   # linux amd64
   os=linux
   abi=amd64
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_FAKE_DEVICE" == "1" ] && [ -n "$FAKE_DEVICE_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224 $os $abi fake_device,builtin_device "$FAKE_DEVICE_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test $os $abi fake_device,builtin_device "$FAKE_DEVICE_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_BUILTIN_DEVICE" == "1" ] && [ -n "$BUILTIN_DEVICE_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224 $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_CAMBRICON_MLU" == "1" ] && [ -n "$CAMBRICON_MLU_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi cambricon_mlu "$CAMBRICON_MLU_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi cambricon_mlu "$CAMBRICON_MLU_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_NVIDIA_TENSORRT" == "1" ] && [ -n "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_INTEL_OPENVINO" == "1" ] && [ -n "$INTEL_OPENVINO_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh resnet50_fp32_224 $os $abi intel_openvino "$INTEL_OPENVINO_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh resnet50_fp32_224#imagenet_224.txt#test $os $abi intel_openvino "$INTEL_OPENVINO_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:resnet50_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi qualcomm_qnn "${QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST}"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:resnet50_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi qualcomm_qnn "${QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST}"
   fi
   # qnx arm64
   os=qnx
   abi=arm64
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_FAKE_DEVICE" == "1" ] && [ -n "$FAKE_DEVICE_QNX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224 $os $abi fake_device,builtin_device "$FAKE_DEVICE_QNX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test $os $abi fake_device,builtin_device "$FAKE_DEVICE_QNX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_BUILTIN_DEVICE" == "1" ] && [ -n "$BUILTIN_DEVICE_QNX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:mobilenet_v1_int8_224_per_channel:mobilenet_v1_fp32_224 $os $abi builtin_device "$BUILTIN_DEVICE_QNX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_int8_224_per_channel#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test $os $abi builtin_device "$BUILTIN_DEVICE_QNX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer:resnet50_int8_224_per_layer:mobilenet_v1_fp32_224:resnet50_fp32_224 $os $abi qualcomm_qnn "${QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST}"
+    run_demo ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer#imagenet_224.txt#test:resnet50_int8_224_per_layer#imagenet_224.txt#test:mobilenet_v1_fp32_224#imagenet_224.txt#test:resnet50_fp32_224#imagenet_224.txt#test $os $abi qualcomm_qnn "${QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST}"
   fi
   echo "done"
 }
 
-build_and_run_ssd_detection_demo() {
-  echo "build and run ssd_detection_demo"
-  cd $ROOT_DIR/ssd_detection_demo/shell
+build_and_run_object_detection_demo() {
+  echo "build and run object_detection_demo"
+  cd $ROOT_DIR/object_detection_demo/shell
   # android arm64-v8a
   local os=android
   local abi=arm64-v8a
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST"
+    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test:ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
+    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer#yolov3_coco_608.txt#test:yolov3_mobilenet_v1_270e_coco_int8_608_per_channel#yolov3_coco_608.txt#test:yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test:ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST"
+    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer#yolov3_coco_608.txt#test:yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
   fi
   # android armeabi-v7a
   os=android
   abi=armeabi-v7a
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_MEDIATEK_APU" == "1" ] && [ -n "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer $os $abi mediatek_apu "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test $os $abi mediatek_apu "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer#yolov3_coco_608.txt#test:yolov3_mobilenet_v1_270e_coco_int8_608_per_channel#yolov3_coco_608.txt#test $os $abi mediatek_apu "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi verisilicon_timvx "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test:ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi verisilicon_timvx "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer#yolov3_coco_608.txt#test:yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi verisilicon_timvx "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test:ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer#yolov3_coco_608.txt#test:yolov3_mobilenet_v1_270e_coco_int8_608_per_channel#yolov3_coco_608.txt#test:yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test:ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer#yolov3_coco_608.txt#test:yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   # linux arm64
   os=linux
   abi=arm64
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_ROCKCHIP_NPU" == "1" ] && [ -n "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST"
+    # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer#yolov3_coco_608.txt#test $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_AMLOGIC_NPU" == "1" ] && [ -n "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer $os $abi amlogic_npu "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test $os $abi amlogic_npu "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST"
+    # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer#yolov3_coco_608.txt#test $os $abi amlogic_npu "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST"
   fi
   #if [ "$ENABLE_DEMO_IMAGINATION_NNA" == "1" ] && [ -n "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST" ]; then
-    # run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer $os $abi imagination_nna "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST"
+    # run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test $os $abi imagination_nna "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST"
+    # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer#yolov3_coco_608.txt#test $os $abi imagination_nna "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST"
   #fi
   if [ "$ENABLE_DEMO_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi verisilicon_timvx "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test:ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi verisilicon_timvx "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST"
+    # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer#yolov3_coco_608.txt#test:yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi verisilicon_timvx "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST"
+    # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_NVIDIA_TENSORRT" == "1" ] && [ -n "$NVIDIA_TENSORRT_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi nvidia_tensorrt "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
   fi
   # linux armhf
   os=linux
   abi=armhf
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_ROCKCHIP_NPU" == "1" ] && [ -n "$ROCKCHIP_NPU_LINUX_ARMHF_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARMHF_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARMHF_DEVICE_LIST"
+    # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer#yolov3_coco_608.txt#test $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARMHF_DEVICE_LIST"
   fi
   # linux amd64
   os=linux
   abi=amd64
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST"
   fi
   #if [ "$ENABLE_DEMO_CAMBRICON_MLU" == "1" ] && [ -n "$CAMBRICON_MUL_LINUX_AMD64_DEVICE_LIST" ]; then
-    # run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi cambricon_mlu "$CAMBRICON_MUL_LINUX_AMD64_DEVICE_LIST"
+    # run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi cambricon_mlu "$CAMBRICON_MUL_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi cambricon_mlu "$CAMBRICON_MLU_LINUX_AMD64_DEVICE_LIST"
   #fi
   if [ "$ENABLE_DEMO_NVIDIA_TENSORRT" == "1" ] && [ -n "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test:ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
+    # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
   fi
   # qnx arm64
   os=qnx
   abi=arm64
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer:ssd_mobilenet_v1_relu_voc_fp32_300 $os $abi qualcomm_qnn "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test:ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST"
+    # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi qualcomm_qnn "${QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST}"
   fi
-  echo "done"
-}
-
-build_and_run_yolo_detection_demo() {
-  echo "build and run yolo_detection_demo"
-  cd $ROOT_DIR/yolo_detection_demo/shell
-  # android arm64-v8a
-  local os=android
-  local abi=arm64-v8a
-  ./build.sh $os $abi
-  #if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST"
-  #fi
-  #if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer:yolov3_mobilenet_v1_270e_coco_int8_608_per_channel:yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
-  #fi
-  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
-    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer:yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
-  #fi
-  os=android
-  abi=armeabi-v7a
-  ./build.sh $os $abi
-  #if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
-  #fi
-  #if [ "$ENABLE_DEMO_MEDIATEK_APU" == "1" ] && [ -n "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer:yolov3_mobilenet_v1_270e_coco_int8_608_per_channel $os $abi mediatek_apu "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
-  #fi
-  #if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer:yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi verisilicon_timvx "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST"
-  #fi
-  #if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer:yolov3_mobilenet_v1_270e_coco_int8_608_per_channel:yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
-  #fi
-  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    # run_demo ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer:yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
-  #fi
-  # linux arm64
-  os=linux
-  abi=arm64
-  ./build.sh $os $abi
-  #if [ "$ENABLE_DEMO_ROCKCHIP_NPU" == "1" ] && [ -n "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-    # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST"
-  #fi
-  #if [ "$ENABLE_DEMO_AMLOGIC_NPU" == "1" ] && [ -n "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-    # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer $os $abi amlogic_npu "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST"
-  #fi
-  #if ["$ENABLE_DEMO_IMAGINATION_NNA" == "1" ] && [ -n "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST" ]; then
-    # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer $os $abi imagination_nna "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST"
-  #fi
-  if [ "$ENABLE_DEMO_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
-  fi
-  #if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST" ]; then
-    # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer:yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi verisilicon_timvx "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST"
-  #fi
-  #if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST" ]; then
-     # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST"
-  #fi
-  if [ "$ENABLE_DEMO_NVIDIA_TENSORRT" == "1" ] && [ -n "$NVIDIA_TENSORRT_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi nvidia_tensorrt "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
-  fi
-  # linux armhf
-  os=linux
-  abi=armhf
-  ./build.sh $os $abi
-  #if [ "$ENABLE_DEMO_ROCKCHIP_NPU" == "1" ] && [ -n "$ROCKCHIP_NPU_LINUX_ARMHF_DEVICE_LIST" ]; then
-    # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARMHF_DEVICE_LIST"
-  #fi
-  # linux amd64
-  os=linux
-  abi=amd64
-  ./build.sh $os $abi
-  if [ "$ENABLE_DEMO_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST"
-  fi
-  if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST"
-  fi
-  if [ "$ENABLE_DEMO_CAMBRICON_MLU" == "1" ] && [ -n "$CAMBRICON_MLU_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi cambricon_mlu "$CAMBRICON_MLU_LINUX_AMD64_DEVICE_LIST"
-  fi
-  if [ "$ENABLE_DEMO_NVIDIA_TENSORRT" == "1" ] && [ -n "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST"
-  fi
-  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
-  #  run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
-  #fi
-  # qnx arm64
-  os=qnx
-  abi=arm64
-  ./build.sh $os $abi
-  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST" ]; then
-  #  run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 $os $abi qualcomm_qnn "${QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST}"
-  #fi
   echo "done"
 }
 
@@ -396,142 +323,140 @@ build_and_run_model_test() {
   local abi=arm64-v8a
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_FAKE_DEVICE" == "1" ] && [ -n "$FAKE_DEVICE_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#0#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi fake_device,builtin_device "$FAKE_DEVICE_ANDROID_ARM64_V8A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi fake_device,builtin_device "$FAKE_DEVICE_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_BUILTIN_DEVICE" == "1" ] && [ -n "$BUILTIN_DEVICE_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#0#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi builtin_device "$BUILTIN_DEVICE_ANDROID_ARM64_V8A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi builtin_device "$BUILTIN_DEVICE_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#0#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
   # android armeabi-v7a
   os=android
   abi=armeabi-v7a
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_FAKE_DEVICE" == "1" ] && [ -n "$FAKE_DEVICE_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#0#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi fake_device,builtin_device "$FAKE_DEVICE_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi fake_device,builtin_device "$FAKE_DEVICE_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_BUILTIN_DEVICE" == "1" ] && [ -n "$BUILTIN_DEVICE_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#0#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi builtin_device "$BUILTIN_DEVICE_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi builtin_device "$BUILTIN_DEVICE_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_MEDIATEK_APU" == "1" ] && [ -n "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#0#1,3,224,224#float32#float32 $os $abi mediatek_apu "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#1,3,224,224#float32#float32 $os $abi mediatek_apu "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi verisilicon_timvx "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi verisilicon_timvx "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#0#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_int8_per_channel#1,3,224,224#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+    run_demo ./run_with_adb.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
   # linux arm64
   os=linux
   abi=arm64
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_FAKE_DEVICE" == "1" ] && [ -n "$FAKE_DEVICE_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi fake_device,builtin_device "$FAKE_DEVICE_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi fake_device,builtin_device "$FAKE_DEVICE_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_BUILTIN_DEVICE" == "1" ] && [ -n "$BUILTIN_DEVICE_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_ROCKCHIP_NPU" == "1" ] && [ -n "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32 $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32 $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_AMLOGIC_NPU" == "1" ] && [ -n "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32 $os $abi amlogic_npu "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32 $os $abi amlogic_npu "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_IMAGINATION_NNA" == "1" ] && [ -n "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32 $os $abi imagination_nna "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32 $os $abi imagination_nna "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi verisilicon_timvx "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi verisilicon_timvx "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_NVIDIA_TENSORRT" == "1" ] && [ -n "$NVIDIA_TENSORRT_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_ARM64_DEVICE_LIST"
   fi
   # linux armhf
   os=linux
   abi=armhf
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_FAKE_DEVICE" == "1" ] && [ -n "$FAKE_DEVICE_LINUX_ARMHF_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi fake_device,builtin_device "$FAKE_DEVICE_LINUX_ARMHF_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi fake_device,builtin_device "$FAKE_DEVICE_LINUX_ARMHF_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_BUILTIN_DEVICE" == "1" ] && [ -n "$BUILTIN_DEVICE_LINUX_ARMHF_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_ARMHF_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_ARMHF_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_ROCKCHIP_NPU" == "1" ] && [ -n "$ROCKCHIP_NPU_LINUX_ARMHF_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32 $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARMHF_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32 $os $abi rockchip_npu "$ROCKCHIP_NPU_LINUX_ARMHF_DEVICE_LIST"
   fi
   # linux amd64
   os=linux
   abi=amd64
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_FAKE_DEVICE" == "1" ] && [ -n "$FAKE_DEVICE_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi fake_device,builtin_device "$FAKE_DEVICE_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi fake_device,builtin_device "$FAKE_DEVICE_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_BUILTIN_DEVICE" == "1" ] && [ -n "$BUILTIN_DEVICE_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_CAMBRICON_MLU" == "1" ] && [ -n "$CAMBRICON_MLU_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi cambricon_mlu "$CAMBRICON_MLU_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi cambricon_mlu "$CAMBRICON_MLU_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_NVIDIA_TENSORRT" == "1" ] && [ -n "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi nvidia_tensorrt "$NVIDIA_TENSORRT_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_INTEL_OPENVINO" == "1" ] && [ -n "$INTEL_OPENVINO_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi intel_openvino "$INTEL_OPENVINO_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi intel_openvino "$INTEL_OPENVINO_LINUX_AMD64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
   fi
   # qnx arm64
   os=qnx
   abi=arm64
   ./build.sh $os $abi
   if [ "$ENABLE_DEMO_FAKE_DEVICE" == "1" ] && [ -n "$FAKE_DEVICE_QNX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi fake_device,builtin_device "$FAKE_DEVICE_QNX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi fake_device,builtin_device "$FAKE_DEVICE_QNX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_BUILTIN_DEVICE" == "1" ] && [ -n "$BUILTIN_DEVICE_QNX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi builtin_device "$BUILTIN_DEVICE_LINUX_ARM64_DEVICE_LIST"
   fi
   if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#0#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#0#1,3,224,224#float32#float32 $os $abi qualcomm_qnn "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST"
+    run_demo ./run_with_ssh.sh conv_add_144_192_int8_per_layer#1,3,192,144#float32#float32:conv_bn_relu_224_fp32#1,3,224,224#float32#float32 $os $abi qualcomm_qnn "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST"
   fi
   echo "done"
 }
 
 build_and_run_image_classification_demo
-build_and_run_ssd_detection_demo
-build_and_run_yolo_detection_demo
+build_and_run_object_detection_demo
 build_and_run_model_test
 
 # clean all
 clean_demo image_classification_demo
-clean_demo ssd_detection_demo
-clean_demo yolo_detection_demo
+clean_demo object_detection_demo
 clean_demo model_test
 
-echo "all done."
+echo "Done."

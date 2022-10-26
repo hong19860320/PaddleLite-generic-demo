@@ -155,4 +155,4 @@ if [ -n "$ENABLE_TEST_QUALCOMM_QNN" ] && [ "$ENABLE_TEST_QUALCOMM_QNN" == "1" ];
   ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --arch_list=$arch --toolchain_list=clang --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 $extra_arguments $build_target
 fi
 
-echo "all done."
+echo "Done."

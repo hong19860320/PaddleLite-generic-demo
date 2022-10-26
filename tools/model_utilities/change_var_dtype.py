@@ -51,7 +51,23 @@ def main(argv=None):
     except OSError as e:
         if e.errno != 17:
             raise
-    fetch_targets = [program.block(0).var("conv2d_0.tmp_0")]
+    # Update the datatype of the specified variable from float32 to int8.
+    var_name = "image"
+    main_block = program.block(0)
+    var = main_block.var(var_name)
+    # core.VarDesc.VarType.UINT8
+    # core.VarDesc.VarType.INT8
+    # core.VarDesc.VarType.INT16
+    # core.VarDesc.VarType.INT32
+    # core.VarDesc.VarType.INT64
+    # core.VarDesc.VarType.FP32
+    # core.VarDesc.VarType.FP64
+    # core.VarDesc.VarType.FP16
+    # core.VarDesc.VarType.BF16
+    # core.VarDesc.VarType.COMPLEX64
+    # core.VarDesc.VarType.COMPLEX128
+    # core.VarDesc.VarType.BOOL
+    var.desc.set_dtype(core.VarDesc.VarType.INT8)
     print('--- new feed_target_names ---')
     print(feed_target_names)
     print('--- new fetch_targets ---')

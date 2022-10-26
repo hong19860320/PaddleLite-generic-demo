@@ -43,4 +43,4 @@ if [ "$ENABLE_BUILD_INTEL_OPENVINO" == "1" ]; then
   curl -L http://paddlelite-demo.bj.bcebos.com/devices/intel/openvino_2022.1.0.643.tar.gz -o - | tar -xz -C $SDK_DIR
 fi
 
-echo "all done."
+echo "Done."

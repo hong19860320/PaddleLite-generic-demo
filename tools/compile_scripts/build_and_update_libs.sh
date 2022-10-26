@@ -284,4 +284,4 @@ echo "16"
 build_and_update_lib qnx armv8 gcc 1 1 1
 #!
 
-echo "all done."
+echo "Done."

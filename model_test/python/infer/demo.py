@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import cv2
 import numpy as np
 import paddle
 import paddle.fluid as fluid
@@ -20,30 +21,29 @@ from paddle.fluid import core
 
 paddle.enable_static()
 
-MODEL_DIR = "./simple_model"
-MODEL_FILE = "model.pdmodel"
-PARAMS_FILE = "model.pdiparams"
-
-#MODEL_FILE = ""
-#PARAMS_FILE = ""
+MODEL_NAME = "conv_bn_relu_224_fp32"
+MODEL_FILE = ""
+PARAMS_FILE = ""
 
 
 def main(argv=None):
-    place = paddle.CPUPlace()
-    exe = paddle.static.Executor(place=place)
+    # Load model
+    place = fluid.CPUPlace()
+    exe = fluid.Executor(place)
+    model_dir = "../../assets/models/" + MODEL_NAME
     if len(MODEL_FILE) == 0 and len(PARAMS_FILE) == 0:
         [program, feed_target_names,
-         fetch_targets] = fluid.io.load_inference_model(MODEL_DIR, exe)
+         fetch_targets] = fluid.io.load_inference_model(model_dir, exe)
     else:
         [program, feed_target_names,
          fetch_targets] = fluid.io.load_inference_model(
-             MODEL_DIR,
+             model_dir,
              exe,
              model_filename=MODEL_FILE,
              params_filename=PARAMS_FILE)
-    print('--- feed_target_names ---')
+    print("--- feed_target_names ---")
     print(feed_target_names)
-    print('--- fetch_targets ---')
+    print("--- fetch_targets ---")
     print(fetch_targets)
     # Preprocess
     input_tensors = {'image': np.ones([1, 3, 224, 224]).astype(np.float32)}
@@ -56,7 +56,7 @@ def main(argv=None):
     for output_tensor in output_tensors:
         output_data = np.array(output_tensor)
         print(output_data.shape)
-        #print(output_data)
+        print(output_data)
     print("Done.")
 
 

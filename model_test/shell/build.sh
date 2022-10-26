@@ -14,6 +14,8 @@ ANDROID_NDK=/opt/android-ndk-r17c # docker
 # RK1806EVB, RV1109/1126 EVB: TARGET_OS=linux and TARGET_ABI=armhf 
 # Intel-x86+Ascend310: TARGET_OS=linux and TARGET_ABI=amd64
 TARGET_OS=linux
+#TARGET_OS=android
+#TARGET_OS=qnx # cmake 3.22.3 or later required
 if [ -n "$1" ]; then
   TARGET_OS=$1
 fi

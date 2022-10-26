@@ -1,11 +1,9 @@
 #!/bin/bash
-MODEL_NAME=mobilenet_v1_fp32_224
-#MODEL_NAME=mobilenet_v1_int8_224_per_layer
-#MODEL_NAME=mobilenet_v1_int8_224_per_channel
-#MODEL_NAME=mobilenet_v2_int8_224_per_layer
-#MODEL_NAME=resnet50_fp32_224
-#MODEL_NAME=resnet50_int8_224_per_layer
-#MODEL_NAME=shufflenet_v2_int8_224_per_layer
+MODEL_NAME=ssd_mobilenet_v1_relu_voc_fp32_300
+#MODEL_NAME=ssd_mobilenet_v1_relu_voc_int8_300_per_layer
+#MODEL_NAME=yolov3_mobilenet_v1_270e_coco_fp32_608
+#MODEL_NAME=yolov3_darknet53_270e_coco_fp32_608
+#MODEL_NAME=picodet_relu6_int8_416_per_channel
 if [ -n "$1" ]; then
   MODEL_NAME=$1
 fi
@@ -19,7 +17,9 @@ if [ ! -d "../assets/models/$MODEL_NAME" ];then
   fi
 fi
 
-CONFIG_NAME=imagenet_224.txt
+CONFIG_NAME=ssd_voc_300.txt
+#CONFIG_NAME=yolov3_coco_608.txt
+#CONFIG_NAME=picodet_coco_416.txt
 if [ -n "$2" ]; then
   CONFIG_NAME=$2
 fi

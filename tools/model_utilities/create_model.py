@@ -20,12 +20,12 @@ from paddle.fluid import core
 
 paddle.enable_static()
 
-model_dir = "./output_model"
-model_file = "model.pdmodel"
-params_file = "model.pdiparams"
+MODEL_DIR = "./output_model"
+MODEL_FILE = "model.pdmodel"
+PARAMS_FILE = "model.pdiparams"
 
-#model_file = ""
-#params_file = ""
+#MODEL_FILE = ""
+#PARAMS_FILE = ""
 
 
 def main(argv=None):
@@ -55,15 +55,16 @@ def main(argv=None):
     print(out_data.shape)
     #print(out_data)
     # Save the network to model for inference
-    if len(model_file) == 0 and len(params_file) == 0:
-        fluid.io.save_inference_model(model_dir, ['x'], [out], exe, program)
+    if len(MODEL_FILE) == 0 and len(PARAMS_FILE) == 0:
+        fluid.io.save_inference_model(MODEL_DIR, ['x'], [out], exe, program)
     else:
         fluid.io.save_inference_model(
-            model_dir, ['x'], [out],
+            MODEL_DIR, ['x'], [out],
             exe,
             program,
-            model_filename=model_file,
-            params_filename=params_file)
+            model_filename=MODEL_FILE,
+            params_filename=PARAMS_FILE)
+    print("Done.")
 
 
 if __name__ == '__main__':
