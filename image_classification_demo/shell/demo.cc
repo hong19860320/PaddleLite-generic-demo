@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <algorithm>
 #include <fstream>
-#include <limits
+#include <limits>
 #include <opencv2/core/core.hpp>  // NOLINT
 #include <opencv2/highgui.hpp>    // NOLINT
 #include <opencv2/opencv.hpp>     // NOLINT
