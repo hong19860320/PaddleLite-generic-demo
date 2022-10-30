@@ -252,10 +252,10 @@ build_and_run_object_detection_demo() {
     run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test $os $abi amlogic_npu "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST"
     # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer#yolov3_coco_608.txt#test $os $abi amlogic_npu "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST"
   fi
-  if [ "$ENABLE_DEMO_IMAGINATION_NNA" == "1" ] && [ -n "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST" ]; then
+  #if [ "$ENABLE_DEMO_IMAGINATION_NNA" == "1" ] && [ -n "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST" ]; then
     # run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer#ssd_voc_300.txt#test $os $abi imagination_nna "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST"
     # run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_int8_608_per_layer#yolov3_coco_608.txt#test $os $abi imagination_nna "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST"
-  fi
+  #fi
   if [ "$ENABLE_DEMO_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
     run_demo ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300#ssd_voc_300.txt#test $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
     run_demo ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608#yolov3_coco_608.txt#test $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
