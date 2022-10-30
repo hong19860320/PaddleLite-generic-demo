@@ -59,8 +59,8 @@ RUN dpkg-reconfigure -f noninteractive tzdata
 # Download both cmake 3.10 and 3.22.3, but cmake 3.10 is used by default
 RUN curl -L http://paddlelite-demo.bj.bcebos.com/devices/generic/tools/cmake-3.10.3-Linux-x86_64.tar.gz -o - | tar -xz -C /opt/
 RUN curl -L http://paddlelite-demo.bj.bcebos.com/devices/generic/tools/cmake-3.22.3-linux-x86_64.tar.gz -o - | tar -xz -C /opt/
-RUN rm /usr/bin/cmake && ln -s /opt/cmake-3.22.3-linux-x86_64/bin/cmake /usr/bin/cmake && \
-    rm /usr/bin/ccmake && ln -s /opt/cmake-3.22.3-linux-x86_64/bin/ccmake /usr/bin/ccmake
+RUN rm /usr/bin/cmake && ln -s /opt/cmake-3.10.3-Linux-x86_64/bin/cmake /usr/bin/cmake && \
+    rm /usr/bin/ccmake && ln -s /opt/cmake-3.10.3-Linux-x86_64/bin/ccmake /usr/bin/ccmake
 
 # Cross compiler for Android
 # Download both android ndk r17c and r20b, but r17c is used by default
