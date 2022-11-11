@@ -36,11 +36,31 @@ const int CPU_THREAD_NUM = 1;
 const paddle::lite_api::PowerMode CPU_POWER_MODE =
     paddle::lite_api::PowerMode::LITE_POWER_NO_BIND;
 
+#ifdef __QNX__
+#include <devctl.h>
+#include <fcntl.h>
+inline int64_t get_current_us() {
+  auto fd = open("/dev/qgptp", O_RDONLY);
+  if (fd < 0) {
+    printf("open '/dev/qgptp' failed.");
+  }
+  uint64_t time_nsec;
+  #define GPTP_GETTIME __DIOF(_DCMD_MISC,  1, int)
+  if (EOK != devctl(fd, GPTP_GETTIME, &time_nsec, sizeof(time_nsec), NULL)) {
+    printf("devctl failed.");
+  }
+  if (close(fd) < 0) {
+    printf("close fd failed.");
+  }
+  return time_nsec / 1000;
+}
+#else
 inline int64_t get_current_us() {
   struct timeval time;
   gettimeofday(&time, NULL);
   return 1000000LL * (int64_t)time.tv_sec + (int64_t)time.tv_usec;
 }
+#endif
 
 template <typename T>
 void get_value_from_sstream(std::stringstream *ss, T *value) {
