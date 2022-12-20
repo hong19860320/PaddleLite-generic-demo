@@ -105,7 +105,7 @@ if [[ "$NNADAPTER_DEVICE_NAMES" =~ "verisilicon_timvx" ]]; then
   export VSI_NN_LOG_LEVEL=5
 fi
 
-export LD_LIBRARY_PATH=.:../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib:../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/cpu:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/cpu:../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib:.:$LD_LIBRARY_PATH
 for NNADAPTER_DEVICE_NAME in ${NNADAPTER_DEVICE_NAMES_LIST[@]}
 do
   export LD_LIBRARY_PATH=../../libs/PaddleLite/$TARGET_OS/$TARGET_ABI/lib/$NNADAPTER_DEVICE_NAME:$LD_LIBRARY_PATH
@@ -156,6 +156,10 @@ if [[ "$NNADAPTER_DEVICE_NAMES" =~ "qualcomm_qnn" ]]; then
   if [[ ! "$NNADAPTER_CONTEXT_PROPERTIES" =~ "QUALCOMM_QNN_DEVICE_TYPE" ]]; then
     NNADAPTER_CONTEXT_PROPERTIES="QUALCOMM_QNN_DEVICE_TYPE=HTP;${NNADAPTER_CONTEXT_PROPERTIES}"
   fi
+fi
+
+if [[ "$NNADAPTER_DEVICE_NAMES" =~ "xpu" ]]; then
+  export XPU_VISIBLE_DEVICES=0
 fi
 
 if [ -z "$NNADAPTER_CONTEXT_PROPERTIES" ]; then

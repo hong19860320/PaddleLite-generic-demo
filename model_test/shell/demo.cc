@@ -261,6 +261,41 @@ void check_output_tensors(
 #undef CHECK_TENSOR_WITH_TYPE
 }
 
+void process(std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor,
+             const std::vector<std::vector<int64_t>> &input_shapes,
+             const std::vector<std::string> &input_types,
+             const std::vector<std::string> &output_types) {
+  for (int i = 0; i < WARMUP_COUNT; i++) {
+    fill_input_tensors(predictor, input_shapes, input_types, 1);
+    predictor->Run();
+  }
+  double cur_cost = 0;
+  double total_cost = 0;
+  double max_cost = 0;
+  double min_cost = std::numeric_limits<float>::max();
+  for (int i = 0; i < REPEAT_COUNT; i++) {
+    fill_input_tensors(predictor, input_shapes, input_types, 1);
+    auto start = get_current_us();
+    predictor->Run();
+    auto end = get_current_us();
+    cur_cost = (end - start) / 1000.0f;
+    total_cost += cur_cost;
+    if (cur_cost > max_cost) {
+      max_cost = cur_cost;
+    }
+    if (cur_cost < min_cost) {
+      min_cost = cur_cost;
+    }
+    printf("[%d] Prediction time: %f ms \n", i, cur_cost);
+  }
+  print_output_tensors(predictor, output_types);
+  printf("Prediction time: avg %f ms, max %f ms, min %f ms\n",
+         total_cost / REPEAT_COUNT,
+         max_cost,
+         min_cost);
+  printf("Done.\n");
+}
+
 int main(int argc, char **argv) {
   if (argc < 11) {
     printf(
@@ -307,73 +342,96 @@ int main(int argc, char **argv) {
   std::vector<paddle::lite_api::Place> valid_places;
   if (std::find(nnadapter_device_names.begin(),
                 nnadapter_device_names.end(),
-                "cpu") == nnadapter_device_names.end()) {
+                "xpu") != nnadapter_device_names.end()) {
+    valid_places.push_back(
+        paddle::lite_api::Place{TARGET(kXPU), PRECISION(kInt8)});
+    valid_places.push_back(
+        paddle::lite_api::Place{TARGET(kXPU), PRECISION(kFloat)});
+  } else if (std::find(nnadapter_device_names.begin(),
+                       nnadapter_device_names.end(),
+                       "opencl") != nnadapter_device_names.end()) {
+    valid_places.push_back(paddle::lite_api::Place{
+        TARGET(kOpenCL), PRECISION(kFP16), DATALAYOUT(kImageDefault)});
+    valid_places.push_back(paddle::lite_api::Place{
+        TARGET(kOpenCL), PRECISION(kFP16), DATALAYOUT(kImageFolder)});
+    valid_places.push_back(paddle::lite_api::Place{
+        TARGET(kOpenCL), PRECISION(kFloat), DATALAYOUT(kNCHW)});
+    valid_places.push_back(paddle::lite_api::Place{
+        TARGET(kOpenCL), PRECISION(kAny), DATALAYOUT(kImageDefault)});
+    valid_places.push_back(paddle::lite_api::Place{
+        TARGET(kOpenCL), PRECISION(kAny), DATALAYOUT(kImageFolder)});
+    valid_places.push_back(paddle::lite_api::Place{
+        TARGET(kOpenCL), PRECISION(kAny), DATALAYOUT(kNCHW)});
+    valid_places.push_back(paddle::lite_api::Place{
+        TARGET(kOpenCL), PRECISION(kInt32), DATALAYOUT(kNCHW)});
+  } else if (std::find(nnadapter_device_names.begin(),
+                       nnadapter_device_names.end(),
+                       "cpu") == nnadapter_device_names.end()) {
     valid_places.push_back(
         paddle::lite_api::Place{TARGET(kNNAdapter), PRECISION(kInt8)});
     valid_places.push_back(
         paddle::lite_api::Place{TARGET(kNNAdapter), PRECISION(kFloat)});
+    cxx_config.set_nnadapter_device_names(nnadapter_device_names);
+    cxx_config.set_nnadapter_context_properties(nnadapter_context_properties);
+    cxx_config.set_nnadapter_model_cache_dir(nnadapter_model_cache_dir);
+    // Set the mixed precision quantization configuration file
+    if (!nnadapter_mixed_precision_quantization_config_path.empty()) {
+      std::vector<char> nnadapter_mixed_precision_quantization_config_buffer;
+      if (read_file(nnadapter_mixed_precision_quantization_config_path,
+                    &nnadapter_mixed_precision_quantization_config_buffer,
+                    false)) {
+        if (!nnadapter_mixed_precision_quantization_config_buffer.empty()) {
+          std::string nnadapter_mixed_precision_quantization_config_string(
+              nnadapter_mixed_precision_quantization_config_buffer.data(),
+              nnadapter_mixed_precision_quantization_config_buffer.size());
+          cxx_config.set_nnadapter_mixed_precision_quantization_config_buffer(
+              nnadapter_mixed_precision_quantization_config_string);
+        }
+      } else {
+        printf(
+            "Failed to load the mixed precision quantization configuration "
+            "file %s\n",
+            nnadapter_mixed_precision_quantization_config_path.c_str());
+      }
+    }
+    // Set the subgraph partition configuration file
+    if (!nnadapter_subgraph_partition_config_path.empty()) {
+      std::vector<char> nnadapter_subgraph_partition_config_buffer;
+      if (read_file(nnadapter_subgraph_partition_config_path,
+                    &nnadapter_subgraph_partition_config_buffer,
+                    false)) {
+        if (!nnadapter_subgraph_partition_config_buffer.empty()) {
+          std::string nnadapter_subgraph_partition_config_string(
+              nnadapter_subgraph_partition_config_buffer.data(),
+              nnadapter_subgraph_partition_config_buffer.size());
+          cxx_config.set_nnadapter_subgraph_partition_config_buffer(
+              nnadapter_subgraph_partition_config_string);
+        }
+      } else {
+        printf("Failed to load the subgraph partition configuration file %s\n",
+               nnadapter_subgraph_partition_config_path.c_str());
+      }
+    }
   }
 #if defined(__arm__) || defined(__aarch64__)
   valid_places.push_back(
       paddle::lite_api::Place{TARGET(kARM), PRECISION(kInt8)});
   valid_places.push_back(
       paddle::lite_api::Place{TARGET(kARM), PRECISION(kFloat)});
-  valid_places.push_back(
-      paddle::lite_api::Place{TARGET(kARM), PRECISION(kInt32)});
 #elif defined(__x86_64__)
   valid_places.push_back(
       paddle::lite_api::Place{TARGET(kX86), PRECISION(kInt8)});
   valid_places.push_back(
       paddle::lite_api::Place{TARGET(kX86), PRECISION(kFloat)});
-  valid_places.push_back(
-      paddle::lite_api::Place{TARGET(kX86), PRECISION(kInt32)});
 #endif
   cxx_config.set_valid_places(valid_places);
-  cxx_config.set_nnadapter_device_names(nnadapter_device_names);
-  cxx_config.set_nnadapter_context_properties(nnadapter_context_properties);
-  cxx_config.set_nnadapter_model_cache_dir(nnadapter_model_cache_dir);
-  // Set the subgraph partition configuration file
-  if (!nnadapter_subgraph_partition_config_path.empty()) {
-    std::vector<char> nnadapter_subgraph_partition_config_buffer;
-    if (read_file(nnadapter_subgraph_partition_config_path,
-                  &nnadapter_subgraph_partition_config_buffer,
-                  false)) {
-      if (!nnadapter_subgraph_partition_config_buffer.empty()) {
-        std::string nnadapter_subgraph_partition_config_string(
-            nnadapter_subgraph_partition_config_buffer.data(),
-            nnadapter_subgraph_partition_config_buffer.size());
-        cxx_config.set_nnadapter_subgraph_partition_config_buffer(
-            nnadapter_subgraph_partition_config_string);
-      }
-    } else {
-      printf(
-          "Failed to load the subgraph partition configuration file "
-          "%s\n",
-          nnadapter_subgraph_partition_config_path.c_str());
-    }
-  }
-  // Set the mixed precision quantization configuration file
-  if (!nnadapter_mixed_precision_quantization_config_path.empty()) {
-    std::vector<char> nnadapter_mixed_precision_quantization_config_buffer;
-    if (read_file(nnadapter_mixed_precision_quantization_config_path,
-                  &nnadapter_mixed_precision_quantization_config_buffer,
-                  false)) {
-      if (!nnadapter_mixed_precision_quantization_config_buffer.empty()) {
-        std::string nnadapter_mixed_precision_quantization_config_string(
-            nnadapter_mixed_precision_quantization_config_buffer.data(),
-            nnadapter_mixed_precision_quantization_config_buffer.size());
-        cxx_config.set_nnadapter_mixed_precision_quantization_config_buffer(
-            nnadapter_mixed_precision_quantization_config_string);
-      }
-    } else {
-      printf(
-          "Failed to load the mixed precision quantization configuration file "
-          "%s\n",
-          nnadapter_mixed_precision_quantization_config_path.c_str());
-    }
-  }
   try {
     predictor = paddle::lite_api::CreatePaddlePredictor(cxx_config);
+    if (std::find(nnadapter_device_names.begin(),
+                  nnadapter_device_names.end(),
+                  "xpu") != nnadapter_device_names.end()) {
+      process(predictor, input_shapes, input_types, output_types);
+    }
     predictor->SaveOptimizedModel(
         model_dir, paddle::lite_api::LiteModelType::kNaiveBuffer);
   } catch (std::exception e) {
@@ -387,44 +445,53 @@ int main(int argc, char **argv) {
   mobile_config.set_model_from_file(model_dir + ".nb");
   mobile_config.set_threads(CPU_THREAD_NUM);
   mobile_config.set_power_mode(CPU_POWER_MODE);
-  mobile_config.set_nnadapter_device_names(nnadapter_device_names);
-  mobile_config.set_nnadapter_context_properties(nnadapter_context_properties);
-  // Set the model cache buffer and directory
-  mobile_config.set_nnadapter_model_cache_dir(nnadapter_model_cache_dir);
-  if (!nnadapter_model_cache_token.empty() &&
-      !nnadapter_model_cache_dir.empty()) {
-    std::vector<char> nnadapter_model_cache_buffer;
-    std::string nnadapter_model_cache_path =
-        nnadapter_model_cache_dir + "/" + nnadapter_model_cache_token + ".nnc";
-    if (!read_file(
-            nnadapter_model_cache_path, &nnadapter_model_cache_buffer, true)) {
-      printf("Failed to load the cache model file %s\n",
-             nnadapter_model_cache_path.c_str());
+  if (std::find(nnadapter_device_names.begin(),
+                nnadapter_device_names.end(),
+                "xpu") != nnadapter_device_names.end()) {
+#ifndef USE_FULL_API
+    printf("XPU does not support light api!\n");
+#endif
+    return 0;
+  } else if (std::find(nnadapter_device_names.begin(),
+                       nnadapter_device_names.end(),
+                       "opencl") != nnadapter_device_names.end()) {
+    // Check device valid
+    if (!paddle::lite_api::IsOpenCLBackendValid()) {
+      printf(
+          "OpenCL is not supported by the current device, please contact the "
+          "device's vendor!\n");
+      return 0;
     }
-    if (!nnadapter_model_cache_buffer.empty()) {
-      mobile_config.set_nnadapter_model_cache_buffers(
-          nnadapter_model_cache_token, nnadapter_model_cache_buffer);
+  } else if (std::find(nnadapter_device_names.begin(),
+                       nnadapter_device_names.end(),
+                       "cpu") == nnadapter_device_names.end()) {
+    mobile_config.set_nnadapter_device_names(nnadapter_device_names);
+    mobile_config.set_nnadapter_context_properties(
+        nnadapter_context_properties);
+    // Set the model cache buffer and directory
+    mobile_config.set_nnadapter_model_cache_dir(nnadapter_model_cache_dir);
+    if (!nnadapter_model_cache_token.empty() &&
+        !nnadapter_model_cache_dir.empty()) {
+      std::vector<char> nnadapter_model_cache_buffer;
+      auto nnadapter_model_cache_path = nnadapter_model_cache_dir + "/" +
+                                        nnadapter_model_cache_token + ".nnc";
+      if (!read_file(nnadapter_model_cache_path,
+                     &nnadapter_model_cache_buffer,
+                     true)) {
+        printf("Failed to load the cache model file %s\n",
+               nnadapter_model_cache_path.c_str());
+      }
+      if (!nnadapter_model_cache_buffer.empty()) {
+        mobile_config.set_nnadapter_model_cache_buffers(
+            nnadapter_model_cache_token, nnadapter_model_cache_buffer);
+      }
     }
   }
   try {
-    predictor = paddle::lite_api::CreatePaddlePredictor(mobile_config);
-    for (int i = 0; i < WARMUP_COUNT; i++) {
-      fill_input_tensors(predictor, input_shapes, input_types, 1);
-      predictor->Run();
-    }
-    double cost = 0.0f;
-    for (int i = 0; i < REPEAT_COUNT; i++) {
-      fill_input_tensors(predictor, input_shapes, input_types, 1);
-      auto start = get_current_us();
-      predictor->Run();
-      auto duration = (get_current_us() - start) / 1000.0f;
-      cost += duration;
-      std::cout << "iter" << i << " " << duration << " ms" << std::endl;
-    }
-    std::cout << "warmup count: " << WARMUP_COUNT
-              << ", repeat count: " << REPEAT_COUNT << ", spend "
-              << cost / REPEAT_COUNT << " ms in average." << std::endl;
-    print_output_tensors(predictor, output_types);
+    predictor =
+        paddle::lite_api::CreatePaddlePredictor<paddle::lite_api::MobileConfig>(
+            mobile_config);
+    process(predictor, input_shapes, input_types, output_types);
   } catch (std::exception e) {
     printf("An internal error occurred in PaddleLite(mobile config).\n");
     return -1;

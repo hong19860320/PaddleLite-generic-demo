@@ -11,19 +11,6 @@ if [ "$ENABLE_BUILD_MEDIATEK_APU" == "1" ]; then
   curl -L http://paddlelite-demo.bj.bcebos.com/devices/mediatek/apu_ddk.tar.gz -o - | tar -xz -C $SDK_DIR
 fi
 
-if [ "$ENABLE_BUILD_ROCKCHIP_NPU" == "1" ]; then
-  cd $SDK_DIR
-  git clone http://github.com/airockchip/rknpu_ddk.git
-  cd -
-fi
-
-if [ "$ENABLE_BUILD_AMLOGIC_NPU" == "1" ]; then
-  mkdir -p $SDK_DIR/amlnpu_ddk/android
-  curl -L http://paddlelite-demo.bj.bcebos.com/devices/amlogic/android/amlnpu_ddk.tar.gz -o - | tar -xz -C $SDK_DIR/amlnpu_ddk/android
-  mkdir -p $SDK_DIR/amlnpu_ddk/linux
-  curl -L http://paddlelite-demo.bj.bcebos.com/devices/amlogic/linux/amlnpu_ddk.tar.gz -o - | tar -xz -C $SDK_DIR/amlnpu_ddk/linux
-fi
-
 if [ "$ENABLE_BUILD_IMAGINATION_NNA" == "1" ]; then
   curl -L http://paddlelite-demo.bj.bcebos.com/devices/imagination/imagination_nna_sdk.tar.gz -o - | tar -xz -C $SDK_DIR
 fi

@@ -33,20 +33,6 @@ if [ -n "$ENABLE_TEST_MEDIATEK_APU" ] && [ "$ENABLE_TEST_MEDIATEK_APU" == "1" ] 
   ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --os_list=$os --arch_list=$arch --toolchain_list=$toolchain --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
 fi
 
-if [ -n "$ENABLE_TEST_ROCKCHIP_NPU" ] && [ "$ENABLE_TEST_ROCKCHIP_NPU" == "1" ] && [ -n "$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-  os=armlinux
-  arch=armv8
-  toolchain=gcc
-  unit_test_check_list="test_mobilenet_v1_int8_per_layer_nnadapter,test_resnet50_int8_per_layer_nnadapter,test_ssd_mobilenet_v1_relu_voc_int8_per_layer_nnadapter"
-  unit_test_filter_type=1
-  remote_device_type=1
-  remote_device_list=$ROCKCHIP_NPU_LINUX_ARM64_DEVICE_LIST
-  build_target=rockchip_npu_build_and_test
-  remote_device_work_dir="~/$build_target"
-  cd $LITE_DIR
-  ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --os_list=$os --arch_list=$arch --toolchain_list=$toolchain --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
-fi
-
 if [ -n "$ENABLE_TEST_HUAWEI_ASCEND_NPU" ] && [ "$ENABLE_TEST_HUAWEI_ASCEND_NPU" == "1" ]; then
   #arch=armv8
   arch=x86
@@ -57,20 +43,6 @@ if [ -n "$ENABLE_TEST_HUAWEI_ASCEND_NPU" ] && [ "$ENABLE_TEST_HUAWEI_ASCEND_NPU"
   build_target=huawei_ascend_npu_build_and_test
   cd $LITE_DIR
   ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --arch_list=$arch --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
-fi
-
-if [ -n "$ENABLE_TEST_AMLOGIC_NPU" ] && [ "$ENABLE_TEST_AMLOGIC_NPU" == "1" ] && [ -n "$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
-  os=armlinux
-  arch=armv8
-  toolchain=gcc
-  unit_test_check_list="test_mobilenet_v1_int8_per_layer_nnadapter"
-  unit_test_filter_type=1
-  remote_device_type=1
-  remote_device_list=$AMLOGIC_NPU_LINUX_ARM64_DEVICE_LIST
-  build_target=amlogic_npu_build_and_test
-  remote_device_work_dir="~/$build_target"
-  cd $LITE_DIR
-  ./tools/ci_tools/ci_nn_accelerators_unit_test.sh --os_list=$os --arch_list=$arch --toolchain_list=$toolchain --unit_test_check_list=$unit_test_check_list --unit_test_filter_type=$unit_test_filter_type --unit_test_log_level=5 --remote_device_type=$remote_device_type --remote_device_list=$remote_device_list --remote_device_work_dir=$remote_device_work_dir $extra_arguments $build_target
 fi
 
 if [ -n "$ENABLE_TEST_IMAGINATION_NNA" ] && [ "$ENABLE_TEST_IMAGINATION_NNA" == "1" ] && [ -n "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST" ]; then
