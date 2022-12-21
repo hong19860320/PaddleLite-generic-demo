@@ -294,7 +294,7 @@ build_and_update_lib() {
             return -1
           fi
         fi
-        cp $build_dir/lite/backends/nnadapter/nnadapter/src/driver/$device_name/*.so $lib_dir/lib/$device_name/
+        cp $build_dir/lite/backends/nnadapter/nnadapter/src/driver/$device_name/*.so* $lib_dir/lib/$device_name/
       fi
       rm -rf $lib_dir/lib/$device_name/libnnadapter*.so
       cp $build_dir/lite/backends/nnadapter/nnadapter/src/libnnadapter.so $lib_dir/lib/$device_name/
