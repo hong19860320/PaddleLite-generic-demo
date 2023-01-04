@@ -70,10 +70,11 @@ build_and_update_lib() {
         extra_args="$extra_args --nnadapter_with_google_xnnpack=ON --nnadapter_google_xnnpack_src_git_tag=$GOOGLE_XNNPACK_SRC_GIT_TAG"
         device_list=( "${device_list[@]}" "google_xnnpack" )
       fi
-      if [ "$ENABLE_BUILD_QUALCOMM_QNN" == "1" ]; then
-        extra_args="$extra_args --nnadapter_with_qualcomm_qnn=ON --nnadapter_qualcomm_qnn_sdk_root=$QUALCOMM_QNN_SDK_ROOT --nnadapter_qualcomm_hexagon_sdk_root=$QUALCOMM_HEXAGON_SDK_ROOT"
-        device_list=( "${device_list[@]}" "qualcomm_qnn" )
-      fi
+      # QNN 2.5 or later no longer supports android armeabi-v7a
+      #if [ "$ENABLE_BUILD_QUALCOMM_QNN" == "1" ]; then
+      #  extra_args="$extra_args --nnadapter_with_qualcomm_qnn=ON --nnadapter_qualcomm_qnn_sdk_root=$QUALCOMM_QNN_SDK_ROOT --nnadapter_qualcomm_hexagon_sdk_root=$QUALCOMM_HEXAGON_SDK_ROOT"
+      #  device_list=( "${device_list[@]}" "qualcomm_qnn" )
+      #fi
       if [ "$ENABLE_BUILD_OPENCL" == "1" ] && [ $only_opencl -ne 0 ]; then
         extra_args="--with_opencl=ON"
         device_list=( "opencl" )
