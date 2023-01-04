@@ -105,7 +105,7 @@ build_and_update_lib() {
         device_list=( "${device_list[@]}" "google_xnnpack" )
       fi
       if [ "$ENABLE_BUILD_HUAWEI_ASCEND_NPU" == "1" ] && [ $only_huawei_ascend_npu -ne 0 ]; then
-        extra_args="$extra_args --nnadapter_with_huawei_ascend_npu=ON --nnadapter_huawei_ascend_npu_sdk_root=$HUAWEI_ASCEND_NPU_LINUX_ARM64_SDK_ROOT"
+        extra_args="--nnadapter_with_huawei_ascend_npu=ON --nnadapter_huawei_ascend_npu_sdk_root=$HUAWEI_ASCEND_NPU_LINUX_ARM64_SDK_ROOT"
         device_list=( "huawei_ascend_npu" )
       fi
       if [ "$ENABLE_BUILD_XPU" == "1" ] && [ $only_xpu -ne 0 ]; then
@@ -162,7 +162,7 @@ build_and_update_lib() {
         device_list=( "${device_list[@]}" "qualcomm_qnn" )
       fi
       if [ "$ENABLE_BUILD_HUAWEI_ASCEND_NPU" == "1" ] && [ $only_huawei_ascend_npu -ne 0 ]; then
-        extra_args="$extra_args --nnadapter_with_huawei_ascend_npu=ON --nnadapter_huawei_ascend_npu_sdk_root=$HUAWEI_ASCEND_NPU_LINUX_AMD64_SDK_ROOT"
+        extra_args="--nnadapter_with_huawei_ascend_npu=ON --nnadapter_huawei_ascend_npu_sdk_root=$HUAWEI_ASCEND_NPU_LINUX_AMD64_SDK_ROOT"
         device_list=( "huawei_ascend_npu" )
       fi
       if [ "$ENABLE_BUILD_XPU" == "1" ] && [ $only_xpu -ne 0 ]; then
