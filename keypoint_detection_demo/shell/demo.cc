@@ -212,34 +212,13 @@ void nhwc12nc1hw(const float *src,
 }
 
 typedef struct {
-  // type = 1 indicates the model(0: image) has only one input and one output.
-  // type = 2 indicates the model has two inputs(0: image, 1: scale_factor) and
-  // one output.
-  // type = 3 indicates the model has three inputs(0: im_shape, 1: image, 2:
-  // scale_factor) and one output.
-  int type;
   int width;
   int height;
   std::vector<float> mean;
   std::vector<float> std;
-  float draw_threshold{0.0f};
-  std::vector<std::string> label_list;
+  float draw_threshold{0.5f};
+  bool use_dark_decode{true};
 } CONFIG;
-
-std::vector<std::string> load_label(const std::string &path) {
-  std::vector<char> buffer;
-  if (!read_file(path, &buffer, false)) {
-    printf("Failed to load the label file %s\n", path.c_str());
-    exit(-1);
-  }
-  std::string content(buffer.begin(), buffer.end());
-  auto lines = split_string<std::string>(content, '\n');
-  if (lines.empty()) {
-    printf("The label file %s should not be empty!\n", path.c_str());
-    exit(-1);
-  }
-  return lines;
-}
 
 CONFIG load_config(const std::string &path) {
   CONFIG config;
@@ -266,18 +245,6 @@ CONFIG load_config(const std::string &path) {
     }
     values[value[0]] = value[1];
   }
-  // type
-  if (!values.count("type")) {
-    printf("Missing the key 'type'!\n");
-    exit(-1);
-  }
-  config.type = atoi(values["type"].c_str());
-  if (config.type < 1 || config.type > 3) {
-    printf("The key 'type' only supports 1,2 or 3, but receive %d!\n",
-           config.type);
-    exit(-1);
-  }
-  printf("type: %d\n", config.type);
   // width
   if (!values.count("width")) {
     printf("Missing the key 'width'!\n");
@@ -333,15 +300,11 @@ CONFIG load_config(const std::string &path) {
       exit(-1);
     }
   }
-  printf("draw_threshold: %f\n", config.draw_threshold);
-  // label_list(optional)
-  if (values.count("label_list")) {
-    std::string label_list = values["label_list"];
-    if (!label_list.empty()) {
-      config.label_list = load_label(dir + "/" + label_list);
-    }
+  // use_dark_decode(optional)
+  if (values.count("use_dark_decode")) {
+    config.use_dark_decode = !(values["use_dark_decode"] == "false" ||
+                               values["use_dark_decode"] == "0");
   }
-  printf("label_list size: %u\n", config.label_list.size());
   return config;
 }
 
@@ -360,6 +323,195 @@ std::vector<std::string> load_dataset(const std::string &path) {
   return lines;
 }
 
+#define PI 3.1415926535
+#define HALF_CIRCLE_DEGREE 180
+
+cv::Point2f get_3rd_point(cv::Point2f &a, cv::Point2f &b) {  // NOLINT
+  cv::Point2f direct{a.x - b.x, a.y - b.y};
+  return cv::Point2f(a.x - direct.y, a.y + direct.x);
+}
+
+std::vector<float> get_dir(float src_point_x,
+                           float src_point_y,
+                           float rot_rad) {
+  float sn = sin(rot_rad);
+  float cs = cos(rot_rad);
+  std::vector<float> src_result{0.0, 0.0};
+  src_result[0] = src_point_x * cs - src_point_y * sn;
+  src_result[1] = src_point_x * sn + src_point_y * cs;
+  return src_result;
+}
+
+void affine_tranform(float pt_x,
+                     float pt_y,
+                     cv::Mat &trans,             // NOLINT
+                     std::vector<float> &preds,  // NOLINT
+                     int p) {                    // NOLINT
+  double new1[3] = {pt_x, pt_y, 1.0};
+  cv::Mat new_pt(3, 1, trans.type(), new1);
+  cv::Mat w = trans * new_pt;
+  preds[p * 3 + 1] = static_cast<float>(w.at<double>(0, 0));
+  preds[p * 3 + 2] = static_cast<float>(w.at<double>(1, 0));
+}
+
+void get_affine_transform(std::vector<float> &center,  // NOLINT
+                          std::vector<float> &scale,   // NOLINT
+                          float rot,
+                          std::vector<int> &output_size,  // NOLINT
+                          cv::Mat &trans,                 // NOLINT
+                          int inv) {
+  float src_w = scale[0];
+  float dst_w = static_cast<float>(output_size[0]);
+  float dst_h = static_cast<float>(output_size[1]);
+  float rot_rad = rot * PI / HALF_CIRCLE_DEGREE;
+  std::vector<float> src_dir = get_dir(-0.5 * src_w, 0, rot_rad);
+  std::vector<float> dst_dir{static_cast<float>(-0.5) * dst_w, 0.0};
+  cv::Point2f srcPoint2f[3], dstPoint2f[3];
+  srcPoint2f[0] = cv::Point2f(center[0], center[1]);
+  srcPoint2f[1] = cv::Point2f(center[0] + src_dir[0], center[1] + src_dir[1]);
+  srcPoint2f[2] = get_3rd_point(srcPoint2f[0], srcPoint2f[1]);
+
+  dstPoint2f[0] = cv::Point2f(dst_w * 0.5, dst_h * 0.5);
+  dstPoint2f[1] =
+      cv::Point2f(dst_w * 0.5 + dst_dir[0], dst_h * 0.5 + dst_dir[1]);
+  dstPoint2f[2] = get_3rd_point(dstPoint2f[0], dstPoint2f[1]);
+  if (inv == 0) {
+    trans = cv::getAffineTransform(srcPoint2f, dstPoint2f);
+  } else {
+    trans = cv::getAffineTransform(dstPoint2f, srcPoint2f);
+  }
+}
+
+void transform_preds(std::vector<float> &coords,         // NOLINT
+                     std::vector<float> &center,         // NOLINT
+                     std::vector<float> &scale,          // NOLINT
+                     std::vector<int> &output_size,      // NOLINT
+                     std::vector<int64_t> &shape,        // NOLINT
+                     std::vector<float> &target_coords,  // NOLINT
+                     bool affine = false) {
+  if (affine) {
+    cv::Mat trans(2, 3, CV_64FC1);
+    get_affine_transform(center, scale, 0, output_size, trans, 1);
+    for (int p = 0; p < shape[1]; ++p) {
+      affine_tranform(
+          coords[p * 2], coords[p * 2 + 1], trans, target_coords, p);
+    }
+  } else {
+    float heat_w = static_cast<float>(output_size[0]);
+    float heat_h = static_cast<float>(output_size[1]);
+    float x_scale = scale[0] / heat_w;
+    float y_scale = scale[1] / heat_h;
+    float offset_x = center[0] - scale[0] / 2.;
+    float offset_y = center[1] - scale[1] / 2.;
+    for (int i = 0; i < shape[1]; i++) {
+      target_coords[i * 3 + 1] = x_scale * coords[i * 2] + offset_x;
+      target_coords[i * 3 + 2] = y_scale * coords[i * 2 + 1] + offset_y;
+    }
+  }
+}
+
+void dark_parse(const float *heatmap,
+                std::vector<int64_t> &shape,  // NOLINT
+                std::vector<float> &coords,   // NOLINT
+                int px,
+                int py,
+                int index,
+                int ch) {
+  /*DARK postpocessing, Zhang et al. Distribution-Aware Coordinate
+  Representation for Human Pose Estimation (CVPR 2020).
+  1) offset = - hassian.inv() * derivative
+  2) dx = (heatmap[x+1] - heatmap[x-1])/2.
+  3) dxx = (dx[x+1] - dx[x-1])/2.
+  4) derivative = Mat([dx, dy])
+  5) hassian = Mat([[dxx, dxy], [dxy, dyy]])
+  */
+  std::vector<float> heatmap_ch(heatmap + index,
+                                heatmap + index + shape[2] * shape[3]);
+  cv::Mat heatmap_mat = cv::Mat(heatmap_ch).reshape(0, shape[2]);
+  heatmap_mat.convertTo(heatmap_mat, CV_32FC1);
+  cv::GaussianBlur(heatmap_mat, heatmap_mat, cv::Size(3, 3), 0, 0);
+  heatmap_mat = heatmap_mat.reshape(1, 1);
+  heatmap_ch = std::vector<float>(heatmap_mat.reshape(1, 1));
+
+  float epsilon = 1e-10;
+  // sample heatmap to get values in around target location
+  float xy = log(fmax(heatmap_ch[py * shape[3] + px], epsilon));
+  float xr = log(fmax(heatmap_ch[py * shape[3] + px + 1], epsilon));
+  float xl = log(fmax(heatmap_ch[py * shape[3] + px - 1], epsilon));
+
+  float xr2 = log(fmax(heatmap_ch[py * shape[3] + px + 2], epsilon));
+  float xl2 = log(fmax(heatmap_ch[py * shape[3] + px - 2], epsilon));
+  float yu = log(fmax(heatmap_ch[(py + 1) * shape[3] + px], epsilon));
+  float yd = log(fmax(heatmap_ch[(py - 1) * shape[3] + px], epsilon));
+  float yu2 = log(fmax(heatmap_ch[(py + 2) * shape[3] + px], epsilon));
+  float yd2 = log(fmax(heatmap_ch[(py - 2) * shape[3] + px], epsilon));
+  float xryu = log(fmax(heatmap_ch[(py + 1) * shape[3] + px + 1], epsilon));
+  float xryd = log(fmax(heatmap_ch[(py - 1) * shape[3] + px + 1], epsilon));
+  float xlyu = log(fmax(heatmap_ch[(py + 1) * shape[3] + px - 1], epsilon));
+  float xlyd = log(fmax(heatmap_ch[(py - 1) * shape[3] + px - 1], epsilon));
+
+  // Compute dx/dy and dxx/dyy with sampled values
+  float dx = 0.5 * (xr - xl);
+  float dy = 0.5 * (yu - yd);
+  float dxx = 0.25 * (xr2 - 2 * xy + xl2);
+  float dxy = 0.25 * (xryu - xryd - xlyu + xlyd);
+  float dyy = 0.25 * (yu2 - 2 * xy + yd2);
+
+  // Finally get offset by derivative and hassian, which combined by dx/dy and
+  // dxx/dyy
+  if (dxx * dyy - dxy * dxy != 0) {
+    float M[2][2] = {dxx, dxy, dxy, dyy};
+    float D[2] = {dx, dy};
+    cv::Mat hassian(2, 2, CV_32F, M);
+    cv::Mat derivative(2, 1, CV_32F, D);
+    cv::Mat offset = -hassian.inv() * derivative;
+    coords[ch * 2] += offset.at<float>(0, 0);
+    coords[ch * 2 + 1] += offset.at<float>(1, 0);
+  }
+}
+
+void get_final_preds(const float *heatmap,
+                     std::vector<int64_t> &shape,  // NOLINT
+                     const int64_t *index,
+                     std::vector<float> &center,  // NOLINT
+                     std::vector<float> scale,
+                     std::vector<float> &preds,  // NOLINT
+                     bool DARK) {
+  std::vector<float> coords;
+  coords.resize(shape[1] * 2);
+  int heatmap_height = shape[2];
+  int heatmap_width = shape[3];
+
+  for (int j = 0; j < shape[1]; ++j) {
+    int offset = j * shape[2] * shape[3];
+    int idx = index[j];
+    preds[j * 3] = heatmap[offset + idx];
+    coords[j * 2] = idx % heatmap_width;
+    coords[j * 2 + 1] = idx / heatmap_width;
+
+    int px = static_cast<int>(coords[j * 2] + 0.5);
+    int py = static_cast<int>(coords[j * 2 + 1] + 0.5);
+
+    if (DARK && px > 1 && px < heatmap_width - 2) {
+      dark_parse(heatmap, shape, coords, px, py, offset, j);
+    } else {
+      if (px > 0 && px < heatmap_width - 1) {
+        float diff_x = heatmap[offset + py * shape[3] + px + 1] -
+                       heatmap[offset + py * shape[3] + px - 1];
+        coords[j * 2] += diff_x > 0 ? 1 : -1 * 0.25;
+      }
+      if (py > 0 && py < heatmap_height - 1) {
+        float diff_y = heatmap[offset + (py + 1) * shape[3] + px] -
+                       heatmap[offset + (py - 1) * shape[3] + px];
+        coords[j * 2 + 1] += diff_y > 0 ? 1 : -1 * 0.25;
+      }
+    }
+  }
+
+  std::vector<int> img_size{heatmap_width, heatmap_height};
+  transform_preds(coords, center, scale, img_size, shape, preds);
+}
+
 void process(std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor,
              const std::string &config_path,
              const std::string &dataset_dir) {
@@ -368,34 +520,9 @@ void process(std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor,
   // Load dataset list
   auto dataset = load_dataset(dataset_dir + "/list.txt");
   // Prepare for inference and warmup
-  std::unique_ptr<paddle::lite_api::Tensor> image_tensor = nullptr;
-  std::unique_ptr<paddle::lite_api::Tensor> scale_factor_tensor = nullptr;
-  std::unique_ptr<paddle::lite_api::Tensor> im_shape_tensor = nullptr;
-  if (config.type == 1) {
-    image_tensor = predictor->GetInput(0);
-  } else if (config.type == 2) {
-    image_tensor = predictor->GetInput(0);
-    scale_factor_tensor = predictor->GetInput(1);
-  } else if (config.type == 3) {
-    image_tensor = predictor->GetInput(1);
-    scale_factor_tensor = predictor->GetInput(2);
-    // Fill im_shape tensor with a constant float value
-    im_shape_tensor = predictor->GetInput(0);
-    im_shape_tensor->Resize({1, 2});
-    auto im_shape_data = im_shape_tensor->mutable_data<float>();
-    im_shape_data[0] = config.width;
-    im_shape_data[1] = config.height;
-  } else {
-    printf("Unknown type(%d)!\n", config.type);
-    exit(-1);
-  }
+  auto image_tensor = predictor->GetInput(0);
   image_tensor->Resize({1, 3, config.height, config.width});
   auto image_data = image_tensor->mutable_data<float>();
-  float *scale_factor_data = nullptr;
-  if (scale_factor_tensor) {
-    scale_factor_tensor->Resize({1, 2});
-    scale_factor_data = scale_factor_tensor->mutable_data<float>();
-  }
   predictor->Run();  // Warmup
   // Traverse the list of the dataset and run inference on each sample
   double cur_costs[3];
@@ -418,7 +545,6 @@ void process(std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor,
     }
     // Preprocess
     double start = get_current_us();
-    // image tensor
     cv::Mat origin_image = cv::imread(input_path);
     cv::Mat resized_image;
     cv::resize(origin_image,
@@ -442,12 +568,6 @@ void process(std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor,
                 config.std.data(),
                 config.width,
                 config.height);
-    if (scale_factor_data) {
-      scale_factor_data[0] =
-          static_cast<float>(config.height) / origin_image.rows;
-      scale_factor_data[1] =
-          static_cast<float>(config.width) / origin_image.cols;
-    }
     double end = get_current_us();
     cur_costs[0] = (end - start) / 1000.0f;
     // Inference
@@ -457,67 +577,74 @@ void process(std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor,
     cur_costs[1] = (end - start) / 1000.0f;
     // Postprocess
     start = get_current_us();
-    auto output_tensor = predictor->GetOutput(0);
-    auto output_data = output_tensor->data<float>();
-    auto output_size = shape_production(output_tensor->shape());
-    int output_index = 0;
-    for (int64_t j = 0; j < output_size; j += 6) {
-      auto class_id = static_cast<int>(round(output_data[j]));
-      auto score = output_data[j + 1];
-      if (score < config.draw_threshold) continue;
-      std::string class_name =
-          class_id >= 0 && class_id < config.label_list.size()
-              ? config.label_list[class_id]
-              : "Unknown";
-      float x0, y0, x1, y1;
-      x0 = output_data[j + 2];
-      y0 = output_data[j + 3];
-      x1 = output_data[j + 4];
-      y1 = output_data[j + 5];
-      printf("[%d] %s - %f [%f,%f,%f,%f]\n",
-             output_index,
-             class_name.c_str(),
-             score,
-             x0,
-             y0,
-             x1,
-             y1);
-      if (!scale_factor_tensor && !im_shape_tensor) {
-        x0 *= origin_image.cols;
-        y0 *= origin_image.rows;
-        x1 *= origin_image.cols;
-        y1 *= origin_image.rows;
+    auto heatmap_tensor = predictor->GetOutput(0);
+    auto heatmap_data = heatmap_tensor->data<float>();
+    auto heatmap_shape = heatmap_tensor->shape();
+    auto heatmap_size = shape_production(heatmap_shape);
+    if (heatmap_size < 6) {
+      printf("[WARNING] No object detected.\n");
+    }
+    auto index_tensor = predictor->GetOutput(1);
+    auto index_data = index_tensor->data<int64_t>();
+    auto index_shape = index_tensor->shape();
+    auto index_size = shape_production(index_shape);
+    std::vector<float> preds(heatmap_shape[1] * 3, 0);
+    std::vector<float> center = {static_cast<float>(origin_image.cols) / 2.0f,
+                                 static_cast<float>(origin_image.rows) / 2.0f};
+    std::vector<float> scale = {static_cast<float>(origin_image.cols),
+                                static_cast<float>(origin_image.rows)};
+    get_final_preds(heatmap_data,
+                    heatmap_shape,
+                    index_data,
+                    center,
+                    scale,
+                    preds,
+                    config.use_dark_decode);
+    const int edge[][2] = {{0, 1},
+                           {0, 2},
+                           {1, 3},
+                           {2, 4},
+                           {3, 5},
+                           {4, 6},
+                           {5, 7},
+                           {6, 8},
+                           {7, 9},
+                           {8, 10},
+                           {5, 11},
+                           {6, 12},
+                           {11, 13},
+                           {12, 14},
+                           {13, 15},
+                           {14, 16},
+                           {11, 12}};
+    auto num_joints = heatmap_shape[1];
+    for (int i = 0; i < num_joints; i++) {
+      if (preds[i * 3] > config.draw_threshold) {
+        int x_coord = static_cast<int>(preds[i * 3 + 1]);
+        int y_coord = static_cast<int>(preds[i * 3 + 2]);
+        cv::circle(origin_image,
+                   cv::Point2d(x_coord, y_coord),
+                   1,
+                   cv::Scalar(0, 0, 255),
+                   2);
       }
-      int lx = std::max(static_cast<int>(x0), 0);
-      int ly = std::max(static_cast<int>(y0), 0);
-      int w = std::max(
-          std::min(static_cast<int>(x1), origin_image.cols - 1) - lx, 0);
-      int h = std::max(
-          std::min(static_cast<int>(y1), origin_image.rows - 1) - ly, 0);
-      if (w > 0 && h > 0) {
-        const std::vector<cv::Scalar> COLORS = {cv::Scalar(237, 189, 101),
-                                                cv::Scalar(0, 0, 255),
-                                                cv::Scalar(102, 153, 153),
-                                                cv::Scalar(255, 0, 0),
-                                                cv::Scalar(9, 255, 0),
-                                                cv::Scalar(0, 0, 0),
-                                                cv::Scalar(51, 153, 51)};
-        cv::Scalar color = COLORS[class_id % COLORS.size()];
-        cv::rectangle(origin_image, cv::Rect(lx, ly, w, h), color);
-        cv::rectangle(origin_image,
-                      cv::Point2d(lx, ly),
-                      cv::Point2d(lx + w, ly - 10),
-                      color,
-                      -1);
-        cv::putText(origin_image,
-                    std::to_string(output_index) + "." + class_name + ":" +
-                        std::to_string(score),
-                    cv::Point2d(lx, ly),
-                    cv::FONT_HERSHEY_PLAIN,
-                    1,
-                    cv::Scalar(255, 255, 255));
+      if (preds[edge[i][0] * 3] > config.draw_threshold &&
+          preds[edge[i][1] * 3] > config.draw_threshold) {
+        int x_start = static_cast<int>(preds[edge[i][0] * 3 + 1]);
+        int y_start = static_cast<int>(preds[edge[i][0] * 3 + 2]);
+        int x_end = static_cast<int>(preds[edge[i][1] * 3 + 1]);
+        int y_end = static_cast<int>(preds[edge[i][1] * 3 + 2]);
+        cv::line(origin_image,
+                 cv::Point2d(x_start, y_start),
+                 cv::Point2d(x_end, y_end),
+                 cv::Scalar(0, 255, 255),
+                 1);
       }
-      output_index++;
+      printf("[%d] %f, %f - %f\n",
+             i,
+             preds[i * 3 + 1],
+             preds[i * 3 + 2],
+             preds[i * 3]);
     }
     cv::imwrite(output_path, origin_image);
     end = get_current_us();

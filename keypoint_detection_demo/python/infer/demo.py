@@ -22,33 +22,18 @@ from paddle.fluid import core
 
 paddle.enable_static()
 
-MODEL_NAME = "ssd_mobilenet_v1_relu_voc_fp32_300"
-#MODEL_NAME = "ssd_mobilenet_v1_relu_voc_int8_300_per_layer"
-MODEL_FILE = ""
-PARAMS_FILE = ""
-CONFIG_NAME = "ssd_voc_300.txt"
+MODEL_NAME = "tinypose_fp32_128_96"
+#MODEL_NAME = "tinypose_int8_128_96_per_channel"
+MODEL_FILE = "model.pdmodel"
+PARAMS_FILE = "model.pdiparams"
+CONFIG_NAME = "tinypose_128_96.txt"
 
-#MODEL_NAME = "yolov3_mobilenet_v1_270e_coco_fp32_608"
-#MODEL_FILE = "model"
-#PARAMS_FILE = "params"
-#CONFIG_NAME = "yolov3_coco_608.txt"
-
-#MODEL_NAME = "picodet_relu6_int8_416_per_channel"
-#MODEL_FILE = "model"
-#PARAMS_FILE = "params"
-#CONFIG_NAME = "picodet_coco_416.txt"
+#MODEL_NAME = "tinypose_fp32_256_192"
+#MODEL_FILE = "model.pdmodel"
+#PARAMS_FILE = "model.pdiparams"
+#CONFIG_NAME = "tinypose_256_192.txt"
 
 DATASET_NAME = "test"
-
-
-def load_label(path):
-    lines = []
-    with open(path, 'r', encoding='utf-8') as f:
-        for line in f.readlines():
-            line = line.strip('\n')
-            lines.append(line)
-    assert len(lines) > 0, "The label file %s should not be empty!" % path
-    return lines
 
 
 def load_config(path):
@@ -64,13 +49,6 @@ def load_config(path):
     dir = os.path.dirname(path)
     print("dir: %s" % dir)
     config = {}
-    # type
-    assert 'type' in values, "Missing the key 'type'!"
-    config['type'] = int(values['type'])
-    assert config['type'] >= 1 and config[
-        'type'] <= 3, "The key 'type' only supports 1,2 or 3, but receive %d!" % config[
-            'type']
-    print("type: %d" % config['type'])
     # width
     assert 'width' in values, "Missing the key 'width'!"
     config['width'] = int(values['width'])
@@ -108,12 +86,11 @@ def load_config(path):
             'draw_threshold'] >= 0, "The key 'draw_threshold' should >= 0.f, but receive %f!" % config[
                 'draw_threshold']
         print("draw_threshold: %f" % config['draw_threshold'])
-    # label_list
-    if 'label_list' in values:
-        label_list = values['label_list']
-        if len(label_list) > 0:
-            config['label_list'] = load_label(dir + "/" + label_list)
-            print("label_list: %d" % len(config['label_list']))
+    # use_dark_decode
+    if 'use_dark_decode' in values:
+        config['use_dark_decode'] = False if values['use_dark_decode'].lower(
+        ) == 'false' or values['use_dark_decode'].lower() == '0' else True
+        print("use_dark_decode: %r" % config['use_dark_decode'])
     return config
 
 
@@ -179,64 +156,17 @@ def main(argv=None):
         image_tensor = fluid.core.LoDTensor()
         image_tensor.set(image_data, place)
         input_tensors['image'] = image_tensor
-        if config['type'] == 2 or config['type'] == 3:
-            scale_factor_data = np.array([
-                config['height'] / float(origin_image.shape[0]),
-                config['width'] / float(origin_image.shape[1])
-            ]).reshape(1, 2).astype(np.float32)
-            scale_factor_tensor = fluid.core.LoDTensor()
-            scale_factor_tensor.set(scale_factor_data, place)
-            input_tensors['scale_factor'] = scale_factor_tensor
-        if config['type'] == 3:
-            im_shape_data = np.array(
-                [config['height'], config['width']]).reshape(
-                    1, 2).astype(np.float32)
-            im_shape_tensor = fluid.core.LoDTensor()
-            im_shape_tensor.set(im_shape_data, place)
-            input_tensors['im_shape'] = im_shape_tensor
         # Inference
         output_tensors = exe.run(program=program,
                                  feed=input_tensors,
                                  fetch_list=fetch_targets,
                                  return_numpy=False)
         # Postprocess
-        output_data = np.array(output_tensors[0])
-        # print(output_data)
-        output_index = 0
-        for j in range(len(output_data)):
-            class_id = int(output_data[j][0])
-            score = output_data[j][1]
-            if score < config['draw_threshold']:
-                continue
-            class_name = config['label_list'][
-                class_id] if class_id >= 0 and class_id < len(config[
-                    'label_list']) else 'Unknown'
-            x0 = output_data[j][2]
-            y0 = output_data[j][3]
-            x1 = output_data[j][4]
-            y1 = output_data[j][5]
-            print("[%d] class_name=%s score=%f bbox=[%f,%f,%f,%f]" %
-                  (output_index, class_name, score, x0, y0, x1, y1))
-            if config['type'] == 1:
-                x0 = x0 * origin_image.shape[1]
-                y0 = y0 * origin_image.shape[0]
-                x1 = x1 * origin_image.shape[1]
-                y1 = y1 * origin_image.shape[0]
-            lx = max(int(x0), 0)
-            ly = max(int(y0), 0)
-            w = max(min(int(x1), origin_image.shape[1] - 1) - lx, 0)
-            h = max(min(int(y1), origin_image.shape[0] - 1) - ly, 0)
-            if w > 0 and h > 0:
-                COLORS = [(237, 189, 101), (0, 0, 255), (102, 153, 153),
-                          (255, 0, 0), (9, 255, 0), (0, 0, 0), (51, 153, 51)]
-                color = COLORS[class_id % len(COLORS)]
-                cv2.rectangle(origin_image, [lx, ly, w, h], color)
-                cv2.rectangle(origin_image, (lx, ly), (lx + w, ly - 10), color,
-                              int(-1))
-                cv2.putText(origin_image, "%d.%s:%f" %
-                            (output_index, class_name, score), (lx, ly),
-                            cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255))
-            output_index = output_index + 1
+        heatmap_data = np.array(output_tensors[0])
+        print(heatmap_data)
+        index_data = np.array(output_tensors[1])
+        print(index_data)
+        # TODO(hong19860320) Add postprocess
         cv2.imwrite(output_path, origin_image)
     print("Done.")
 

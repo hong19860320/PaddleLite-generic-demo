@@ -379,7 +379,7 @@ echo "Build #18"
 build_and_update_lib android armv8 clang 1 1 0 0 0
 
 # Android armeabi-v7a
-# Huawei Kirin NPU, MediaTek APU, Verisilicon TIM-VX, Android NNAPI, Google XNNPACK, Qualcomm QNN
+# Huawei Kirin NPU, MediaTek APU, Verisilicon TIM-VX, Android NNAPI, Google XNNPACK
 echo "Build #19"
 build_and_update_lib android armv7 clang 1 0 0 0 0
 echo "Build #20"
