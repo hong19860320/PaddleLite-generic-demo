@@ -411,9 +411,9 @@ build_and_run_keypoint_detection_demo() {
   if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST" ]; then
     run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST"
   fi
-  if [ "$ENABLE_DEMO_CAMBRICON_MLU" == "1" ] && [ -n "$CAMBRICON_MUL_LINUX_AMD64_DEVICE_LIST" ]; then
+  #if [ "$ENABLE_DEMO_CAMBRICON_MLU" == "1" ] && [ -n "$CAMBRICON_MUL_LINUX_AMD64_DEVICE_LIST" ]; then
     # run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi cambricon_mlu "$CAMBRICON_MUL_LINUX_AMD64_DEVICE_LIST"
-  fi
+  #fi
   if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
     run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
   fi
