@@ -338,15 +338,15 @@ build_and_run_keypoint_detection_demo() {
   local os=android
   local abi=arm64-v8a
   ./build.sh $os $abi
-  if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST"
-  fi
-  if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test:tinypose_int8_128_96_per_channel#tinypose_128_96.txt#test $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
-  fi
-  if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST"
-  fi
+  #if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test:tinypose_int8_128_96_per_channel#tinypose_128_96.txt#test $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST"
+  #fi
   if [ "$ENABLE_DEMO_OPENCL" == "1" ] && [ -n "$OPENCL_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
     run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi opencl "$OPENCL_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
@@ -354,21 +354,21 @@ build_and_run_keypoint_detection_demo() {
   os=android
   abi=armeabi-v7a
   ./build.sh $os $abi
-  if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
-  fi
-  if [ "$ENABLE_DEMO_MEDIATEK_APU" == "1" ] && [ -n "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh tinypose_int8_128_96_per_channel#tinypose_128_96.txt#test $os $abi mediatek_apu "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
-  fi
-  if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh tinypose_int8_128_96_per_channel#tinypose_128_96.txt#test $os $abi verisilicon_timvx "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST"
-  fi
-  if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test:tinypose_int8_128_96_per_channel#tinypose_128_96.txt#test $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
-  fi
-  if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
-    run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
-  fi
+  #if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_MEDIATEK_APU" == "1" ] && [ -n "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh tinypose_int8_128_96_per_channel#tinypose_128_96.txt#test $os $abi mediatek_apu "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh tinypose_int8_128_96_per_channel#tinypose_128_96.txt#test $os $abi verisilicon_timvx "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test:tinypose_int8_128_96_per_channel#tinypose_128_96.txt#test $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  #fi
   if [ "$ENABLE_DEMO_OPENCL" == "1" ] && [ -n "$OPENCL_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
     run_demo ./run_with_adb.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi opencl "$OPENCL_ANDROID_ARMEABI_V7A_DEVICE_LIST"
   fi
@@ -377,17 +377,17 @@ build_and_run_keypoint_detection_demo() {
   abi=arm64
   ./build.sh $os $abi
   #if [ "$ENABLE_DEMO_IMAGINATION_NNA" == "1" ] && [ -n "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST" ]; then
-    # run_demo tinypose_int8_128_96_per_channel#tinypose_128_96.txt#test $os $abi imagination_nna "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST"
+    #run_demo tinypose_int8_128_96_per_channel#tinypose_128_96.txt#test $os $abi imagination_nna "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST"
   #fi
   if [ "$ENABLE_DEMO_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
     run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
   fi
-  if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh tinypose_int8_128_96_per_channel#tinypose_128_96.txt#test $os $abi verisilicon_timvx "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST"
-  fi
-  if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST"
-  fi
+  #if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh tinypose_int8_128_96_per_channel#tinypose_128_96.txt#test $os $abi verisilicon_timvx "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST"
+  #fi
   if [ "$ENABLE_DEMO_OPENCL" == "1" ] && [ -n "$OPENCL_LINUX_ARM64_DEVICE_LIST" ]; then
     run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi opencl "$OPENCL_LINUX_ARM64_DEVICE_LIST"
   fi
@@ -398,9 +398,9 @@ build_and_run_keypoint_detection_demo() {
   os=linux
   abi=armhf
   ./build.sh $os $abi
-  if [ "$ENABLE_DEMO_OPENCL" == "1" ] && [ -n "$OPENCL_LINUX_ARMHF_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi opencl "$OPENCL_LINUX_ARMHF_DEVICE_LIST"
-  fi
+  #if [ "$ENABLE_DEMO_OPENCL" == "1" ] && [ -n "$OPENCL_LINUX_ARMHF_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi opencl "$OPENCL_LINUX_ARMHF_DEVICE_LIST"
+  #fi
   # linux amd64
   os=linux
   abi=amd64
@@ -408,15 +408,15 @@ build_and_run_keypoint_detection_demo() {
   if [ "$ENABLE_DEMO_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST" ]; then
     run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST"
   fi
-  if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST"
-  fi
+  #if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST"
+  #fi
   #if [ "$ENABLE_DEMO_CAMBRICON_MLU" == "1" ] && [ -n "$CAMBRICON_MUL_LINUX_AMD64_DEVICE_LIST" ]; then
     # run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi cambricon_mlu "$CAMBRICON_MUL_LINUX_AMD64_DEVICE_LIST"
   #fi
-  if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
-  fi
+  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
+  #fi
   if [ "$ENABLE_DEMO_OPENCL" == "1" ] && [ -n "$OPENCL_LINUX_AMD64_DEVICE_LIST" ]; then
     run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi opencl "$OPENCL_LINUX_AMD64_DEVICE_LIST"
   fi
@@ -427,9 +427,111 @@ build_and_run_keypoint_detection_demo() {
   os=qnx
   abi=arm64
   ./build.sh $os $abi
-  if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST" ]; then
-    run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST"
+  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh tinypose_fp32_128_96#tinypose_128_96.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST"
+  #fi
+  echo "done"
+}
+
+build_and_run_semantic_segmentation_demo() {
+  echo "build and run semantic_segmentation_demo"
+  cd $ROOT_DIR/semantic_segmentation_demo/shell
+  # android arm64-v8a
+  local os=android
+  local abi=arm64-v8a
+  ./build.sh $os $abi
+  #if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARM64_V8A_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel#human_224_398.txt#test $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARM64_V8A_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel#human_224_398.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARM64_V8A_DEVICE_LIST"
+  #fi
+  if [ "$ENABLE_DEMO_OPENCL" == "1" ] && [ -n "$OPENCL_ANDROID_ARM64_V8A_DEVICE_LIST" ]; then
+    run_demo ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi opencl "$OPENCL_ANDROID_ARM64_V8A_DEVICE_LIST"
   fi
+  # android armeabi-v7a
+  os=android
+  abi=armeabi-v7a
+  ./build.sh $os $abi
+  #if [ "$ENABLE_DEMO_HUAWEI_KIRIN_NPU" == "1" ] && [ -n "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi huawei_kirin_npu "$HUAWEI_KIRIN_NPU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_MEDIATEK_APU" == "1" ] && [ -n "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel#human_224_398.txt#test $os $abi mediatek_apu "$MEDIATEK_APU_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel#human_224_398.txt#test $os $abi verisilicon_timvx "$VERISILICON_TIMVX_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_ANDROID_NNAPI" == "1" ] && [ -n "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel#human_224_398.txt#test $os $abi android_nnapi "$ANDROID_NNAPI_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    # run_demo ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel#human_224_398.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  #fi
+  if [ "$ENABLE_DEMO_OPENCL" == "1" ] && [ -n "$OPENCL_ANDROID_ARMEABI_V7A_DEVICE_LIST" ]; then
+    run_demo ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi opencl "$OPENCL_ANDROID_ARMEABI_V7A_DEVICE_LIST"
+  fi
+  # linux arm64
+  os=linux
+  abi=arm64
+  ./build.sh $os $abi
+  #if [ "$ENABLE_DEMO_IMAGINATION_NNA" == "1" ] && [ -n "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST" ]; then
+    # run_demo pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel#human_224_398.txt#test $os $abi imagination_nna "$IMAGINATION_NNA_LINUX_ARM64_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_ARM64_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_VERISILICON_TIMVX" == "1" ] && [ -n "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel#human_224_398.txt#test $os $abi verisilicon_timvx "$VERISILICON_TIMVX_LINUX_ARM64_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_ARM64_DEVICE_LIST"
+  #fi
+  if [ "$ENABLE_DEMO_OPENCL" == "1" ] && [ -n "$OPENCL_LINUX_ARM64_DEVICE_LIST" ]; then
+    run_demo ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi opencl "$OPENCL_LINUX_ARM64_DEVICE_LIST"
+  fi
+  if [ "$ENABLE_DEMO_XPU" == "1" ] && [ -n "$XPU_LINUX_ARM64_DEVICE_LIST" ]; then
+    run_demo ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi xpu "$XPU_LINUX_ARM64_DEVICE_LIST"
+  fi
+  # linux armhf
+  os=linux
+  abi=armhf
+  ./build.sh $os $abi
+  #if [ "$ENABLE_DEMO_OPENCL" == "1" ] && [ -n "$OPENCL_LINUX_ARMHF_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi opencl "$OPENCL_LINUX_ARMHF_DEVICE_LIST"
+  #fi
+  # linux amd64
+  os=linux
+  abi=amd64
+  ./build.sh $os $abi
+  #if [ "$ENABLE_DEMO_HUAWEI_ASCEND_NPU" == "1" ] && [ -n "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi huawei_ascend_npu "$HUAWEI_ASCEND_NPU_LINUX_AMD64_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_KUNLUNXIN_XTCL" == "1" ] && [ -n "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi kunlunxin_xtcl "$KUNLUNXIN_XTCL_LINUX_AMD64_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_CAMBRICON_MLU" == "1" ] && [ -n "$CAMBRICON_MUL_LINUX_AMD64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi cambricon_mlu "$CAMBRICON_MUL_LINUX_AMD64_DEVICE_LIST"
+  #fi
+  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel#human_224_398.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_LINUX_AMD64_DEVICE_LIST"
+  #fi
+  if [ "$ENABLE_DEMO_OPENCL" == "1" ] && [ -n "$OPENCL_LINUX_AMD64_DEVICE_LIST" ]; then
+    run_demo ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi opencl "$OPENCL_LINUX_AMD64_DEVICE_LIST"
+  fi
+  if [ "$ENABLE_DEMO_XPU" == "1" ] && [ -n "$XPU_LINUX_AMD64_DEVICE_LIST" ]; then
+    run_demo ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test $os $abi xpu "$XPU_LINUX_AMD64_DEVICE_LIST"
+  fi
+  # qnx arm64
+  os=qnx
+  abi=arm64
+  ./build.sh $os $abi
+  #if [ "$ENABLE_DEMO_QUALCOMM_QNN" == "1" ] && [ -n "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST" ]; then
+    # run_demo ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer#cityscapes_512_1024.txt#test:pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel#cityscapes_512_1024.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer#human_224_398.txt#test:portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel#human_224_398.txt#test $os $abi qualcomm_qnn "$QUALCOMM_QNN_QNX_ARM64_DEVICE_LIST"
+  #fi
   echo "done"
 }
 
@@ -577,12 +679,14 @@ build_and_run_model_test() {
 build_and_run_image_classification_demo
 build_and_run_object_detection_demo
 build_and_run_keypoint_detection_demo
+build_and_run_semantic_segmentation_demo
 build_and_run_model_test
 
 # clean all
 clean_demo image_classification_demo
 clean_demo object_detection_demo
 clean_demo keypoint_detection_demo
+clean_demo semantic_segmentation_demo
 clean_demo model_test
 
 echo "Done."

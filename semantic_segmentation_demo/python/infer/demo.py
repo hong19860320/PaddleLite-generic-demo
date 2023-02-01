@@ -22,21 +22,19 @@ from paddle.fluid import core
 
 paddle.enable_static()
 
-MODEL_NAME = "ssd_mobilenet_v1_relu_voc_fp32_300"
-#MODEL_NAME = "ssd_mobilenet_v1_relu_voc_int8_300_per_layer"
-MODEL_FILE = ""
-PARAMS_FILE = ""
-CONFIG_NAME = "ssd_voc_300.txt"
+MODEL_NAME = "pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024"
+#MODEL_NAME = "pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer"
+#MODEL_NAME = "pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel"
+MODEL_FILE = "model.pdmodel"
+PARAMS_FILE = "model.pdiparams"
+CONFIG_NAME = "cityscapes_512_1024.txt"
 
-#MODEL_NAME = "yolov3_mobilenet_v1_270e_coco_fp32_608"
-#MODEL_FILE = "model"
-#PARAMS_FILE = "params"
-#CONFIG_NAME = "yolov3_coco_608.txt"
-
-#MODEL_NAME = "picodet_relu6_int8_416_per_channel"
-#MODEL_FILE = "model"
-#PARAMS_FILE = "params"
-#CONFIG_NAME = "picodet_coco_416.txt"
+#MODEL_NAME = "portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398"
+#MODEL_NAME = "portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer"
+#MODEL_NAME = "portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel"
+#MODEL_FILE = "model.pdmodel"
+#PARAMS_FILE = "model.pdiparams"
+#CONFIG_NAME = "human_224_398.txt"
 
 DATASET_NAME = "test"
 
@@ -64,13 +62,6 @@ def load_config(path):
     dir = os.path.dirname(path)
     print("dir: %s" % dir)
     config = {}
-    # type
-    assert 'type' in values, "Missing the key 'type'!"
-    config['type'] = int(values['type'])
-    assert config['type'] >= 1 and config[
-        'type'] <= 3, "The key 'type' only supports 1,2 or 3, but receive %d!" % config[
-            'type']
-    print("type: %d" % config['type'])
     # width
     assert 'width' in values, "Missing the key 'width'!"
     config['width'] = int(values['width'])
@@ -101,19 +92,13 @@ def load_config(path):
             'std'].size
     print("std: %f,%f,%f" %
           (config['std'][0], config['std'][1], config['std'][2]))
-    # draw_threshold
-    if 'draw_threshold' in values:
-        config['draw_threshold'] = float(values['draw_threshold'])
+    # draw_weight
+    if 'draw_weight' in values:
+        config['draw_weight'] = float(values['draw_weight'])
         assert config[
-            'draw_threshold'] >= 0, "The key 'draw_threshold' should >= 0.f, but receive %f!" % config[
-                'draw_threshold']
-        print("draw_threshold: %f" % config['draw_threshold'])
-    # label_list
-    if 'label_list' in values:
-        label_list = values['label_list']
-        if len(label_list) > 0:
-            config['label_list'] = load_label(dir + "/" + label_list)
-            print("label_list: %d" % len(config['label_list']))
+            'draw_weight'] >= 0, "The key 'draw_weight' should >= 0.f, but receive %f!" % config[
+                'draw_weight']
+        print("draw_weight: %f" % config['draw_weight'])
     return config
 
 
@@ -180,7 +165,7 @@ def main(argv=None):
     sample_count = len(dataset)
     shutil.rmtree("../../assets/datasets/" + DATASET_NAME + "/outputs")
     os.mkdir("../../assets/datasets/" + DATASET_NAME + "/outputs")
-    color_map = generate_color_map(len(config['label_list']))
+    color_map = generate_color_map(1000)
     for i in range(sample_count):
         sample_name = dataset[i]
         print("[%u/%u] Processing %s" % (i + 1, sample_count, sample_name))
@@ -194,30 +179,15 @@ def main(argv=None):
             fx=0,
             fy=0,
             interpolation=cv2.INTER_CUBIC)
-        image_data = cv2.cvtColor(resized_image, cv2.COLOR_BGR2RGB)
-        image_data = image_data.transpose((2, 0, 1)) / 255.0
+        rgb_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2RGB)
+        image_data = rgb_image.transpose((2, 0, 1)) / 255.0
         image_data = (image_data - config['mean'].reshape(
             (3, 1, 1))) / config['std'].reshape((3, 1, 1))
         image_data = image_data.reshape(
             [1, 3, config['height'], config['width']]).astype(np.float32)
         image_tensor = fluid.core.LoDTensor()
         image_tensor.set(image_data, place)
-        input_tensors['image'] = image_tensor
-        if config['type'] == 2 or config['type'] == 3:
-            scale_factor_data = np.array([
-                config['height'] / float(origin_image.shape[0]),
-                config['width'] / float(origin_image.shape[1])
-            ]).reshape(1, 2).astype(np.float32)
-            scale_factor_tensor = fluid.core.LoDTensor()
-            scale_factor_tensor.set(scale_factor_data, place)
-            input_tensors['scale_factor'] = scale_factor_tensor
-        if config['type'] == 3:
-            im_shape_data = np.array(
-                [config['height'], config['width']]).reshape(
-                    1, 2).astype(np.float32)
-            im_shape_tensor = fluid.core.LoDTensor()
-            im_shape_tensor.set(im_shape_data, place)
-            input_tensors['im_shape'] = im_shape_tensor
+        input_tensors['x'] = image_tensor
         # Inference
         output_tensors = exe.run(program=program,
                                  feed=input_tensors,
@@ -226,39 +196,37 @@ def main(argv=None):
         # Postprocess
         output_data = np.array(output_tensors[0])
         # print(output_data)
-        output_index = 0
-        for j in range(len(output_data)):
-            class_id = int(output_data[j][0])
-            score = output_data[j][1]
-            if score < config['draw_threshold']:
-                continue
-            class_name = config['label_list'][
-                class_id] if class_id >= 0 and class_id < len(config[
-                    'label_list']) else 'Unknown'
-            x0 = output_data[j][2]
-            y0 = output_data[j][3]
-            x1 = output_data[j][4]
-            y1 = output_data[j][5]
-            print("[%d] class_name=%s score=%f bbox=[%f,%f,%f,%f]" %
-                  (output_index, class_name, score, x0, y0, x1, y1))
-            if config['type'] == 1:
-                x0 = x0 * origin_image.shape[1]
-                y0 = y0 * origin_image.shape[0]
-                x1 = x1 * origin_image.shape[1]
-                y1 = y1 * origin_image.shape[0]
-            lx = max(int(x0), 0)
-            ly = max(int(y0), 0)
-            w = max(min(int(x1), origin_image.shape[1] - 1) - lx, 0)
-            h = max(min(int(y1), origin_image.shape[0] - 1) - ly, 0)
-            if w > 0 and h > 0:
-                color = color_map[class_id % len(color_map)]
-                cv2.rectangle(origin_image, [lx, ly, w, h], color)
-                cv2.rectangle(origin_image, (lx, ly), (lx + w, ly - 10), color,
-                              int(-1))
-                cv2.putText(origin_image, "%d.%s:%f" %
-                            (output_index, class_name, score), (lx, ly),
-                            cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255))
-            output_index = output_index + 1
+        output_shape = output_data.shape
+        output_rank = output_data.ndim
+        if output_rank == 3:
+            mask_data = output_data.astype(np.int64)
+            output_height = output_shape[1]
+            output_width = output_shape[2]
+        elif output_rank == 4:
+            mask_data = np.argmax(output_data, axis=1).astype(np.int64)
+            output_height = output_shape[2]
+            output_width = output_shape[3]
+        else:
+            print(
+                "The rank of the output tensor should be 3 or 4, but receive %d!"
+                % output_rank)
+            exit(-1)
+        mask_image = resized_image.copy()
+        for j in range(output_height):
+            for k in range(output_width):
+                class_id = mask_data[0, j, k]
+                if class_id != 0:  #  Not background
+                    mask_image[j, k] = [
+                        color_map[class_id][2], color_map[class_id][1],
+                        color_map[class_id][0]
+                    ]  # RGB->BGR
+        mask_image = cv2.resize(
+            mask_image, (origin_image.shape[1], origin_image.shape[0]),
+            fx=0,
+            fy=0,
+            interpolation=cv2.INTER_CUBIC)
+        origin_image = cv2.addWeighted(origin_image, 1 - config['draw_weight'],
+                                       mask_image, config['draw_weight'], 0)
         cv2.imwrite(output_path, origin_image)
     print("Done.")
 

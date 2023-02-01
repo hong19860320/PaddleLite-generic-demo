@@ -212,34 +212,12 @@ void nhwc12nc1hw(const float *src,
 }
 
 typedef struct {
-  // type = 1 indicates the model(0: image) has only one input and one output.
-  // type = 2 indicates the model has two inputs(0: image, 1: scale_factor) and
-  // one output.
-  // type = 3 indicates the model has three inputs(0: im_shape, 1: image, 2:
-  // scale_factor) and one output.
-  int type;
   int width;
   int height;
   std::vector<float> mean;
   std::vector<float> std;
-  float draw_threshold{0.0f};
-  std::vector<std::string> label_list;
+  float draw_weight{0.5f};
 } CONFIG;
-
-std::vector<std::string> load_label(const std::string &path) {
-  std::vector<char> buffer;
-  if (!read_file(path, &buffer, false)) {
-    printf("Failed to load the label file %s\n", path.c_str());
-    exit(-1);
-  }
-  std::string content(buffer.begin(), buffer.end());
-  auto lines = split_string<std::string>(content, '\n');
-  if (lines.empty()) {
-    printf("The label file %s should not be empty!\n", path.c_str());
-    exit(-1);
-  }
-  return lines;
-}
 
 CONFIG load_config(const std::string &path) {
   CONFIG config;
@@ -266,18 +244,6 @@ CONFIG load_config(const std::string &path) {
     }
     values[value[0]] = value[1];
   }
-  // type
-  if (!values.count("type")) {
-    printf("Missing the key 'type'!\n");
-    exit(-1);
-  }
-  config.type = atoi(values["type"].c_str());
-  if (config.type < 1 || config.type > 3) {
-    printf("The key 'type' only supports 1,2 or 3, but receive %d!\n",
-           config.type);
-    exit(-1);
-  }
-  printf("type: %d\n", config.type);
   // width
   if (!values.count("width")) {
     printf("Missing the key 'width'!\n");
@@ -324,24 +290,16 @@ CONFIG load_config(const std::string &path) {
     exit(-1);
   }
   printf("std: %f,%f,%f\n", config.std[0], config.std[1], config.std[2]);
-  // draw_threshold(optional)
-  if (values.count("draw_threshold")) {
-    config.draw_threshold = atof(values["draw_threshold"].c_str());
-    if (config.draw_threshold < 0.f) {
-      printf("The key 'draw_threshold' should >= 0.f, but receive %f!\n",
-             config.draw_threshold);
+  // draw_weight(optional)
+  if (values.count("draw_weight")) {
+    config.draw_weight = atof(values["draw_weight"].c_str());
+    if (config.draw_weight < 0.f) {
+      printf("The key 'draw_weight' should >= 0.f, but receive %f!\n",
+             config.draw_weight);
       exit(-1);
     }
   }
-  printf("draw_threshold: %f\n", config.draw_threshold);
-  // label_list(optional)
-  if (values.count("label_list")) {
-    std::string label_list = values["label_list"];
-    if (!label_list.empty()) {
-      config.label_list = load_label(dir + "/" + label_list);
-    }
-  }
-  printf("label_list size: %u\n", config.label_list.size());
+  printf("draw_weight: %f\n", config.draw_weight);
   return config;
 }
 
@@ -389,34 +347,9 @@ void process(std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor,
   // Load dataset list
   auto dataset = load_dataset(dataset_dir + "/list.txt");
   // Prepare for inference and warmup
-  std::unique_ptr<paddle::lite_api::Tensor> image_tensor = nullptr;
-  std::unique_ptr<paddle::lite_api::Tensor> scale_factor_tensor = nullptr;
-  std::unique_ptr<paddle::lite_api::Tensor> im_shape_tensor = nullptr;
-  if (config.type == 1) {
-    image_tensor = predictor->GetInput(0);
-  } else if (config.type == 2) {
-    image_tensor = predictor->GetInput(0);
-    scale_factor_tensor = predictor->GetInput(1);
-  } else if (config.type == 3) {
-    image_tensor = predictor->GetInput(1);
-    scale_factor_tensor = predictor->GetInput(2);
-    // Fill im_shape tensor with a constant float value
-    im_shape_tensor = predictor->GetInput(0);
-    im_shape_tensor->Resize({1, 2});
-    auto im_shape_data = im_shape_tensor->mutable_data<float>();
-    im_shape_data[0] = config.width;
-    im_shape_data[1] = config.height;
-  } else {
-    printf("Unknown type(%d)!\n", config.type);
-    exit(-1);
-  }
+  auto image_tensor = predictor->GetInput(0);
   image_tensor->Resize({1, 3, config.height, config.width});
   auto image_data = image_tensor->mutable_data<float>();
-  float *scale_factor_data = nullptr;
-  if (scale_factor_tensor) {
-    scale_factor_tensor->Resize({1, 2});
-    scale_factor_data = scale_factor_tensor->mutable_data<float>();
-  }
   predictor->Run();  // Warmup
   // Traverse the list of the dataset and run inference on each sample
   double cur_costs[3];
@@ -427,7 +360,7 @@ void process(std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor,
                          std::numeric_limits<float>::max()};
   int iter_count = 0;
   auto sample_count = dataset.size();
-  auto color_map = generate_color_map(config.label_list.size());
+  auto color_map = generate_color_map(1000);
   for (size_t i = 0; i < sample_count; i++) {
     auto sample_name = dataset[i];
     printf("[%u/%u] Processing %s\n", i + 1, sample_count, sample_name.c_str());
@@ -448,28 +381,23 @@ void process(std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor,
                cv::Size(config.width, config.height),
                0,
                0);
+    cv::Mat rgb_image;
     if (resized_image.channels() == 3) {
-      cv::cvtColor(resized_image, resized_image, cv::COLOR_BGR2RGB);
+      cv::cvtColor(resized_image, rgb_image, cv::COLOR_BGR2RGB);
     } else if (resized_image.channels() == 4) {
-      cv::cvtColor(resized_image, resized_image, cv::COLOR_BGRA2RGB);
+      cv::cvtColor(resized_image, rgb_image, cv::COLOR_BGRA2RGB);
     } else {
       printf("The channel size should be 4 or 3, but receive %d!\n",
              resized_image.channels());
       exit(-1);
     }
-    resized_image.convertTo(resized_image, CV_32FC3, 1 / 255.f);
-    nhwc32nc3hw(reinterpret_cast<const float *>(resized_image.data),
+    rgb_image.convertTo(rgb_image, CV_32FC3, 1 / 255.f);
+    nhwc32nc3hw(reinterpret_cast<const float *>(rgb_image.data),
                 image_data,
                 config.mean.data(),
                 config.std.data(),
                 config.width,
                 config.height);
-    if (scale_factor_data) {
-      scale_factor_data[0] =
-          static_cast<float>(config.height) / origin_image.rows;
-      scale_factor_data[1] =
-          static_cast<float>(config.width) / origin_image.cols;
-    }
     double end = get_current_us();
     cur_costs[0] = (end - start) / 1000.0f;
     // Inference
@@ -480,60 +408,73 @@ void process(std::shared_ptr<paddle::lite_api::PaddlePredictor> predictor,
     // Postprocess
     start = get_current_us();
     auto output_tensor = predictor->GetOutput(0);
-    auto output_data = output_tensor->data<float>();
-    auto output_size = shape_production(output_tensor->shape());
-    int output_index = 0;
-    for (int64_t j = 0; j < output_size; j += 6) {
-      auto class_id = static_cast<int>(round(output_data[j]));
-      auto score = output_data[j + 1];
-      if (score < config.draw_threshold) continue;
-      std::string class_name =
-          class_id >= 0 && class_id < config.label_list.size()
-              ? config.label_list[class_id]
-              : "Unknown";
-      float x0, y0, x1, y1;
-      x0 = output_data[j + 2];
-      y0 = output_data[j + 3];
-      x1 = output_data[j + 4];
-      y1 = output_data[j + 5];
-      printf("[%d] %s - %f [%f,%f,%f,%f]\n",
-             output_index,
-             class_name.c_str(),
-             score,
-             x0,
-             y0,
-             x1,
-             y1);
-      if (!scale_factor_tensor && !im_shape_tensor) {
-        x0 *= origin_image.cols;
-        y0 *= origin_image.rows;
-        x1 *= origin_image.cols;
-        y1 *= origin_image.rows;
+    auto output_shape = output_tensor->shape();
+    auto output_rank = output_shape.size();
+    int64_t output_height, output_width;
+    std::vector<int64_t> mask_data;
+    if (output_rank == 3) {
+      output_height = output_shape[1];
+      output_width = output_shape[2];
+      auto image_size = output_height * output_width;
+      mask_data.resize(image_size);
+      if (output_tensor->precision() == PRECISION(kInt32)) {
+        auto output_data = output_tensor->data<int32_t>();
+        for (int64_t j = 0; j < image_size; j++) {
+          mask_data[j] = static_cast<int64_t>(output_data[j]);
+        }
+      } else if (output_tensor->precision() == PRECISION(kInt64)) {
+        auto output_data = output_tensor->data<int64_t>();
+        memcpy(mask_data.data(), output_data, image_size * sizeof(int64_t));
       }
-      int lx = std::max(static_cast<int>(x0), 0);
-      int ly = std::max(static_cast<int>(y0), 0);
-      int w = std::max(
-          std::min(static_cast<int>(x1), origin_image.cols - 1) - lx, 0);
-      int h = std::max(
-          std::min(static_cast<int>(y1), origin_image.rows - 1) - ly, 0);
-      if (w > 0 && h > 0) {
-        cv::Scalar color = color_map[class_id % color_map.size()];
-        cv::rectangle(origin_image, cv::Rect(lx, ly, w, h), color);
-        cv::rectangle(origin_image,
-                      cv::Point2d(lx, ly),
-                      cv::Point2d(lx + w, ly - 10),
-                      color,
-                      -1);
-        cv::putText(origin_image,
-                    std::to_string(output_index) + "." + class_name + ":" +
-                        std::to_string(score),
-                    cv::Point2d(lx, ly),
-                    cv::FONT_HERSHEY_PLAIN,
-                    1,
-                    cv::Scalar(255, 255, 255));
+    } else if (output_rank == 4) {
+      auto num_classes = output_shape[1];
+      output_height = output_shape[2];
+      output_width = output_shape[3];
+      auto image_size = output_height * output_width;
+      mask_data.resize(image_size);
+      auto output_data = output_tensor->data<float>();
+      for (int64_t j = 0; j < image_size; j++) {
+        auto max_value = output_data[j];
+        auto max_index = 0;
+        for (int64_t k = 1; k < num_classes; k++) {
+          auto cur_value = output_data[k * image_size + j];
+          if (max_value < cur_value) {
+            max_value = cur_value;
+            max_index = k;
+          }
+        }
+        mask_data[j] = max_index;
       }
-      output_index++;
+    } else {
+      printf(
+          "The rank of the output tensor should be 3 or 4, but receive %d!\n",
+          output_rank);
+      exit(-1);
     }
+    auto mask_image = resized_image.clone();
+    int64_t mask_index = 0;
+    for (int64_t j = 0; j < output_height; j++) {
+      for (int64_t k = 0; k < output_width; k++) {
+        auto class_id = mask_data[mask_index++];
+        if (class_id != 0) {  // Not background
+          mask_image.at<cv::Vec3b>(j, k) =
+              cv::Vec3b(color_map[class_id][2],
+                        color_map[class_id][1],
+                        color_map[class_id][0]);  // RGB->BGR
+        }
+      }
+    }
+    cv::resize(mask_image,
+               mask_image,
+               cv::Size(origin_image.cols, origin_image.rows),
+               0,
+               0);
+    cv::addWeighted(origin_image,
+                    1.0 - config.draw_weight,
+                    mask_image,
+                    config.draw_weight,
+                    0,
+                    origin_image);
     cv::imwrite(output_path, origin_image);
     end = get_current_us();
     cur_costs[2] = (end - start) / 1000.0f;

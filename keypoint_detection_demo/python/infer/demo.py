@@ -143,7 +143,7 @@ def main(argv=None):
         input_tensors = {}
         origin_image = cv2.imread(input_path)
         resized_image = cv2.resize(
-            origin_image, (config['height'], config['width']),
+            origin_image, (config['width'], config['height']),
             fx=0,
             fy=0,
             interpolation=cv2.INTER_CUBIC)
