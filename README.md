@@ -17,6 +17,12 @@ cd model_test/shell
   ```
 - Arm CPU (Linux)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 cpu
+  ./run.sh conv_add_144_192_int8_per_layer 1,3,192,144 float32 float32 linux arm64 cpu
+  ./run.sh conv_bn_relu_224_int8_per_channel 1,3,224,224 float32 float32 linux arm64 cpu
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux armhf cpu
+  ./run.sh conv_add_144_192_int8_per_layer 1,3,192,144 float32 float32 linux armhf cpu
+  ./run.sh conv_bn_relu_224_int8_per_channel 1,3,224,224 float32 float32 linux armhf cpu
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 cpu 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh conv_add_144_192_int8_per_layer 1,3,192,144 float32 float32 linux arm64 cpu 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh conv_bn_relu_224_int8_per_channel 1,3,224,224 float32 float32 linux arm64 cpu 192.168.100.30 22 khadas khadas
@@ -26,7 +32,12 @@ cd model_test/shell
   ```
 - x86 CPU (Linux)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux amd64 cpu
+  ./run.sh conv_add_144_192_int8_per_layer 1,3,192,144 float32 float32 linux amd64 cpu
+  ./run.sh conv_bn_relu_224_int8_per_channel 1,3,224,224 float32 float32 linux amd64 cpu
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux amd64 cpu localhost 9031 root root
+  ./run_with_ssh.sh conv_add_144_192_int8_per_layer 1,3,192,144 float32 float32 linux amd64 cpu localhost 9031 root root
+  ./run_with_ssh.sh conv_bn_relu_224_int8_per_channel 1,3,224,224 float32 float32 linux amd64 cpu localhost 9031 root root
   ```
 ### OpenCL
 -  Arm CPU + Mali/Adreno GPU (Android)
@@ -36,11 +47,14 @@ cd model_test/shell
   ```
 - Arm CPU + Mali GPU (Linux)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 opencl
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux armhf opencl
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 opencl 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux armhf opencl 192.168.100.13 22 root rockchip
   ```
 - x86 CPU + Intel/Nvidia GPU (Linux)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux amd64 opencl
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux amd64 opencl localhost 9031 root root
   ```
 ### Huawei Kirin NPU
@@ -62,10 +76,12 @@ cd model_test/shell
 ### Huawei Ascend NPU
 - x86 CPU + Huawei Atlas 300C(3010) (Ubuntu)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux amd64 huawei_ascend_npu
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux amd64 huawei_ascend_npu localhost 9031 root root
   ```
 - Arm CPU + Huawei Atlas 300C(3000) (CentOS)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 huawei_ascend_npu
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 huawei_ascend_npu localhost 9031 root root
   ```
 ### Verisilicon TIM-VX (Rockchip NPU and Amlogic NPU)
@@ -76,45 +92,58 @@ cd model_test/shell
   ```
 - Khadas VIM3 (Linux)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 verisilicon_timvx
+  ./run.sh conv_add_144_192_int8_per_layer 1,3,192,144 float32 float32 linux arm64 verisilicon_timvx
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 verisilicon_timvx 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh conv_add_144_192_int8_per_layer 1,3,192,144 float32 float32 linux arm64 verisilicon_timvx 192.168.100.30 22 khadas khadas
   ```
 - RK1808EVB (Linux)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 verisilicon_timvx
+  ./run.sh conv_add_144_192_int8_per_layer 1,3,192,144 float32 float32 linux arm64 verisilicon_timvx
   ./run_with_adb.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 verisilicon_timvx a133d8abb26137b2
   ./run_with_adb.sh conv_add_144_192_int8_per_layer 1,3,192,144 float32 float32 linux arm64 verisilicon_timvx a133d8abb26137b2
   ```
 - Toybirck TB-RK1808S0 (Linux)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 verisilicon_timvx
+  ./run.sh conv_add_144_192_int8_per_layer 1,3,192,144 float32 float32 linux arm64 verisilicon_timvx
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 verisilicon_timvx 192.168.180.8 22 toybrick toybrick
   ./run_with_ssh.sh conv_add_144_192_int8_per_layer 1,3,192,144 float32 float32 linux arm64 verisilicon_timvx 192.168.180.8 22 toybrick toybrick
   ```
 - RV1109 (Linux)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux armhf verisilicon_timvx
+  ./run.sh conv_add_144_192_int8_per_layer 1,3,192,144 float32 float32 linux armhf verisilicon_timvx
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux armhf verisilicon_timvx 192.168.100.13 22 root rockchip
   ./run_with_ssh.sh conv_add_144_192_int8_per_layer 1,3,192,144 float32 float32 linux armhf verisilicon_timvx 192.168.100.13 22 root rockchip
   ```
 ### Kunlunxin XPU with XDNN
 - x86 CPU + Kunlunxin K100 (Ubuntu)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux amd64 xpu
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux amd64 xpu localhost 9031 root root
   ```
 - Arm CPU + Kunlunxin K200 (KylinOS)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 xpu
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 xpu localhost 9031 root root
   ```
 ### Kunlunxin XPU with XTCL
 - x86 CPU + Kunlunxin K100 (Ubuntu)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux amd64 kunlunxin_xtcl
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux amd64 kunlunxin_xtcl localhost 9031 root root
   ```
 - Arm CPU + Kunlunxin K200 (KylinOS)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 kunlunxin_xtcl
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux arm64 kunlunxin_xtcl localhost 9031 root root
   ```
 ### Cambricon MLU
 - x86 CPU + Cambricon MLU 370 (Ubuntu)
   ```
+  ./run.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux amd64 cambricon_mlu
   ./run_with_ssh.sh conv_bn_relu_224_fp32 1,3,224,224 float32 float32 linux amd64 cambricon_mlu localhost 9031 root root
   ```
 ### Android NNAPI
@@ -186,6 +215,16 @@ cd image_classification_demo/shell
   ```
 - Arm CPU (Linux)
   ```
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 cpu
+  ./run.sh mobilenet_v1_int8_224_per_layer imagenet_224.txt test linux arm64 cpu
+  ./run.sh mobilenet_v1_int8_224_per_channel imagenet_224.txt test linux arm64 cpu
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux arm64 cpu
+  ./run.sh resnet50_int8_224_per_layer imagenet_224.txt test linux arm64 cpu
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux armhf cpu
+  ./run.sh mobilenet_v1_int8_224_per_layer imagenet_224.txt test linux armhf cpu
+  ./run.sh mobilenet_v1_int8_224_per_channel imagenet_224.txt test linux armhf cpu
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux armhf cpu
+  ./run.sh resnet50_int8_224_per_layer imagenet_224.txt test linux armhf cpu
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer imagenet_224.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh mobilenet_v1_int8_224_per_channel imagenet_224.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
@@ -199,8 +238,16 @@ cd image_classification_demo/shell
   ```
 - x86 CPU (Linux)
   ```
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux amd64 cpu
+  ./run.sh mobilenet_v1_int8_224_per_layer imagenet_224.txt test linux amd64 cpu
+  ./run.sh mobilenet_v1_int8_224_per_channel imagenet_224.txt test linux amd64 cpu
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux amd64 cpu
+  ./run.sh resnet50_int8_224_per_layer imagenet_224.txt test linux amd64 cpu
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux amd64 cpu localhost 9031 root root
+  ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer imagenet_224.txt test linux amd64 cpu localhost 9031 root root
+  ./run_with_ssh.sh mobilenet_v1_int8_224_per_channel imagenet_224.txt test linux amd64 cpu localhost 9031 root root
   ./run_with_ssh.sh resnet50_fp32_224 imagenet_224.txt test linux amd64 cpu localhost 9031 root root
+  ./run_with_ssh.sh resnet50_int8_224_per_layer imagenet_224.txt test linux amd64 cpu localhost 9031 root root
   ```
 ### OpenCL
 -  Arm CPU + Mali/Adreno GPU (Android)
@@ -210,11 +257,19 @@ cd image_classification_demo/shell
   ```
 - Arm CPU + Mali GPU (Linux)
   ```
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 opencl
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux arm64 opencl
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux armhf opencl
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux armhf opencl
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 opencl 192.168.100.30 22 khadas khadas
+  ./run_with_ssh.sh resnet50_fp32_224 imagenet_224.txt test linux arm64 opencl 192.168.100.30 22 khadas khadas
+  ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux armhf opencl 192.168.100.13 22 root rockchip
   ./run_with_ssh.sh resnet50_fp32_224 imagenet_224.txt test linux armhf opencl 192.168.100.13 22 root rockchip
   ```
 - x86 CPU + Intel/Nvidia GPU (Linux)
   ```
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux amd64 opencl
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux amd64 opencl
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux amd64 opencl localhost 9031 root root
   ./run_with_ssh.sh resnet50_fp32_224 imagenet_224.txt test linux amd64 opencl localhost 9031 root root
   ```
@@ -239,11 +294,15 @@ cd image_classification_demo/shell
 ### Huawei Ascend NPU
 - Intel CPU + Huawei Atlas 300C(3010) (Lenovo P720 + Ubuntu 16.04)
   ```
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux amd64 huawei_ascend_npu
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux amd64 huawei_ascend_npu
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux amd64 huawei_ascend_npu localhost 9031 root root
   ./run_with_ssh.sh resnet50_fp32_224 imagenet_224.txt test linux amd64 huawei_ascend_npu localhost 9031 root root
   ```
 - Kunpeng 920 + Huawei Atlas 300C(3000) (Kunpeng 920 Desktop PC + CentOS 7.6)
   ```
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 huawei_ascend_npu
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux arm64 huawei_ascend_npu
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 huawei_ascend_npu localhost 9031 root root
   ./run_with_ssh.sh resnet50_fp32_224 imagenet_224.txt test linux arm64 huawei_ascend_npu localhost 9031 root root
   ```
@@ -257,6 +316,10 @@ cd image_classification_demo/shell
   ```
 - Khadas VIM3 (Linux)
   ```
+  ./run.sh mobilenet_v1_int8_224_per_layer imagenet_224.txt test linux arm64 verisilicon_timvx
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 verisilicon_timvx
+  ./run.sh resnet50_int8_224_per_layer imagenet_224.txt test linux arm64 verisilicon_timvx
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux arm64 verisilicon_timvx
   ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer imagenet_224.txt test linux arm64 verisilicon_timvx 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 verisilicon_timvx 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh resnet50_int8_224_per_layer imagenet_224.txt test linux arm64 verisilicon_timvx 192.168.100.30 22 khadas khadas
@@ -264,6 +327,10 @@ cd image_classification_demo/shell
   ```
 - RK1808EVB (Linux)
   ```
+  ./run.sh mobilenet_v1_int8_224_per_layer imagenet_224.txt test linux arm64 verisilicon_timvx
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 verisilicon_timvx
+  ./run.sh resnet50_int8_224_per_layer imagenet_224.txt test linux arm64 verisilicon_timvx
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux arm64 verisilicon_timvx
   ./run_with_adb.sh mobilenet_v1_int8_224_per_layer imagenet_224.txt test linux arm64 verisilicon_timvx a133d8abb26137b2
   ./run_with_adb.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 verisilicon_timvx a133d8abb26137b2
   ./run_with_adb.sh resnet50_int8_224_per_layer imagenet_224.txt test linux arm64 verisilicon_timvx a133d8abb26137b2
@@ -271,6 +338,10 @@ cd image_classification_demo/shell
   ```
 - Toybirck TB-RK1808S0 (Linux)
   ```
+  ./run.sh mobilenet_v1_int8_224_per_layer imagenet_224.txt test linux arm64 verisilicon_timvx
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 verisilicon_timvx
+  ./run.sh resnet50_int8_224_per_layer imagenet_224.txt test linux arm64 verisilicon_timvx
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux arm64 verisilicon_timvx
   ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer imagenet_224.txt test linux arm64 verisilicon_timvx 192.168.180.8 22 toybrick toybrick
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 verisilicon_timvx 192.168.180.8 22 toybrick toybrick
   ./run_with_ssh.sh resnet50_int8_224_per_layer imagenet_224.txt test linux arm64 verisilicon_timvx 192.168.180.8 22 toybrick toybrick
@@ -278,6 +349,10 @@ cd image_classification_demo/shell
   ```
 - RV1109 (Linux)
   ```
+  ./run.sh mobilenet_v1_int8_224_per_layer imagenet_224.txt test linux armhf verisilicon_timvx
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux armhf verisilicon_timvx
+  ./run.sh resnet50_int8_224_per_layer imagenet_224.txt test linux armhf verisilicon_timvx
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux armhf verisilicon_timvx
   ./run_with_ssh.sh mobilenet_v1_int8_224_per_layer imagenet_224.txt test linux armhf verisilicon_timvx 192.168.100.13 22 root rockchip
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux armhf verisilicon_timvx 192.168.100.13 22 root rockchip
   ./run_with_ssh.sh resnet50_int8_224_per_layer imagenet_224.txt test linux armhf verisilicon_timvx 192.168.100.13 22 root rockchip
@@ -286,28 +361,38 @@ cd image_classification_demo/shell
 ### Kunlunxin XPU with XDNN
 - x86 CPU + Kunlunxin K100 (Ubuntu)
   ```
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux amd64 xpu
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux amd64 xpu
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux amd64 xpu localhost 9031 root root
   ./run_with_ssh.sh resnet50_fp32_224 imagenet_224.txt test linux amd64 xpu localhost 9031 root root
   ```
 - Arm CPU + Kunlunxin K200 (KylinOS)
   ```
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 xpu
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux arm64 xpu
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 xpu localhost 9031 root root
   ./run_with_ssh.sh resnet50_fp32_224 imagenet_224.txt test linux arm64 xpu localhost 9031 root root
   ```
 ### Kunlunxin XPU with XTCL
 - x86 CPU + Kunlunxin K100 (Ubuntu)
   ```
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux amd64 kunlunxin_xtcl
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux amd64 kunlunxin_xtcl
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux amd64 kunlunxin_xtcl localhost 9031 root root
   ./run_with_ssh.sh resnet50_fp32_224 imagenet_224.txt test linux amd64 kunlunxin_xtcl localhost 9031 root root
   ```
 - Arm CPU + Kunlunxin K200 (KylinOS)
   ```
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 kunlunxin_xtcl
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux arm64 kunlunxin_xtcl
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux arm64 kunlunxin_xtcl localhost 9031 root root
   ./run_with_ssh.sh resnet50_fp32_224 imagenet_224.txt test linux arm64 kunlunxin_xtcl localhost 9031 root root
   ```
 ### Cambricon MLU
 - x86 CPU + Cambricon MLU 370 (Lenovo P720 + Ubuntu 16.04)
   ```
+  ./run.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux amd64 cambricon_mlu
+  ./run.sh resnet50_fp32_224 imagenet_224.txt test linux amd64 cambricon_mlu
   ./run_with_ssh.sh mobilenet_v1_fp32_224 imagenet_224.txt test linux amd64 cambricon_mlu localhost 9031 root root
   ./run_with_ssh.sh resnet50_fp32_224 imagenet_224.txt test linux amd64 cambricon_mlu localhost 9031 root root
   ```
@@ -393,19 +478,32 @@ cd object_detection_demo/shell
   ```
   ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test android arm64-v8a cpu UQG0220A15000356
   ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test android arm64-v8a cpu UQG0220A15000356
+  ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test android arm64-v8a cpu UQG0220A15000356
   ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test android armeabi-v7a cpu UQG0220A15000356
   ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test android armeabi-v7a cpu UQG0220A15000356
+  ./run_with_adb.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test android armeabi-v7a cpu UQG0220A15000356
   ```
 - Arm CPU (Linux)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 cpu
+  ./run.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux arm64 cpu
+  ./run.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux arm64 cpu
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux armhf cpu
+  ./run.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux armhf cpu
+  ./run.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux armhf cpu
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
+  ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux armhf cpu 192.168.100.13 22 root rockchip
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux armhf cpu 192.168.100.13 22 root rockchip
+  ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux armhf cpu 192.168.100.13 22 root rockchip
   ```
 - x86 CPU (Linux)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux amd64 cpu
+  ./run.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux amd64 cpu
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux amd64 cpu localhost 9031 root root
+  ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux amd64 cpu localhost 9031 root root
   ```
 ### OpenCL
 -  Arm CPU + Mali/Adreno GPU (Android)
@@ -414,10 +512,12 @@ cd object_detection_demo/shell
   ```
 - Arm CPU + Mali GPU (Linux)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 opencl
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 opencl 192.168.100.30 22 khadas khadas
   ```
 - x86 CPU + Intel/Nvidia GPU (Linux)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux amd64 opencl
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux amd64 opencl localhost 9031 root root
   ```
 ### Huawei Kirin NPU
@@ -433,16 +533,21 @@ cd object_detection_demo/shell
 ### Imagination NNA
 - ROC1 (Linux)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux arm64 imagination_nna
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux arm64 imagination_nna 192.168.100.10 22 img imgroc1
   ```
 ### Huawei Ascend NPU
 - x86 CPU + Huawei Atlas 300C(3010) (Ubuntu)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux amd64 huawei_ascend_npu
+  ./run.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux amd64 huawei_ascend_npu
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux amd64 huawei_ascend_npu localhost 9031 root root
   ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux amd64 huawei_ascend_npu localhost 9031 root root
   ```
 - Arm CPU + Huawei Atlas 300C(3000) (CentOS)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 huawei_ascend_npu
+  ./run.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux arm64 huawei_ascend_npu
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 huawei_ascend_npu localhost 9031 root root
   ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux arm64 huawei_ascend_npu localhost 9031 root root
   ```
@@ -454,49 +559,66 @@ cd object_detection_demo/shell
   ```
 - Khadas VIM3 (Linux)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux arm64 verisilicon_timvx
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 verisilicon_timvx
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux arm64 verisilicon_timvx 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 verisilicon_timvx 192.168.100.30 22 khadas khadas
   ```
 - RK1808EVB (Linux)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux arm64 verisilicon_timvx
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt linux arm64 verisilicon_timvx
   ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux arm64 verisilicon_timvx a133d8abb26137b2
   ./run_with_adb.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt linux arm64 verisilicon_timvx a133d8abb26137b2
   ```
 - Toybirck TB-RK1808S0 (Linux)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux arm64 verisilicon_timvx
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 verisilicon_timvx
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux arm64 verisilicon_timvx 192.168.180.8 22 toybrick toybrick
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 verisilicon_timvx 192.168.180.8 22 toybrick toybrick
   ```
 - RV1109 (Linux)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux armhf verisilicon_timvx
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux armhf verisilicon_timvx
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_int8_300_per_layer ssd_voc_300.txt test linux armhf verisilicon_timvx 192.168.100.13 22 root rockchip
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux armhf verisilicon_timvx 192.168.100.13 22 root rockchip
   ```
 ### Kunlunxin XPU with XDNN
 - x86 CPU + Kunlunxin K100 (Ubuntu)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux amd64 xpu
+  ./run.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux amd64 xpu
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux amd64 xpu localhost 9031 root root
   ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux amd64 xpu localhost 9031 root root
   ```
 - Arm CPU + Kunlunxin K200 (KylinOS)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 xpu
+  ./run.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux arm64 xpu
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 xpu localhost 9031 root root
   ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux arm64 xpu localhost 9031 root root
   ```
 ### Kunlunxin XPU with XTCL
 - x86 CPU + Kunlunxin K100 (Ubuntu)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux amd64 kunlunxin_xtcl
+  ./run.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux amd64 kunlunxin_xtcl
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux amd64 kunlunxin_xtcl localhost 9031 root root
   ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux amd64 kunlunxin_xtcl localhost 9031 root root
   ```
 - Arm CPU + Kunlunxin K200 (KylinOS)
   ```
+  ./run.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 kunlunxin_xtcl
+  ./run.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux arm64 kunlunxin_xtcl
   ./run_with_ssh.sh ssd_mobilenet_v1_relu_voc_fp32_300 ssd_voc_300.txt test linux arm64 kunlunxin_xtcl localhost 9031 root root
   ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux arm64 kunlunxin_xtcl localhost 9031 root root
   ```
 ### Cambricon MLU
 - x86 CPU + Cambricon MLU 370 (Ubuntu)
   ```
+  ./run.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux amd64 cambricon_mlu
   ./run_with_ssh.sh yolov3_mobilenet_v1_270e_coco_fp32_608 yolov3_coco_608.txt test linux amd64 cambricon_mlu localhost 9031 root root
   ```
 ### Android NNAPI
@@ -573,6 +695,10 @@ cd keypoint_detection_demo/shell
   ```
 - Arm CPU (Linux)
   ```
+  ./run.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux arm64 cpu
+  ./run.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux arm64 cpu
+  ./run.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux armhf cpu
+  ./run.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux armhf cpu
   ./run_with_ssh.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux armhf cpu 192.168.100.13 22 root rockchip
@@ -580,7 +706,10 @@ cd keypoint_detection_demo/shell
   ```
 - x86 CPU (Linux)
   ```
+  ./run.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux amd64 cpu
+  ./run.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux amd64 cpu
   ./run_with_ssh.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux amd64 cpu localhost 9031 root root
+  ./run_with_ssh.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux amd64 cpu localhost 9031 root root
   ```
 ### OpenCL
 -  Arm CPU + Mali/Adreno GPU (Android)
@@ -589,10 +718,12 @@ cd keypoint_detection_demo/shell
   ```
 - Arm CPU + Mali GPU (Linux)
   ```
+  ./run.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux arm64 opencl
   ./run_with_ssh.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux arm64 opencl 192.168.100.30 22 khadas khadas
   ```
 - x86 CPU + Intel/Nvidia GPU (Linux)
   ```
+  ./run.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux amd64 opencl
   ./run_with_ssh.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux amd64 opencl localhost 9031 root root
   ```
 ### Huawei Kirin NPU
@@ -608,15 +739,18 @@ cd keypoint_detection_demo/shell
 ### Imagination NNA
 - ROC1 (Linux)
   ```
+  ./run.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux arm64 imagination_nna
   ./run_with_ssh.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux arm64 imagination_nna 192.168.100.10 22 img imgroc1
   ```
 ### Huawei Ascend NPU
 - x86 CPU + Huawei Atlas 300C(3010) (Ubuntu)
   ```
+  ./run.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux amd64 huawei_ascend_npu
   ./run_with_ssh.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux amd64 huawei_ascend_npu localhost 9031 root root
   ```
 - Arm CPU + Huawei Atlas 300C(3000) (CentOS)
   ```
+  ./run.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux arm64 huawei_ascend_npu
   ./run_with_ssh.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux arm64 huawei_ascend_npu localhost 9031 root root
   ```
 ### Verisilicon TIM-VX (Rockchip NPU and Amlogic NPU)
@@ -626,41 +760,50 @@ cd keypoint_detection_demo/shell
   ```
 - Khadas VIM3 (Linux)
   ```
+  ./run.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux arm64 verisilicon_timvx
   ./run_with_ssh.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux arm64 verisilicon_timvx 192.168.100.30 22 khadas khadas
   ```
 - RK1808EVB (Linux)
   ```
+  ./run.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux arm64 verisilicon_timvx
   ./run_with_adb.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux arm64 verisilicon_timvx a133d8abb26137b2
   ```
 - Toybirck TB-RK1808S0 (Linux)
   ```
+  ./run.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux arm64 verisilicon_timvx
   ./run_with_ssh.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux arm64 verisilicon_timvx 192.168.180.8 22 toybrick toybrick
   ```
 - RV1109 (Linux)
   ```
+  ./run.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux armhf verisilicon_timvx
   ./run_with_ssh.sh tinypose_int8_128_96_per_channel tinypose_128_96.txt test linux armhf verisilicon_timvx 192.168.100.13 22 root rockchip
   ```
 ### Kunlunxin XPU with XDNN
 - x86 CPU + Kunlunxin K100 (Ubuntu)
   ```
+  ./run.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux amd64 xpu
   ./run_with_ssh.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux amd64 xpu localhost 9031 root root
   ```
 - Arm CPU + Kunlunxin K200 (KylinOS)
   ```
+  ./run.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux arm64 xpu
   ./run_with_ssh.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux arm64 xpu localhost 9031 root root
   ```
 ### Kunlunxin XPU with XTCL
 - x86 CPU + Kunlunxin K100 (Ubuntu)
   ```
+  ./run.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux amd64 kunlunxin_xtcl
   ./run_with_ssh.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux amd64 kunlunxin_xtcl localhost 9031 root root
   ```
 - Arm CPU + Kunlunxin K200 (KylinOS)
   ```
+  ./run.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux arm64 kunlunxin_xtcl
   ./run_with_ssh.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux arm64 kunlunxin_xtcl localhost 9031 root root
   ```
 ### Cambricon MLU
 - x86 CPU + Cambricon MLU 370 (Ubuntu)
   ```
+  ./run.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux amd64 cambricon_mlu
   ./run_with_ssh.sh tinypose_fp32_128_96 tinypose_128_96.txt test linux amd64 cambricon_mlu localhost 9031 root root
   ```
 ### Android NNAPI
@@ -715,18 +858,48 @@ cd semantic_segmentation_demo/shell
   ./run_with_adb.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test android arm64-v8a cpu UQG0220A15000356
   ./run_with_adb.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test android arm64-v8a cpu UQG0220A15000356
   ./run_with_adb.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel human_224_398.txt test android arm64-v8a cpu UQG0220A15000356
+  ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test android armeabi-v7a cpu UQG0220A15000356
+  ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test android armeabi-v7a cpu UQG0220A15000356
+  ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test android armeabi-v7a cpu UQG0220A15000356
+  ./run_with_adb.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test android armeabi-v7a cpu UQG0220A15000356
+  ./run_with_adb.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test android armeabi-v7a cpu UQG0220A15000356
+  ./run_with_adb.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel human_224_398.txt test android armeabi-v7a cpu UQG0220A15000356
   ```
 - Arm CPU (Linux)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux arm64 cpu
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux arm64 cpu
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux arm64 cpu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux arm64 cpu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux arm64 cpu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel human_224_398.txt test linux arm64 cpu
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux armhf cpu
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux armhf cpu
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux armhf cpu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux armhf cpu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux armhf cpu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel human_224_398.txt test linux armhf cpu
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel human_224_398.txt test linux arm64 cpu 192.168.100.30 22 khadas khadas
+  ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux armhf cpu 192.168.100.13 22 root rockchip
+  ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux armhf cpu 192.168.100.13 22 root rockchip
+  ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux armhf cpu 192.168.100.13 22 root rockchip
+  ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux armhf cpu 192.168.100.13 22 root rockchip
+  ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux armhf cpu 192.168.100.13 22 root rockchip
+  ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel human_224_398.txt test linux armhf cpu 192.168.100.13 22 root rockchip
   ```
 - x86 CPU (Linux)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux amd64 cpu
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux amd64 cpu
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux amd64 cpu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux amd64 cpu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux amd64 cpu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel human_224_398.txt test linux amd64 cpu
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux amd64 cpu localhost 9031 root root
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux amd64 cpu localhost 9031 root root
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux amd64 cpu localhost 9031 root root
@@ -742,11 +915,15 @@ cd semantic_segmentation_demo/shell
   ```
 - Arm CPU + Mali GPU (Linux)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux arm64 opencl
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux arm64 opencl
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux arm64 opencl 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux arm64 opencl 192.168.100.30 22 khadas khadas
   ```
 - x86 CPU + Intel/Nvidia GPU (Linux)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux amd64 opencl
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux amd64 opencl
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux amd64 opencl localhost 9031 root root
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux amd64 opencl localhost 9031 root root
   ```
@@ -767,6 +944,10 @@ cd semantic_segmentation_demo/shell
 ### Imagination NNA
 - ROC1 (Linux)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux arm64 imagination_nna
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux arm64 imagination_nna
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux arm64 imagination_nna
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel human_224_398.txt test linux arm64 imagination_nna
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux arm64 imagination_nna 192.168.100.10 22 img imgroc1
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux arm64 imagination_nna 192.168.100.10 22 img imgroc1
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux arm64 imagination_nna 192.168.100.10 22 img imgroc1
@@ -775,11 +956,15 @@ cd semantic_segmentation_demo/shell
 ### Huawei Ascend NPU
 - x86 CPU + Huawei Atlas 300C(3010) (Ubuntu)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux amd64 huawei_ascend_npu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux amd64 huawei_ascend_npu
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux amd64 huawei_ascend_npu localhost 9031 root root
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux amd64 huawei_ascend_npu localhost 9031 root root
   ```
 - Arm CPU + Huawei Atlas 300C(3000) (CentOS)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux arm64 huawei_ascend_npu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux arm64 huawei_ascend_npu
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux arm64 huawei_ascend_npu localhost 9031 root root
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux arm64 huawei_ascend_npu localhost 9031 root root
   ```
@@ -793,6 +978,10 @@ cd semantic_segmentation_demo/shell
   ```
 - Khadas VIM3 (Linux)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux arm64 verisilicon_timvx
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux arm64 verisilicon_timvx
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux arm64 verisilicon_timvx
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel human_224_398.txt test linux arm64 verisilicon_timvx
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux arm64 verisilicon_timvx 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux arm64 verisilicon_timvx 192.168.100.30 22 khadas khadas
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux arm64 verisilicon_timvx 192.168.100.30 22 khadas khadas
@@ -800,6 +989,10 @@ cd semantic_segmentation_demo/shell
   ```
 - RK1808EVB (Linux)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux arm64 verisilicon_timvx
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux arm64 verisilicon_timvx
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux arm64 verisilicon_timvx
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel human_224_398.txt test linux arm64 verisilicon_timvx
   ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux arm64 verisilicon_timvx a133d8abb26137b2
   ./run_with_adb.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux arm64 verisilicon_timvx a133d8abb26137b2
   ./run_with_adb.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux arm64 verisilicon_timvx a133d8abb26137b2
@@ -807,6 +1000,10 @@ cd semantic_segmentation_demo/shell
   ```
 - Toybirck TB-RK1808S0 (Linux)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux arm64 verisilicon_timvx
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux arm64 verisilicon_timvx
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux arm64 verisilicon_timvx
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel human_224_398.txt test linux arm64 verisilicon_timvx
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux arm64 verisilicon_timvx 192.168.180.8 22 toybrick toybrick
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux arm64 verisilicon_timvx 192.168.180.8 22 toybrick toybrick
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux arm64 verisilicon_timvx 192.168.180.8 22 toybrick toybrick
@@ -814,6 +1011,10 @@ cd semantic_segmentation_demo/shell
   ```
 - RV1109 (Linux)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux armhf verisilicon_timvx
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux armhf verisilicon_timvx
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux armhf verisilicon_timvx
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_channel human_224_398.txt test linux armhf verisilicon_timvx
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_layer cityscapes_512_1024.txt test linux armhf verisilicon_timvx 192.168.100.13 22 root rockchip
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_int8_512_1024_per_channel cityscapes_512_1024.txt test linux armhf verisilicon_timvx 192.168.100.13 22 root rockchip
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_int8_224_398_per_layer human_224_398.txt test linux armhf verisilicon_timvx 192.168.100.13 22 root rockchip
@@ -822,28 +1023,38 @@ cd semantic_segmentation_demo/shell
 ### Kunlunxin XPU with XDNN
 - x86 CPU + Kunlunxin K100 (Ubuntu)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux amd64 xpu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux amd64 xpu
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux amd64 xpu localhost 9031 root root
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux amd64 xpu localhost 9031 root root
   ```
 - Arm CPU + Kunlunxin K200 (KylinOS)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux arm64 xpu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux arm64 xpu
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux arm64 xpu localhost 9031 root root
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux arm64 xpu localhost 9031 root root
   ```
 ### Kunlunxin XPU with XTCL
 - x86 CPU + Kunlunxin K100 (Ubuntu)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux amd64 kunlunxin_xtcl
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux amd64 kunlunxin_xtcl
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux amd64 kunlunxin_xtcl localhost 9031 root root
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux amd64 kunlunxin_xtcl localhost 9031 root root
   ```
 - Arm CPU + Kunlunxin K200 (KylinOS)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux arm64 kunlunxin_xtcl
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux arm64 kunlunxin_xtcl
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux arm64 kunlunxin_xtcl localhost 9031 root root
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux arm64 kunlunxin_xtcl localhost 9031 root root
   ```
 ### Cambricon MLU
 - x86 CPU + Cambricon MLU 370 (Ubuntu)
   ```
+  ./run.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux amd64 cambricon_mlu
+  ./run.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux amd64 cambricon_mlu
   ./run_with_ssh.sh pp_liteseg_stdc1_cityscapes_1024x512_scale_1_0_160k_with_argmax_fp32_512_1024 cityscapes_512_1024.txt test linux amd64 cambricon_mlu localhost 9031 root root
   ./run_with_ssh.sh portrait_pp_humansegv1_lite_398x224_with_softmax_fp32_224_398 human_224_398.txt test linux amd64 cambricon_mlu localhost 9031 root root
   ```

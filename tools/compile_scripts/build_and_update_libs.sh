@@ -7,7 +7,7 @@ build_and_update_lib() {
   local os=$1
   local arch=$2
   local toolchain=$3
-  local rebuild_all=$4
+  local rebuild=$4
   local tiny_publish=$5
   local only_huawei_ascend_npu=$6
   local only_xpu=$7
@@ -210,11 +210,11 @@ build_and_update_lib() {
   fi
   lib_root=$ROOT_DIR/libs/PaddleLite
   lib_dir=$lib_root/$os/$lib_abi
-  if [ -d "$build_dir" ] && [ $rebuild_all -eq 0 ]; then
+  if [ -d "$build_dir" ] && [ $rebuild -eq 0 ]; then
     cd $build_dir
     make -j8 publish_inference
   else
-    build_cmd="$build_cmd $extra_args"
+    build_cmd="$build_cmd $extra_args --with_arm_dnn_library=ON "
     if [ $tiny_publish -eq 0 ]; then
       build_cmd="$build_cmd full_publish"
     fi
@@ -312,7 +312,7 @@ export LIT_BUILD_THREAD=8
 # os: android, linux
 # arch: armv7, armv8, armv7hf, x86
 # toolchain: gcc, clang
-# rebuild_all: 0, 1
+# rebuild: 0, 1
 # tiny_publish: 0, 1
 # only_huawei_ascend_npu: 0, 1
 # only_xpu: 0, 1
