@@ -214,7 +214,8 @@ build_and_update_lib() {
     cd $build_dir
     make -j8 publish_inference
   else
-    build_cmd="$build_cmd $extra_args --with_arm_dnn_library=ON "
+    build_cmd="$build_cmd $extra_args"
+    #build_cmd="$build_cmd $extra_args --with_arm_dnn_library=ON"
     if [ $tiny_publish -eq 0 ]; then
       build_cmd="$build_cmd full_publish"
     fi
