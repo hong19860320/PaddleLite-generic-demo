@@ -1,0 +1,5 @@
+max_length:32
+vocab_path:vocab.txt
+added_tokens_path:added_tokens.json
+intent_label_path:intent_label.txt
+slot_label_path:slot_label.txt
